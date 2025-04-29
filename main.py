@@ -14,8 +14,8 @@ PLAYER_HEIGHT = 80
 
 # imgages
 background_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-back.png.png"))
-player_image_right = pygame.image.load(os.path.join("Test Sprites/Test Sprite-right.png.png"))
-player_image_right = pygame.transform.scale(player_image_right,(PLAYER_WIDTH,PLAYER_HEIGHT))
+player_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-right.png.png"))
+player_image = pygame.transform.scale(player_image,(PLAYER_WIDTH,PLAYER_HEIGHT))
 image_icon = pygame.image.load(os.path.join("Test Sprites/Test Sprite-icon.png.png"))
 
 pygame.init() #always needed to initialize pygame
@@ -27,7 +27,7 @@ clock = pygame.time.Clock() #used for the framerate
 class Player(pygame.Rect):
     def __init__(self):
         pygame.Rect.__init__(self,PLAYER_X,PLAYER_Y,PLAYER_WIDTH,PLAYER_HEIGHT)
-        self.image = player_image_right
+        self.image = player_image
 
 #left(x), top(y), width, height
 player = Player()
@@ -63,8 +63,12 @@ while True: #game loop
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
         player.y += 2
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        player_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-left.png.png"))
+        Player.image = player_image
         player.x -= 2
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        player_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-right.png.png"))
+        Player.image = player_image
         player.x += 2
 
     draw()
