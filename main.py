@@ -14,7 +14,7 @@ PLAYER_HEIGHT = 32
 
 # imgages
 background_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-3.png.png"))
-player_image_right = pygame.image.load(os.path.join("Test_Sprites/Test Sprite-2.png.png"))
+player_image_right = pygame.image.load(os.path.join("Test Sprites/Test Sprite-2.png.png"))
 
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
