@@ -8,17 +8,19 @@ GAME_HEIGHT = 512
 
 PLAYER_X = GAME_WIDTH/2
 PLAYER_Y = GAME_HEIGHT/2
-PLAYER_WIDTH = 32
-PLAYER_HEIGHT = 32
+PLAYER_WIDTH = 80
+PLAYER_HEIGHT = 80
 
 
 # imgages
-background_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-3.png.png"))
-player_image_right = pygame.image.load(os.path.join("Test Sprites/Test Sprite-2.png.png"))
+background_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-back.png.png"))
+player_image_right = pygame.image.load(os.path.join("Test Sprites/Test Sprite-right.png.png"))
+player_image_right = pygame.transform.scale(player_image_right,(PLAYER_WIDTH,PLAYER_HEIGHT))
 
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
 pygame.display.set_caption("test") #title of window
+pygame.display.set_icon()
 clock = pygame.time.Clock() #used for the framerate
 
 class Player(pygame.Rect):
@@ -56,13 +58,13 @@ while True: #game loop
         '''
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP] or keys[pygame.K_w]:
-        player.y -= 5
+        player.y -= 2
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-        player.y += 5
+        player.y += 2
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        player.x -= 5
+        player.x -= 2
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        player.x += 5
+        player.x += 2
 
     draw()
     pygame.display.update()
