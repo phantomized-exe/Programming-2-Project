@@ -16,11 +16,12 @@ PLAYER_HEIGHT = 80
 background_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-back.png.png"))
 player_image_right = pygame.image.load(os.path.join("Test Sprites/Test Sprite-right.png.png"))
 player_image_right = pygame.transform.scale(player_image_right,(PLAYER_WIDTH,PLAYER_HEIGHT))
+image_icon = pygame.image.load(os.path.join("Test Sprites/Test Sprite-icon.png.png"))
 
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
 pygame.display.set_caption("test") #title of window
-pygame.display.set_icon()
+pygame.display.set_icon(image_icon)
 clock = pygame.time.Clock() #used for the framerate
 
 class Player(pygame.Rect):
