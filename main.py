@@ -10,7 +10,7 @@ PLAYER_X = GAME_WIDTH/2
 PLAYER_Y = GAME_HEIGHT/2
 PLAYER_WIDTH = 80
 PLAYER_HEIGHT = 80
-
+PLAYER_DISTANCE = 5
 
 # imgages
 background_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-back.png.png"))
@@ -58,20 +58,20 @@ while True: #game loop
                 player.x += 5
         '''
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_UP] or keys[pygame.K_w]:
-        player.y -= 2
-    if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-        player.y += 2
+    if (keys[pygame.K_UP] or keys[pygame.K_w]) and player.y - PLAYER_DISTANCE >= 0:
+        player.y -= PLAYER_DISTANCE
+    if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and player.y + player.height + PLAYER_DISTANCE <= GAME_HEIGHT:
+        player.y += PLAYER_DISTANCE
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
         player_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-left.png.png"))
         player_image = pygame.transform.scale(player_image,(PLAYER_WIDTH,PLAYER_HEIGHT))
         player.image = player_image
-        player.x -= 2
+        player.x -= PLAYER_DISTANCE
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
         player_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-right.png.png"))
         player_image = pygame.transform.scale(player_image,(PLAYER_WIDTH,PLAYER_HEIGHT))
         player.image = player_image
-        player.x += 2
+        player.x += PLAYER_DISTANCE
 
     draw()
     pygame.display.update()
