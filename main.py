@@ -59,17 +59,8 @@ while True: #game loop
         '''
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP] or keys[pygame.K_w]:
-        if PLAYER_HEIGHT >= 2 and PLAYER_WIDTH >= 2:
-            PLAYER_WIDTH -= 2
-            PLAYER_HEIGHT -= 2
-            player_image = pygame.transform.scale(player_image,(PLAYER_WIDTH,PLAYER_HEIGHT))
-            player.image = player_image
         player.y -= 2
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-        PLAYER_WIDTH += 2
-        PLAYER_HEIGHT += 2
-        player_image = pygame.transform.scale(player_image,(PLAYER_WIDTH,PLAYER_HEIGHT))
-        player.image = player_image
         player.y += 2
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
         player_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-left.png.png"))
