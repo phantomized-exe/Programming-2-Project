@@ -12,7 +12,9 @@ PLAYER_WIDTH = 28
 PLAYER_HEIGHT = 58
 PLAYER_DISTANCE = 5
 
-# imgages
+PLAYER_VELOCITY_Y = -10
+
+# images
 background_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-back.png.png"))
 player_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-right.png.png"))
 player_image = pygame.transform.scale(player_image,(PLAYER_WIDTH,PLAYER_HEIGHT)) #resizes player
@@ -28,10 +30,13 @@ class Player(pygame.Rect):
     def __init__(self):
         pygame.Rect.__init__(self,PLAYER_X,PLAYER_Y,PLAYER_WIDTH,PLAYER_HEIGHT)
         self.image = player_image
+        self.velocity_y = 0
 
 #left(x), top(y), width, height
 player = Player()
 
+def move():
+    player.y += player.velocity_y
 def draw():
     #window.fill("blue")
     #window.fill("#54de9e")
@@ -59,20 +64,13 @@ while True: #game loop
         '''
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP] or keys[pygame.K_w]:
-        player.y = max(player.y - PLAYER_DISTANCE, 0)
-    if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-        player.y = min(player.y + PLAYER_DISTANCE,GAME_HEIGHT-player.height)
+        player.velocity_y = PLAYER_VELOCITY_Y
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        player_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-left.png.png"))
-        player_image = pygame.transform.scale(player_image,(PLAYER_WIDTH,PLAYER_HEIGHT))
-        player.image = player_image
         player.x = max(player.x - PLAYER_DISTANCE, 0)
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        player_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-right.png.png"))
-        player_image = pygame.transform.scale(player_image,(PLAYER_WIDTH,PLAYER_HEIGHT))
-        player.image = player_image
         player.x = min(player.x + PLAYER_DISTANCE,GAME_WIDTH-player.width)
 
+    move()
     draw()
     pygame.display.update()
     clock.tick(60) #frames per second (fps)
