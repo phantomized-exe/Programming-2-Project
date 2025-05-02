@@ -27,7 +27,6 @@ def load_image(image_name,scale=None):
         image = pygame.transform.scale(image,scale)
     return image
 background_image = load_image("Test Sprite-back.png.png")
-player_image = pygame.image.load(os.path.join("Test Sprites/Test Sprite-right.png.png"))
 player_image_right = load_image("Test Sprite-right.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
 player_image_right2 = load_image("Test Sprite-right2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT)) #resizes player
 player_image_left = load_image("Test Sprite-left.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
@@ -47,7 +46,6 @@ class Player(pygame.Rect):
     player_animation = 0
     def __init__(self):
         pygame.Rect.__init__(self,PLAYER_X,PLAYER_Y,PLAYER_WIDTH,PLAYER_HEIGHT)
-        self.image = player_image
         self.velocity_x = 0
         self.velocity_y = 0
         self.direction = "right"
@@ -100,9 +98,16 @@ def create_map():
         tile = Tile(TILE_SIZE*3,(i+10)*TILE_SIZE,floor_tile_image)
         tiles.append(tile)
 def check_tile_collision():
+    global tick_check
     for tile in tiles:
         if player.colliderect(tile):
+            tick_check = 0
             return tile
+    if tick_check >= 10:
+        player.jumping = True
+        tick_check = 0
+    else:
+        tick_check += 1
     return None
 def check_tile_collision_x():
     tile = check_tile_collision()
@@ -153,6 +158,8 @@ def draw():
     window.blit(player.image,player)
 
 #start game
+global tick_check
+tick_check = 0
 player = Player()
 tiles = []
 create_map()
