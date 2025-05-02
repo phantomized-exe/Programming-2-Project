@@ -1,7 +1,6 @@
 import pygame
 from sys import exit #terminate the program
 import os
-import time
 
 # game variables
 TILE_SIZE = 32
@@ -45,6 +44,7 @@ pygame.display.set_icon(image_icon)
 clock = pygame.time.Clock() #used for the framerate
 
 class Player(pygame.Rect):
+    player_animation = 0
     def __init__(self):
         pygame.Rect.__init__(self,PLAYER_X,PLAYER_Y,PLAYER_WIDTH,PLAYER_HEIGHT)
         self.image = player_image
@@ -61,18 +61,28 @@ class Player(pygame.Rect):
         else:
             if self.direction == "right":
                 if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-                    if self.image == player_image_right:
+                    print(self.player_animation)
+                    if self.player_animation >= 20//PLAYER_VELOCITY_X:
                         self.image = player_image_right2
+                        self.player_animation += 1
+                        if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                            self.player_animation = 0
                     else:
                         self.image = player_image_right
+                        self.player_animation += 1
                 else:
                     self.image = player_image_right
             elif self.direction == "left":
                 if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-                    if self.image == player_image_left:
+                    print(self.player_animation)
+                    if self.player_animation >= 20//PLAYER_VELOCITY_X:
                         self.image = player_image_left2
+                        self.player_animation += 1
+                        if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                            self.player_animation = 0
                     else:
                         self.image = player_image_left
+                        self.player_animation += 1
                 else:
                     self.image = player_image_left
 
