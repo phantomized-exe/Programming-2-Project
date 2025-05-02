@@ -9,15 +9,19 @@ GAME_HEIGHT = 512
 
 PLAYER_X = GAME_WIDTH/2
 PLAYER_Y = GAME_HEIGHT/2
-PLAYER_WIDTH = 28
-PLAYER_HEIGHT = 60
-PLAYER_JUMP_WIDTH = 28
-PLAYER_JUMP_HEIGHT = 58
+PLAYER_WIDTH = 14
+PLAYER_HEIGHT = 30
+PLAYER_JUMP_WIDTH = 14
+PLAYER_JUMP_HEIGHT = 29
 PLAYER_DISTANCE = 5
+BACKGROUND_X = -206
+BACKGROUND_Y = -206
+BACKGROUND_WIDTH = 1024
+BACKGROUND_HEIGHT = 1024
 
 GRAVITY = .5
 FRICTION = .4
-PLAYER_VELOCITY_X = 5
+PLAYER_VELOCITY_X = 3
 PLAYER_VELOCITY_Y = -11
 
 # images
@@ -26,7 +30,7 @@ def load_image(image_name,scale=None):
     if scale is not None:
         image = pygame.transform.scale(image,scale)
     return image
-background_image = load_image("Test Sprite-back.png.png")
+background_image = load_image("Test Sprite-back.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
 player_image_right = load_image("Test Sprite-right.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
 player_image_right2 = load_image("Test Sprite-right2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT)) #resizes player
 player_image_left = load_image("Test Sprite-left.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
@@ -151,7 +155,7 @@ def draw():
     #window.fill("#54de9e")
     #window.fill((84,222,158))
     window.fill((20,18,167))
-    window.blit(background_image, (0,0))
+    window.blit(background_image, (BACKGROUND_X,BACKGROUND_Y))
     for tile in tiles:
         window.blit(tile.image, tile)
     player.update_image()
@@ -187,9 +191,13 @@ while True: #game loop
         player.velocity_y = PLAYER_VELOCITY_Y
         player.jumping = True
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        if player.velocity_x < 0:
+            BACKGROUND_X += .5
         player.velocity_x = -PLAYER_VELOCITY_X
         player.direction = "left"
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        if player.velocity_x > 0:
+            BACKGROUND_X -= .5
         player.velocity_x = PLAYER_VELOCITY_X
         player.direction = "right"
 
