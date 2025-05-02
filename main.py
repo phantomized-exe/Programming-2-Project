@@ -61,7 +61,6 @@ class Player(pygame.Rect):
         else:
             if self.direction == "right":
                 if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-                    print(self.player_animation)
                     if self.player_animation >= 20//PLAYER_VELOCITY_X:
                         self.image = player_image_right2
                         self.player_animation += 1
@@ -74,7 +73,6 @@ class Player(pygame.Rect):
                     self.image = player_image_right
             elif self.direction == "left":
                 if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-                    print(self.player_animation)
                     if self.player_animation >= 20//PLAYER_VELOCITY_X:
                         self.image = player_image_left2
                         self.player_animation += 1
