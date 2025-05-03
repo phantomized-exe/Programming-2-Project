@@ -14,11 +14,11 @@ PLAYER_HEIGHT = 60
 PLAYER_JUMP_WIDTH = 28
 PLAYER_JUMP_HEIGHT = 58
 PLAYER_DISTANCE = 5
-BACKGROUND_X = -206
+BACKGROUND_X = -206*0
 global BACKGROUND_Y
-BACKGROUND_Y = -206
-BACKGROUND_WIDTH = 1024
-BACKGROUND_HEIGHT = 1024
+BACKGROUND_Y = -206*0
+BACKGROUND_WIDTH = 1024/2
+BACKGROUND_HEIGHT = 1024/2
 
 GRAVITY = .5
 FRICTION = .4
@@ -31,7 +31,9 @@ def load_image(image_name,scale=None):
     if scale is not None:
         image = pygame.transform.scale(image,scale)
     return image
+background_image3 = load_image("Test Sprite-back3.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
 background_image = load_image("Test Sprite-back.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
+background_image2 = load_image("Test Sprite-back2.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
 player_image_right = load_image("Test Sprite-right.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
 player_image_right2 = load_image("Test Sprite-right2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT)) #resizes player
 player_image_left = load_image("Test Sprite-left.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
@@ -150,9 +152,8 @@ def move():
     check_tile_collision_x()
 
     #y movement
-    BACKGROUND_Y = -206-player.y//50
+    BACKGROUND_Y = -player.y//50#-206
     player.velocity_y += GRAVITY
-    print(-player.y//50)
     player.y += player.velocity_y
     check_tile_collision_y()
 
@@ -161,7 +162,9 @@ def draw():
     #window.fill("#54de9e")
     #window.fill((84,222,158))
     window.fill((20,18,167))
+    window.blit(background_image3, (BACKGROUND_X//4,BACKGROUND_Y//4))
     window.blit(background_image, (BACKGROUND_X,BACKGROUND_Y))
+    window.blit(background_image2, (BACKGROUND_X*2,BACKGROUND_Y*2))
     for tile in tiles:
         window.blit(tile.image, tile)
     player.update_image()
