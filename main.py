@@ -9,12 +9,13 @@ GAME_HEIGHT = 512
 
 PLAYER_X = GAME_WIDTH/2
 PLAYER_Y = GAME_HEIGHT/2
-PLAYER_WIDTH = 14
-PLAYER_HEIGHT = 30
-PLAYER_JUMP_WIDTH = 14
-PLAYER_JUMP_HEIGHT = 29
+PLAYER_WIDTH = 28
+PLAYER_HEIGHT = 60
+PLAYER_JUMP_WIDTH = 28
+PLAYER_JUMP_HEIGHT = 58
 PLAYER_DISTANCE = 5
 BACKGROUND_X = -206
+global BACKGROUND_Y
 BACKGROUND_Y = -206
 BACKGROUND_WIDTH = 1024
 BACKGROUND_HEIGHT = 1024
@@ -131,6 +132,7 @@ def check_tile_collision_y():
             player.jumping = False
         player.velocity_y = 0
 def move():
+    global BACKGROUND_Y
     #x movement
     if player.direction == "left" and player.velocity_x < 0:
         player.velocity_x += FRICTION
@@ -140,13 +142,17 @@ def move():
         player.velocity_x = 0
     player.x += player.velocity_x
     if player.x < 0:
+        player.velocity_x = 0
         player.x = 0
     elif player.x + player.width > GAME_WIDTH:
+        player.velocity_x = 0
         player.x = GAME_WIDTH - player.width
     check_tile_collision_x()
 
     #y movement
+    BACKGROUND_Y = -206-player.y//50
     player.velocity_y += GRAVITY
+    print(-player.y//50)
     player.y += player.velocity_y
     check_tile_collision_y()
 
@@ -192,12 +198,12 @@ while True: #game loop
         player.jumping = True
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
         if player.velocity_x < 0:
-            BACKGROUND_X += .5
+            BACKGROUND_X += .13
         player.velocity_x = -PLAYER_VELOCITY_X
         player.direction = "left"
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
         if player.velocity_x > 0:
-            BACKGROUND_X -= .5
+            BACKGROUND_X -= .13
         player.velocity_x = PLAYER_VELOCITY_X
         player.direction = "right"
 
