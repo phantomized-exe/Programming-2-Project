@@ -153,7 +153,7 @@ def move():
     check_tile_collision_x()
 
     #y movement
-    BACKGROUND_Y = -player.y//50#-206
+    BACKGROUND_Y = -player.y/65
     player.velocity_y += GRAVITY
     player.y += player.velocity_y
     check_tile_collision_y()
@@ -163,10 +163,10 @@ def draw():
     #window.fill("#54de9e")
     #window.fill((84,222,158))
     window.fill((20,18,167))
-    window.blit(background_image3, (BACKGROUND_X//4,BACKGROUND_Y//4))
-    window.blit(background_image, (BACKGROUND_X//2,BACKGROUND_Y//2))
-    window.blit(background_image2, (BACKGROUND_X,BACKGROUND_Y))
-    window.blit(background_image0, (BACKGROUND_X*2,BACKGROUND_Y*2))
+    window.blit(background_image3, (BACKGROUND_X/4,BACKGROUND_Y/4))
+    window.blit(background_image, (BACKGROUND_X/2-206,BACKGROUND_Y/2-103))
+    window.blit(background_image0, (BACKGROUND_X-206,BACKGROUND_Y-103))
+    window.blit(background_image2, (BACKGROUND_X*2,BACKGROUND_Y*2))
     for tile in tiles:
         window.blit(tile.image, tile)
     player.update_image()
@@ -203,12 +203,12 @@ while True: #game loop
         player.jumping = True
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
         if player.velocity_x < 0:
-            BACKGROUND_X += .13
+            BACKGROUND_X += .08
         player.velocity_x = -PLAYER_VELOCITY_X
         player.direction = "left"
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
         if player.velocity_x > 0:
-            BACKGROUND_X -= .13
+            BACKGROUND_X -= .08
         player.velocity_x = PLAYER_VELOCITY_X
         player.direction = "right"
 
