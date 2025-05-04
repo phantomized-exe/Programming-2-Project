@@ -109,16 +109,16 @@ def create_map():
         tile = Tile(TILE_SIZE*3,(i+10)*TILE_SIZE,floor_tile_image)
         tiles.append(tile)
 def check_tile_collision():
-    global tick_check
+    global  coyote_time
     for tile in tiles:
         if player.colliderect(tile):
-            tick_check = 0
+            coyote_time = 0
             return tile
-    if tick_check >= 10:
+    if  coyote_time >= 10:
         player.jumping = True
-        tick_check = 0
+        coyote_time = 0
     else:
-        tick_check += 1
+        coyote_time += 1
     return None
 def check_tile_collision_x():
     tile = check_tile_collision()
@@ -163,11 +163,8 @@ def move():
     #y movement
     player.velocity_y += GRAVITY
     player.y += player.velocity_y
-    BACKGROUND_Y -= player.velocity_y
-    print(player.velocity_y)
-    if player.velocity_y == 0.5:
-        BACKGROUND_Y = 0
     check_tile_collision_y()
+    BACKGROUND_Y -= player.velocity_y/25
     for tile in tiles:
         tile.y -= player.velocity_y
     check_tile_collision_y()
@@ -196,8 +193,8 @@ def draw():
     window.blit(player.image,player)
 
 #start game
-global tick_check
-tick_check = 0
+global  coyote_time
+coyote_time = 0
 player = Player()
 box_x = Scrollbox_x()
 tiles = []
