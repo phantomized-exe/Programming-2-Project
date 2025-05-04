@@ -7,10 +7,10 @@ TILE_SIZE = 32
 GAME_WIDTH = 512
 GAME_HEIGHT = 512
 
-PLAYER_X = GAME_WIDTH/2
-PLAYER_Y = GAME_HEIGHT/2
 PLAYER_WIDTH = 28
 PLAYER_HEIGHT = 58
+PLAYER_X = (GAME_WIDTH/2)
+PLAYER_Y = (GAME_HEIGHT/2)
 PLAYER_JUMP_WIDTH = 28
 PLAYER_JUMP_HEIGHT = 58
 PLAYER_DISTANCE = 5
@@ -22,8 +22,8 @@ BACKGROUND_HEIGHT = 1024
 
 GRAVITY = .5
 FRICTION = .4
-PLAYER_VELOCITY_X = 3
-PLAYER_VELOCITY_Y = -7.5
+PLAYER_VELOCITY_X = 5
+PLAYER_VELOCITY_Y = -8
 
 # images
 def load_image(image_name,scale=None):
@@ -100,12 +100,12 @@ class Tile(pygame.Rect):
 
 def create_map():
     for i in range(4):
-        tile = Tile(player.x+i*TILE_SIZE, player.y+TILE_SIZE*2, floor_tile_image)
+        tile = Tile(player.y+i*TILE_SIZE, player.y+TILE_SIZE*2, floor_tile_image)
         tiles.append(tile)
     for i in range(32):
-        tile = Tile(i*TILE_SIZE,player.y+TILE_SIZE*5,floor_tile_image)
+        tile = Tile(i*TILE_SIZE,player.x+TILE_SIZE*5,floor_tile_image)
         tiles.append(tile)
-    for i in range (3):
+    for i in range(3):
         tile = Tile(TILE_SIZE*3,(i+10)*TILE_SIZE,floor_tile_image)
         tiles.append(tile)
 def check_tile_collision():
@@ -142,8 +142,10 @@ def move():
     #x movement
     if player.direction == "left" and player.velocity_x < 0:
         player.velocity_x += FRICTION
+        player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
     elif player.direction == "right" and player.velocity_x > 0:
         player.velocity_x -= FRICTION
+        player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
     else:
         player.velocity_x = 0
     player.x += player.velocity_x
@@ -155,18 +157,22 @@ def move():
         player.x = GAME_WIDTH - player.width
     check_tile_collision_x()
     for tile in tiles:
-        if player.velocity_x > 0:
-            tile.x -= PLAYER_VELOCITY_X
-        elif player.velocity_x < 0:
-            tile.x += PLAYER_VELOCITY_X
+        tile.x -= player.velocity_x
+    check_tile_collision_x()
 
     #y movement
     BACKGROUND_Y = -player.y/65
     player.velocity_y += GRAVITY
     player.y += player.velocity_y
+    check_tile_collision_y()
     for tile in tiles:
         tile.y -= player.velocity_y
     check_tile_collision_y()
+    if player.y != (GAME_HEIGHT/2)-(PLAYER_HEIGHT/2):
+        if player.y > (GAME_HEIGHT/2)-(PLAYER_HEIGHT/2):
+            player.y -= 0
+        else:
+            player.y += 0
 
 def draw():
     #window.fill("blue")
@@ -189,6 +195,8 @@ player = Player()
 box_x = Scrollbox_x()
 tiles = []
 create_map()
+player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
+player.y = (GAME_HEIGHT/2)-(PLAYER_HEIGHT/2)
 
 while True: #game loop
     for event in pygame.event.get():
@@ -215,12 +223,18 @@ while True: #game loop
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
         if player.velocity_x < 0:
             BACKGROUND_X += .08
+        #if player.x < 192:
+            #player.x = 192
         player.velocity_x = -PLAYER_VELOCITY_X
+        player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
         player.direction = "left"
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
         if player.velocity_x > 0:
             BACKGROUND_X -= .08
+        #if player.x > 320-player.width:
+            #player.x = 320-player.width
         player.velocity_x = PLAYER_VELOCITY_X
+        player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
         player.direction = "right"
         
     move()
