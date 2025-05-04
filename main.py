@@ -168,11 +168,15 @@ def move():
     for tile in tiles:
         tile.y -= player.velocity_y
     check_tile_collision_y()
-    if player.y != (GAME_HEIGHT/2)-(PLAYER_HEIGHT/2):
+    while player.y != (GAME_HEIGHT/2)-(PLAYER_HEIGHT/2):
         if player.y > (GAME_HEIGHT/2)-(PLAYER_HEIGHT/2):
-            player.y -= 0
+            player.y -= 1
+            for tile in tiles:
+                tile.y -= 1
         else:
-            player.y += 0
+            player.y += 1
+            for tile in tiles:
+                tile.y += 1
 
 def draw():
     #window.fill("blue")
