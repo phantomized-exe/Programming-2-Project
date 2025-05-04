@@ -163,7 +163,10 @@ def move():
     #y movement
     player.velocity_y += GRAVITY
     player.y += player.velocity_y
-    BACKGROUND_Y = -player.velocity_y
+    BACKGROUND_Y -= player.velocity_y
+    print(player.velocity_y)
+    if player.velocity_y == 0.5:
+        BACKGROUND_Y = 0
     check_tile_collision_y()
     for tile in tiles:
         tile.y -= player.velocity_y
