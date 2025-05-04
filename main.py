@@ -10,7 +10,7 @@ GAME_HEIGHT = 512
 PLAYER_X = GAME_WIDTH/2
 PLAYER_Y = GAME_HEIGHT/2
 PLAYER_WIDTH = 28
-PLAYER_HEIGHT = 60
+PLAYER_HEIGHT = 58
 PLAYER_JUMP_WIDTH = 28
 PLAYER_JUMP_HEIGHT = 58
 PLAYER_DISTANCE = 5
@@ -23,7 +23,7 @@ BACKGROUND_HEIGHT = 1024
 GRAVITY = .5
 FRICTION = .4
 PLAYER_VELOCITY_X = 3
-PLAYER_VELOCITY_Y = -11
+PLAYER_VELOCITY_Y = -7.5
 
 # images
 def load_image(image_name,scale=None):
@@ -50,6 +50,9 @@ pygame.display.set_caption("test") #title of window
 pygame.display.set_icon(image_icon)
 clock = pygame.time.Clock() #used for the framerate
 
+class Scrollbox_x(pygame.Rect):
+    def __init__(self):
+        pygame.Rect.__init__(self,192,0,128,512)
 class Player(pygame.Rect):
     player_animation = 0
     def __init__(self):
@@ -99,7 +102,7 @@ def create_map():
     for i in range(4):
         tile = Tile(player.x+i*TILE_SIZE, player.y+TILE_SIZE*2, floor_tile_image)
         tiles.append(tile)
-    for i in range(16):
+    for i in range(32):
         tile = Tile(i*TILE_SIZE,player.y+TILE_SIZE*5,floor_tile_image)
         tiles.append(tile)
     for i in range (3):
@@ -151,11 +154,18 @@ def move():
         player.velocity_x = 0
         player.x = GAME_WIDTH - player.width
     check_tile_collision_x()
+    for tile in tiles:
+        if player.velocity_x > 0:
+            tile.x -= PLAYER_VELOCITY_X
+        elif player.velocity_x < 0:
+            tile.x += PLAYER_VELOCITY_X
 
     #y movement
     BACKGROUND_Y = -player.y/65
     player.velocity_y += GRAVITY
     player.y += player.velocity_y
+    for tile in tiles:
+        tile.y -= player.velocity_y
     check_tile_collision_y()
 
 def draw():
@@ -176,6 +186,7 @@ def draw():
 global tick_check
 tick_check = 0
 player = Player()
+box_x = Scrollbox_x()
 tiles = []
 create_map()
 
@@ -211,7 +222,7 @@ while True: #game loop
             BACKGROUND_X -= .08
         player.velocity_x = PLAYER_VELOCITY_X
         player.direction = "right"
-
+        
     move()
     draw()
     pygame.display.update()
