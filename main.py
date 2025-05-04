@@ -102,8 +102,8 @@ def create_map():
     for i in range(4):
         tile = Tile(player.y+i*TILE_SIZE, player.y+TILE_SIZE*2, floor_tile_image)
         tiles.append(tile)
-    for i in range(32):
-        tile = Tile(i*TILE_SIZE,player.x+TILE_SIZE*5,floor_tile_image)
+    for i in range(16):
+        tile = Tile(-i*TILE_SIZE,player.x+TILE_SIZE*5,floor_tile_image)
         tiles.append(tile)
     for i in range(3):
         tile = Tile(TILE_SIZE*3,(i+10)*TILE_SIZE,floor_tile_image)
@@ -161,9 +161,9 @@ def move():
     check_tile_collision_x()
 
     #y movement
-    BACKGROUND_Y = -player.y/65
     player.velocity_y += GRAVITY
     player.y += player.velocity_y
+    BACKGROUND_Y = -player.velocity_y
     check_tile_collision_y()
     for tile in tiles:
         tile.y -= player.velocity_y
