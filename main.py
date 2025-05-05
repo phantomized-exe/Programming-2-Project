@@ -74,6 +74,11 @@ class Player(pygame.Rect):
         self.direction = "right"
         self.jumping = False
         self.crouching = False
+        self.standing_y = (GAME_HEIGHT/2)-(PLAYER_HEIGHT/2)
+        self.standing_x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
+        self.crouching_y = (GAME_HEIGHT/2)-(PLAYER_CROUCH_HEIGHT/2)
+        self.crouching_x = (GAME_WIDTH/2)-(PLAYER_CROUCH_WIDTH/2)
+        self.crouch_jump = False
     def update_image(self):
         if self.crouching:
             if self.direction == "right":
@@ -166,19 +171,22 @@ def check_tile_collision_x():
         if player.velocity_x < 0:
             player.x = tile.x+tile.width
         elif player.velocity_x > 0:
-            player.x = tile.x - player.width
+            player.x = tile.x-player.width
         player.velocity_x = 0
+
 def check_tile_collision_y():
     tile = check_tile_collision()
     if tile is not None:
         if player.velocity_y < 0:
             player.y = tile.y+tile.height
         elif player.velocity_y > 0:
-            player.y = tile.y - player.height
+            player.y = tile.y-player.height
             player.jumping = False
         player.velocity_y = 0
+
 def move():
     global BACKGROUND_Y
+    global crouch_adjust
     #x movement
     if player.direction == "left" and player.velocity_x < 0:
         player.velocity_x += FRICTION
@@ -199,6 +207,7 @@ def move():
     for tile in tiles:
         tile.x -= player.velocity_x
     check_tile_collision_x()
+    player.x = player.crouching_x if player.crouching else player.standing_x
 
     #y movement
     player.velocity_y += GRAVITY
@@ -208,15 +217,27 @@ def move():
     for tile in tiles:
         tile.y -= player.velocity_y
     check_tile_collision_y()
-    while player.y != (GAME_HEIGHT/2)-(PLAYER_HEIGHT/2):
-        if player.y > (GAME_HEIGHT/2)-(PLAYER_HEIGHT/2):
-            player.y -= 1
-            for tile in tiles:
-                tile.y -= 1
-        else:
-            player.y += 1
-            for tile in tiles:
-                tile.y += 1
+    if not player.crouching:
+        while player.y != player.standing_y:
+            if player.y > player.standing_y:
+                player.y -= 1
+                for tile in tiles:
+                    tile.y -= 1
+            else:
+                player.y += 1
+                for tile in tiles:
+                    tile.y += 1
+    else:
+        while player.y != player.crouching_y:
+            if player.y > player.crouching_y:
+                player.y -= 1
+                for tile in tiles:
+                    tile.y -= 1
+            else:
+                player.y += 1
+                for tile in tiles:
+                    tile.y += 1
+    player.y = player.crouching_y if player.crouching else player.standing_y
 
 def draw():
     #window.fill("blue")
@@ -269,8 +290,12 @@ tiles = []
 global force_crouch
 force_crouch = False
 create_map()
-player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
-player.y = (GAME_HEIGHT/2)-(PLAYER_HEIGHT/2)
+if player.crouching:
+    player.x = player.crouching_x
+    player.y = player.crouching_y
+else:
+    player.x = player.standing_x
+    player.y = player.standing_y
 
 while True: #game loop
     for event in pygame.event.get():
@@ -294,36 +319,48 @@ while True: #game loop
     if (keys[pygame.K_UP] or keys[pygame.K_w]) and not player.jumping and not player.crouching:
         player.velocity_y = PLAYER_VELOCITY_Y
         player.jumping = True
+        crouch_adjust = False
+    check_crouch()
     if (keys[pygame.K_DOWN] or keys[pygame.K_s]) or force_crouch:
-        CROUCH_FRICTION = 2
-        #if not player.crouching:
-            #player.y += (PLAYER_HEIGHT - PLAYER_CROUCH_HEIGHT)
-        player.width = PLAYER_CROUCH_WIDTH
-        player.height = PLAYER_CROUCH_HEIGHT
-        player.crouching = True
-        check_crouch()
+        if not player.crouch_jump:
+            CROUCH_FRICTION = 2
+            if not player.crouching:
+                if not player.jumping:
+                    BACKGROUND_Y -= (PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT)/50
+                    player.y += PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT
+            player.width = PLAYER_CROUCH_WIDTH
+            player.height = PLAYER_CROUCH_HEIGHT
+            player.crouching = True
+            player.crouch_jump = True
     else:
-        #if player.crouching:
-            #player.y -= (PLAYER_HEIGHT - PLAYER_CROUCH_HEIGHT)
-        check_crouch()
         if not force_crouch:
             if player.crouching:
-                player.y -= (PLAYER_HEIGHT - PLAYER_CROUCH_HEIGHT)
+                if not player.jumping:
+                    BACKGROUND_Y += (PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT)/50
+                    player.y -= PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT
             CROUCH_FRICTION = 1
             player.width = PLAYER_WIDTH
             player.height = PLAYER_HEIGHT
             player.crouching = False
+            if not player.jumping:
+                player.crouch_jump = False
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
         if player.velocity_x < 0:
             BACKGROUND_X += .08
         player.velocity_x = -PLAYER_VELOCITY_X//CROUCH_FRICTION
-        player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
+        if player.crouching:
+            player.x = player.crouching_x
+        else:
+            player.x = player.standing_x
         player.direction = "left"
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
         if player.velocity_x > 0:
             BACKGROUND_X -= .08
         player.velocity_x = PLAYER_VELOCITY_X//CROUCH_FRICTION
-        player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
+        if player.crouching:
+            player.x = player.crouching_x
+        else:
+            player.x = player.standing_x
         player.direction = "right"
         
     move()
