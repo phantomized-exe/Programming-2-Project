@@ -17,7 +17,7 @@ PLAYER_Y = (GAME_HEIGHT/2)
 PLAYER_JUMP_WIDTH = 28
 PLAYER_JUMP_HEIGHT = 58
 PLAYER_CROUCH_WIDTH = 28
-PLAYER_CROUCH_HEIGHT = 30
+PLAYER_CROUCH_HEIGHT = 32
 PLAYER_DISTANCE = 5
 BACKGROUND_X = -206*0
 global BACKGROUND_Y
@@ -29,6 +29,7 @@ GRAVITY = .5
 FRICTION = .4
 PLAYER_VELOCITY_X = 5
 PLAYER_VELOCITY_Y = -7
+global CROUCH_FRICTION
 CROUCH_FRICTION = 1
 
 # images
@@ -56,7 +57,7 @@ floor_tile_image = load_image("Test Sprite Tile.png.png",(TILE_SIZE,TILE_SIZE))
 
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
-pygame.display.set_caption("test") #title of window
+pygame.display.set_caption("test game") #title of window
 pygame.display.set_icon(image_icon)
 clock = pygame.time.Clock() #used for the framerate
 
@@ -229,13 +230,30 @@ def draw():
         window.blit(tile.image, tile)
     player.update_image()
     window.blit(player.image,player)
-
+def check_crouch():
+    global CROUCH_FRICTION
+    global force_crouch
+    collide_crouch = pygame.Rect(player.x, player.y-(PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT), PLAYER_WIDTH, PLAYER_HEIGHT)
+    tile_count = 0
+    if player.crouching:
+        for tile in tiles:
+            if collide_crouch.colliderect(tile):
+                tile_count += 1
+                CROUCH_FRICTION = 2
+                player.width = PLAYER_CROUCH_WIDTH
+                player.height = PLAYER_CROUCH_HEIGHT
+                player.crouching = True
+                force_crouch = True
+        if tile_count == 0:
+            force_crouch = False
 #start game
 global  coyote_time
 coyote_time = 0
 player = Player()
 box_x = Scrollbox_x()
 tiles = []
+global force_crouch
+force_crouch = False
 create_map()
 player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
 player.y = (GAME_HEIGHT/2)-(PLAYER_HEIGHT/2)
@@ -262,32 +280,35 @@ while True: #game loop
     if (keys[pygame.K_UP] or keys[pygame.K_w]) and not player.jumping and not player.crouching:
         player.velocity_y = PLAYER_VELOCITY_Y
         player.jumping = True
-    if (keys[pygame.K_DOWN] or keys[pygame.K_s]):
+    if (keys[pygame.K_DOWN] or keys[pygame.K_s]) or force_crouch:
         CROUCH_FRICTION = 2
-        if not player.crouching:
-            player.y -= (PLAYER_HEIGHT - PLAYER_CROUCH_HEIGHT)
+        #if not player.crouching:
+            #player.y += (PLAYER_HEIGHT - PLAYER_CROUCH_HEIGHT)
         player.width = PLAYER_CROUCH_WIDTH
         player.height = PLAYER_CROUCH_HEIGHT
         player.crouching = True
+        check_crouch()
     else:
-        CROUCH_FRICTION = 1
-        player.width = PLAYER_WIDTH
-        player.height = PLAYER_HEIGHT
-        player.crouching = False
+        #if player.crouching:
+            #player.y -= (PLAYER_HEIGHT - PLAYER_CROUCH_HEIGHT)
+        check_crouch()
+        if not force_crouch:
+            if player.crouching:
+                player.y -= (PLAYER_HEIGHT - PLAYER_CROUCH_HEIGHT)
+            CROUCH_FRICTION = 1
+            player.width = PLAYER_WIDTH
+            player.height = PLAYER_HEIGHT
+            player.crouching = False
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
         if player.velocity_x < 0:
             BACKGROUND_X += .08
-        #if player.x < 192:
-            #player.x = 192
-        player.velocity_x = -PLAYER_VELOCITY_X/CROUCH_FRICTION
+        player.velocity_x = -PLAYER_VELOCITY_X//CROUCH_FRICTION
         player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
         player.direction = "left"
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
         if player.velocity_x > 0:
             BACKGROUND_X -= .08
-        #if player.x > 320-player.width:
-            #player.x = 320-player.width
-        player.velocity_x = PLAYER_VELOCITY_X/CROUCH_FRICTION
+        player.velocity_x = PLAYER_VELOCITY_X//CROUCH_FRICTION
         player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
         player.direction = "right"
         
