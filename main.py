@@ -1,6 +1,9 @@
 import pygame
 from sys import exit #terminate the program
 import os
+from pathlib import Path
+import json
+level = Path("level_code.json")
 
 # game variables
 TILE_SIZE = 32
@@ -13,6 +16,8 @@ PLAYER_X = (GAME_WIDTH/2)
 PLAYER_Y = (GAME_HEIGHT/2)
 PLAYER_JUMP_WIDTH = 28
 PLAYER_JUMP_HEIGHT = 58
+PLAYER_CROUCH_WIDTH = 28
+PLAYER_CROUCH_HEIGHT = 30
 PLAYER_DISTANCE = 5
 BACKGROUND_X = -206*0
 global BACKGROUND_Y
@@ -23,7 +28,8 @@ BACKGROUND_HEIGHT = 1024
 GRAVITY = .5
 FRICTION = .4
 PLAYER_VELOCITY_X = 5
-PLAYER_VELOCITY_Y = -8
+PLAYER_VELOCITY_Y = -7
+CROUCH_FRICTION = 1
 
 # images
 def load_image(image_name,scale=None):
@@ -42,6 +48,10 @@ player_image_left2 = load_image("Test Sprite-left2.png.png",(PLAYER_WIDTH,PLAYER
 image_icon = load_image("Test Sprite-icon.png.png")
 player_image_jump_right = load_image("Test Sprite-jump-right.png.png",(PLAYER_JUMP_WIDTH,PLAYER_JUMP_HEIGHT))
 player_image_jump_left = load_image("Test Sprite-jump-left.png.png",(PLAYER_JUMP_WIDTH,PLAYER_JUMP_HEIGHT))
+player_image_crouch_right = load_image("Test Sprite-crouch-right.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
+player_image_crouch_left = load_image("Test Sprite-crouch-left.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
+player_image_crouch_right2 = load_image("Test Sprite-crouch-right2.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
+player_image_crouch_left2 = load_image("Test Sprite-crouch-left2.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
 floor_tile_image = load_image("Test Sprite Tile.png.png",(TILE_SIZE,TILE_SIZE))
 
 pygame.init() #always needed to initialize pygame
@@ -61,8 +71,34 @@ class Player(pygame.Rect):
         self.velocity_y = 0
         self.direction = "right"
         self.jumping = False
+        self.crouching = False
     def update_image(self):
-        if self.jumping:
+        if self.crouching:
+            if self.direction == "right":
+                if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+                    if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                        self.image = player_image_crouch_right2
+                        self.player_animation += 1
+                        if self.player_animation >= 80//PLAYER_VELOCITY_X:
+                            self.player_animation = 0
+                    else:
+                        self.image = player_image_crouch_right
+                        self.player_animation += 1
+                else:
+                    self.image = player_image_crouch_right
+            elif self.direction == "left":
+                if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+                    if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                        self.image = player_image_crouch_left2
+                        self.player_animation += 1
+                        if self.player_animation >= 80//PLAYER_VELOCITY_X:
+                            self.player_animation = 0
+                    else:
+                        self.image = player_image_crouch_left
+                        self.player_animation += 1
+                else:
+                    self.image = player_image_crouch_left
+        elif self.jumping:
             if self.direction == "right":
                 self.image = player_image_jump_right
             elif self.direction == "left":
@@ -99,15 +135,17 @@ class Tile(pygame.Rect):
         self.image = image
 
 def create_map():
-    for i in range(4):
-        tile = Tile(player.y+i*TILE_SIZE, player.y+TILE_SIZE*2, floor_tile_image)
-        tiles.append(tile)
-    for i in range(16):
-        tile = Tile(-i*TILE_SIZE,player.x+TILE_SIZE*5,floor_tile_image)
-        tiles.append(tile)
-    for i in range(3):
-        tile = Tile(TILE_SIZE*3,(i+10)*TILE_SIZE,floor_tile_image)
-        tiles.append(tile)
+    read_level = level.read_text()
+    load_level = json.loads(read_level)
+    for row_index in range(len(load_level)):
+        row = load_level[row_index]
+        for i in range(len(row)):
+            tile_code = row[i]
+            if tile_code == "1":
+                x = i * TILE_SIZE
+                y = row_index * TILE_SIZE
+                tile = Tile(x, y, floor_tile_image)
+                tiles.append(tile)
 def check_tile_collision():
     global  coyote_time
     for tile in tiles:
@@ -221,15 +259,27 @@ while True: #game loop
                 player.x += 5
         '''
     keys = pygame.key.get_pressed()
-    if (keys[pygame.K_UP] or keys[pygame.K_w]) and not player.jumping:
+    if (keys[pygame.K_UP] or keys[pygame.K_w]) and not player.jumping and not player.crouching:
         player.velocity_y = PLAYER_VELOCITY_Y
         player.jumping = True
+    if (keys[pygame.K_DOWN] or keys[pygame.K_s]):
+        CROUCH_FRICTION = 2
+        if not player.crouching:
+            player.y -= (PLAYER_HEIGHT - PLAYER_CROUCH_HEIGHT)
+        player.width = PLAYER_CROUCH_WIDTH
+        player.height = PLAYER_CROUCH_HEIGHT
+        player.crouching = True
+    else:
+        CROUCH_FRICTION = 1
+        player.width = PLAYER_WIDTH
+        player.height = PLAYER_HEIGHT
+        player.crouching = False
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
         if player.velocity_x < 0:
             BACKGROUND_X += .08
         #if player.x < 192:
             #player.x = 192
-        player.velocity_x = -PLAYER_VELOCITY_X
+        player.velocity_x = -PLAYER_VELOCITY_X/CROUCH_FRICTION
         player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
         player.direction = "left"
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
@@ -237,7 +287,7 @@ while True: #game loop
             BACKGROUND_X -= .08
         #if player.x > 320-player.width:
             #player.x = 320-player.width
-        player.velocity_x = PLAYER_VELOCITY_X
+        player.velocity_x = PLAYER_VELOCITY_X/CROUCH_FRICTION
         player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
         player.direction = "right"
         
