@@ -62,9 +62,9 @@ pygame.display.set_caption("test game") #title of window
 pygame.display.set_icon(image_icon)
 clock = pygame.time.Clock() #used for the framerate
 
-class Scrollbox_x(pygame.Rect):
+class Background(pygame.Rect):
     def __init__(self):
-        pygame.Rect.__init__(self,192,0,128,512)
+        pygame.Rect.__init__(self,PLAYER_X,PLAYER_Y,PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT)
 class Player(pygame.Rect):
     player_animation = 0
     def __init__(self):
@@ -285,7 +285,7 @@ level.write_text(level_dump)
 global  coyote_time
 coyote_time = 0
 player = Player()
-box_x = Scrollbox_x()
+background = Background()
 tiles = []
 global force_crouch
 force_crouch = False
