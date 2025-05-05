@@ -3,6 +3,7 @@ from sys import exit #terminate the program
 import os
 from pathlib import Path
 import json
+import random
 level = Path("level_code.json")
 
 # game variables
@@ -247,6 +248,19 @@ def check_crouch():
         if tile_count == 0:
             force_crouch = False
 #start game
+level_list = []
+rand_int = 0
+for i in range(48):
+    level_str = ""
+    for j in range(48):
+        rand_int = random.randint(0,47-i)
+        if rand_int == 0:
+            level_str += "1"
+        else:
+            level_str += "0"
+    level_list.append(level_str)
+level_dump = json.dumps(level_list) # convert Python dictionary to JSON format
+level.write_text(level_dump)
 global  coyote_time
 coyote_time = 0
 player = Player()
