@@ -189,6 +189,7 @@ def check_tile_collision_y():
                     BACKGROUND_Y += .1
                 player.jumping = False
         player.velocity_y = 0
+        print(tile.y)
 
 def move():
     global BACKGROUND_Y
