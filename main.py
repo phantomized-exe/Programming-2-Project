@@ -181,7 +181,13 @@ def check_tile_collision_y():
             player.y = tile.y+tile.height
         elif player.velocity_y > 0:
             player.y = tile.y-player.height
-            player.jumping = False
+            if player.jumping:
+                if player.crouching:
+                    for tile in tiles:
+                        tile.y += 1
+                    global BACKGROUND_Y
+                    BACKGROUND_Y += .1
+                player.jumping = False
         player.velocity_y = 0
 
 def move():
@@ -213,7 +219,8 @@ def move():
     player.velocity_y += GRAVITY
     player.y += player.velocity_y
     check_tile_collision_y()
-    BACKGROUND_Y -= player.velocity_y/25
+    BACKGROUND_Y -= round(player.velocity_y/25,1)
+    BACKGROUND_Y = round(BACKGROUND_Y,1)
     for tile in tiles:
         tile.y -= player.velocity_y
     check_tile_collision_y()
@@ -240,14 +247,27 @@ def move():
     player.y = player.crouching_y if player.crouching else player.standing_y
 
 def draw():
+    global BACKGROUND_Y
     #window.fill("blue")
     #window.fill("#54de9e")
     #window.fill((84,222,158))
+    background_y = BACKGROUND_Y
     window.fill((20,18,167))
-    window.blit(background_image3, (BACKGROUND_X/4,BACKGROUND_Y/4))
-    window.blit(background_image, (BACKGROUND_X/2-206,BACKGROUND_Y/2-103))
-    window.blit(background_image0, (BACKGROUND_X-206,BACKGROUND_Y-103))
-    window.blit(background_image2, (BACKGROUND_X*2,BACKGROUND_Y*2))
+    background_y = round(BACKGROUND_Y/4,1)
+    round(background_y,1)
+    window.blit(background_image3, (BACKGROUND_X//4,background_y))
+    background_y = BACKGROUND_Y
+    background_y = round(background_y/2,1)-103
+    round(background_y,1)
+    window.blit(background_image, (BACKGROUND_X//2-206,background_y))
+    background_y = BACKGROUND_Y
+    background_y = background_y-103
+    round(background_y,1)
+    window.blit(background_image0, (BACKGROUND_X-206,background_y))
+    background_y = BACKGROUND_Y
+    background_y = background_y*2
+    round(background_y,1)
+    window.blit(background_image2, (BACKGROUND_X*2,background_y))
     for tile in tiles:
         window.blit(tile.image, tile)
     player.update_image()
@@ -326,7 +346,8 @@ while True: #game loop
             CROUCH_FRICTION = 2
             if not player.crouching:
                 if not player.jumping:
-                    BACKGROUND_Y -= (PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT)/50
+                    BACKGROUND_Y -= round((PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT)/50,1)
+                    BACKGROUND_Y = round(BACKGROUND_Y,1)
                     player.y += PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT
             player.width = PLAYER_CROUCH_WIDTH
             player.height = PLAYER_CROUCH_HEIGHT
@@ -336,7 +357,8 @@ while True: #game loop
         if not force_crouch:
             if player.crouching:
                 if not player.jumping:
-                    BACKGROUND_Y += (PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT)/50
+                    BACKGROUND_Y += round((PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT)/50,1)
+                    BACKGROUND_Y = round(BACKGROUND_Y,1)
                     player.y -= PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT
             CROUCH_FRICTION = 1
             player.width = PLAYER_WIDTH
