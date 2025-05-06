@@ -144,26 +144,19 @@ class Tile(pygame.Rect):
 def create_map():
     read_level = level.read_text()
     load_level = json.loads(read_level)
-    for row_index in range(len(load_level)):
-        row = load_level[row_index]
-        for i in range(len(row)):
-            tile_code = row[i]
+    for i in range(len(load_level)):
+        row = load_level[i]
+        for j in range(len(row)):
+            tile_code = row[j]
             if tile_code == "1":
-                x = i * TILE_SIZE
-                y = row_index * TILE_SIZE
+                x = j * TILE_SIZE
+                y = i * TILE_SIZE
                 tile = Tile(x, y, floor_tile_image)
                 tiles.append(tile)
 def check_tile_collision():
-    global  coyote_time
     for tile in tiles:
         if player.colliderect(tile):
-            coyote_time = 0
             return tile
-    if  coyote_time >= 10:
-        player.jumping = True
-        coyote_time = 0
-    else:
-        coyote_time += 1
     return None
 def check_tile_collision_x():
     tile = check_tile_collision()
@@ -175,21 +168,39 @@ def check_tile_collision_x():
         player.velocity_x = 0
 
 def check_tile_collision_y():
+    global coyote_time
+    feet_rect = Player()
+    feet_rect.height = PLAYER_HEIGHT+.1
+    for tile in tiles:
+        if feet_rect.colliderect(tile):
+            touching_tile = True
+            break
+        else:
+            touching_tile = False
     tile = check_tile_collision()
     if tile is not None:
+        coyote_time = 0
         if player.velocity_y < 0:
+            player.jumping = True
             player.y = tile.y+tile.height
         elif player.velocity_y > 0:
             player.y = tile.y-player.height
             if player.jumping:
                 if player.crouching:
                     for tile in tiles:
-                        tile.y += 1
+                        tile.y += 2
                     global BACKGROUND_Y
                     BACKGROUND_Y += .1
                 player.jumping = False
         player.velocity_y = 0
-        print(tile.y)
+    elif not touching_tile:
+        if coyote_time >= 10 and not player.jumping:
+            player.jumping = True
+            coyote_time = 0
+        elif not player.jumping:
+            coyote_time += 1
+    else:
+        coyote_time = 0
 
 def move():
     global BACKGROUND_Y
@@ -223,7 +234,8 @@ def move():
     BACKGROUND_Y -= round(player.velocity_y/25,1)
     BACKGROUND_Y = round(BACKGROUND_Y,1)
     for tile in tiles:
-        tile.y -= player.velocity_y
+        if player.velocity_y <= 6.5:
+            tile.y -= player.velocity_y
     check_tile_collision_y()
     if not player.crouching:
         while player.y != player.standing_y:
