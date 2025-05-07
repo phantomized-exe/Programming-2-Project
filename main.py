@@ -27,8 +27,8 @@ BACKGROUND_WIDTH = 1024
 BACKGROUND_HEIGHT = 1024
 
 GRAVITY = .5
-FRICTION = 1.5
-PLAYER_VELOCITY_X = 7
+FRICTION = .6
+PLAYER_VELOCITY_X = 6
 PLAYER_VELOCITY_Y = -7
 global CROUCH_FRICTION
 CROUCH_FRICTION = 1
@@ -170,6 +170,7 @@ def check_tile_collision_x():
 
 def check_tile_collision_y():
     global coyote_time
+    global touching_tile
     feet_rect = Player()
     feet_rect.height = PLAYER_HEIGHT+.1
     for tile in tiles:
@@ -189,7 +190,7 @@ def check_tile_collision_y():
             if player.jumping:
                 if player.crouching:
                     global BACKGROUND_Y
-                    BACKGROUND_Y += .4
+                    BACKGROUND_Y += .1
                 player.jumping = False
         player.velocity_y = 0
     elif not touching_tile:
@@ -203,23 +204,21 @@ def check_tile_collision_y():
 
 def move():
     global BACKGROUND_Y
+    global time_walking
     global crouch_adjust
+    global touching_tile
     #x movement
-    if player.direction == "left" and player.velocity_x < 0:
-        player.velocity_x += FRICTION
-        player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
-    elif player.direction == "right" and player.velocity_x > 0:
+    if player.velocity_x > 0:
         player.velocity_x -= FRICTION
-        player.x = (GAME_WIDTH/2)-(PLAYER_WIDTH/2)
+        if player.velocity_x < 0:
+            player.velocity_x = 0
+    elif player.velocity_x < 0:
+        player.velocity_x += FRICTION
+        if player.velocity_x > 0:
+            player.velocity_x = 0
     else:
         player.velocity_x = 0
     player.x += player.velocity_x
-    if player.x < 0:
-        player.velocity_x = 0
-        player.x = 0
-    elif player.x + player.width > GAME_WIDTH:
-        player.velocity_x = 0
-        player.x = GAME_WIDTH - player.width
     check_tile_collision_x()
     for tile in tiles:
         tile.x -= player.velocity_x
@@ -228,13 +227,19 @@ def move():
 
     #y movement
     player.velocity_y += GRAVITY
-    player.y += player.velocity_y
     check_tile_collision_y()
+    player.y += player.velocity_y
+    print(player.velocity_y)
     BACKGROUND_Y -= round(player.velocity_y/25,1)
     BACKGROUND_Y = round(BACKGROUND_Y,1)
     for tile in tiles:
-        if player.velocity_y <= 6.5:
+        if tile.y >= 0:
             tile.y -= player.velocity_y
+        else:
+            if player.velocity_y < 0:
+                tile.y -= abs(player.velocity_y)
+            elif player.velocity_y > 0:
+                tile.y -= player.velocity_y
     check_tile_collision_y()
     if not player.crouching:
         while player.y != player.standing_y:
@@ -256,7 +261,7 @@ def move():
                 player.y += 1
                 for tile in tiles:
                     tile.y += 1
-    player.y = player.crouching_y if player.crouching else player.standing_y
+    #player.y = player.crouching_y if player.crouching else player.standing_y
 
 def draw():
     global BACKGROUND_Y
@@ -311,7 +316,7 @@ for i in range(48):
             rand_int = 0
         else:
             rand_int = 1
-        #rand_int = random.randint(0,47-i)
+        rand_int = random.randint(0,47-i) #generate random map
         if rand_int == 0:
             level_str += "1"
         else:
@@ -324,15 +329,19 @@ coyote_time = 0
 player = Player()
 background = Background()
 tiles = []
+global time_walking
+time_walking = 0
 global force_crouch
 force_crouch = False
 create_map()
+'''
 if player.crouching:
     player.x = player.crouching_x
     player.y = player.crouching_y
 else:
     player.x = player.standing_x
     player.y = player.standing_y
+'''
 
 while True: #game loop
     for event in pygame.event.get():
@@ -341,17 +350,6 @@ while True: #game loop
             exit()
 
         #KEYDOWN - key was pressed, KEYUP - key was pressed/release
-        '''
-        if event.type == pygame.KEYDOWN:
-            if event.key in (pygame.K_UP, pygame.K_w):
-                player.y -= 5
-            if event.key in (pygame.K_DOWN, pygame.K_s):
-                player.y += 5
-            if event.key in (pygame.K_LEFT, pygame.K_a):
-                player.x -= 5
-            if event.key in (pygame.K_RIGHT, pygame.K_d):
-                player.x += 5
-        '''
     keys = pygame.key.get_pressed()
     if (keys[pygame.K_UP] or keys[pygame.K_w]) and not player.jumping and not player.crouching:
         player.velocity_y = PLAYER_VELOCITY_Y
@@ -383,10 +381,13 @@ while True: #game loop
             if not player.jumping:
                 player.crouch_jump = False
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        time_walking += .1
+        '''
         if FRICTION > 0:
             FRICTION -= .1
         else:
             FRICTION = 0
+        '''
         if player.velocity_x < 0:
             BACKGROUND_X += .08
         player.velocity_x = -PLAYER_VELOCITY_X//CROUCH_FRICTION
@@ -396,22 +397,30 @@ while True: #game loop
             player.x = player.standing_x
         player.direction = "left"
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        time_walking += .1
+        '''
         if FRICTION > 0:
             FRICTION -= .1
         else:
             FRICTION = 0
+        '''
         if player.velocity_x > 0:
             BACKGROUND_X -= .08
         player.velocity_x = PLAYER_VELOCITY_X//CROUCH_FRICTION
+        '''
         if player.crouching:
             player.x = player.crouching_x
         else:
             player.x = player.standing_x
+        '''
         player.direction = "right"
     if not (keys[pygame.K_LEFT] or keys[pygame.K_a]) and not (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
+        time_walking = 0
+    '''
         if FRICTION < 1.5:
             FRICTION += .1
     FRICTION = round(FRICTION,3)
+    '''
     move()
     draw()
     pygame.display.update()
