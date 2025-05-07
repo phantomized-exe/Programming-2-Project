@@ -169,10 +169,11 @@ def check_tile_collision_x():
         player.velocity_x = 0
 
 def check_tile_collision_y():
+    global BACKGROUND_Y
     global coyote_time
     global touching_tile
-    feet_rect = Player()
-    feet_rect.height = PLAYER_HEIGHT+.1
+    feet_rect.height = player.height
+    feet_rect.y = player.crouching_y+1 if player.crouching else player.standing_y+1
     for tile in tiles:
         if feet_rect.colliderect(tile):
             touching_tile = True
@@ -189,8 +190,9 @@ def check_tile_collision_y():
             player.y = tile.y-player.height
             if player.jumping:
                 if player.crouching:
-                    global BACKGROUND_Y
                     BACKGROUND_Y += .1
+                else:
+                    BACKGROUND_Y += .3
                 player.jumping = False
         player.velocity_y = 0
     elif not touching_tile:
@@ -208,6 +210,7 @@ def move():
     global crouch_adjust
     global touching_tile
     #x movement
+    player.x = player.crouching_x if player.crouching else player.standing_x
     if player.velocity_x > 0:
         player.velocity_x -= FRICTION
         if player.velocity_x < 0:
@@ -223,13 +226,12 @@ def move():
     for tile in tiles:
         tile.x -= player.velocity_x
     check_tile_collision_x()
-    player.x = player.crouching_x if player.crouching else player.standing_x
 
     #y movement
-    player.velocity_y += GRAVITY
+    if player.jumping:
+        player.velocity_y += GRAVITY
     check_tile_collision_y()
     player.y += player.velocity_y
-    print(player.velocity_y)
     BACKGROUND_Y -= round(player.velocity_y/25,1)
     BACKGROUND_Y = round(BACKGROUND_Y,1)
     for tile in tiles:
@@ -237,8 +239,8 @@ def move():
             tile.y -= player.velocity_y
         else:
             if player.velocity_y < 0:
-                tile.y -= abs(player.velocity_y)
-            elif player.velocity_y > 0:
+                tile.y += abs(player.velocity_y)
+            else:
                 tile.y -= player.velocity_y
     check_tile_collision_y()
     if not player.crouching:
@@ -261,7 +263,7 @@ def move():
                 player.y += 1
                 for tile in tiles:
                     tile.y += 1
-    #player.y = player.crouching_y if player.crouching else player.standing_y
+    player.y = player.crouching_y if player.crouching else player.standing_y
 
 def draw():
     global BACKGROUND_Y
@@ -289,6 +291,7 @@ def draw():
         window.blit(tile.image, tile)
     player.update_image()
     window.blit(player.image,player)
+    pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
 def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
@@ -333,6 +336,10 @@ global time_walking
 time_walking = 0
 global force_crouch
 force_crouch = False
+feet_rect = Player()
+feet_rect.x = player.standing_x
+feet_rect.y = player.standing_y
+feet_rect.height = PLAYER_HEIGHT+1
 create_map()
 '''
 if player.crouching:
