@@ -27,8 +27,8 @@ BACKGROUND_WIDTH = 1024
 BACKGROUND_HEIGHT = 1024
 
 GRAVITY = .5
-FRICTION = .4
-PLAYER_VELOCITY_X = 5
+FRICTION = 1
+PLAYER_VELOCITY_X = 6
 PLAYER_VELOCITY_Y = -7
 global CROUCH_FRICTION
 CROUCH_FRICTION = 1
@@ -149,10 +149,11 @@ def create_map():
         for j in range(len(row)):
             tile_code = row[j]
             if tile_code == "1":
-                x = j * TILE_SIZE
-                y = i * TILE_SIZE
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
                 tile = Tile(x, y, floor_tile_image)
                 tiles.append(tile)
+
 def check_tile_collision():
     for tile in tiles:
         if player.colliderect(tile):
@@ -307,13 +308,18 @@ rand_int = 0
 for i in range(48):
     level_str = ""
     for j in range(48):
-        rand_int = random.randint(0,47-i)
+        # for straight line map generation
+        if i == 47:
+            rand_int = 0
+        else:
+            rand_int = 1
+        #rand_int = random.randint(0,47-i)
         if rand_int == 0:
             level_str += "1"
         else:
             level_str += "0"
     level_list.append(level_str)
-level_dump = json.dumps(level_list) # convert Python dictionary to JSON format
+level_dump = json.dumps(level_list)
 level.write_text(level_dump)
 global  coyote_time
 coyote_time = 0
@@ -380,6 +386,10 @@ while True: #game loop
             if not player.jumping:
                 player.crouch_jump = False
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        if FRICTION > 0:
+            FRICTION -= .05
+        else:
+            FRICTION = 0
         if player.velocity_x < 0:
             BACKGROUND_X += .08
         player.velocity_x = -PLAYER_VELOCITY_X//CROUCH_FRICTION
@@ -388,7 +398,12 @@ while True: #game loop
         else:
             player.x = player.standing_x
         player.direction = "left"
+    FRICTION = round(FRICTION,3)
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        if FRICTION > 0:
+            FRICTION -= .05
+        else:
+            FRICTION = 0
         if player.velocity_x > 0:
             BACKGROUND_X -= .08
         player.velocity_x = PLAYER_VELOCITY_X//CROUCH_FRICTION
@@ -397,7 +412,11 @@ while True: #game loop
         else:
             player.x = player.standing_x
         player.direction = "right"
-        
+    FRICTION = round(FRICTION,3)
+    if not (keys[pygame.K_LEFT] or keys[pygame.K_a]) and not (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
+        if FRICTION < 1:
+                FRICTION += .1
+    FRICTION = round(FRICTION,3)
     move()
     draw()
     pygame.display.update()
