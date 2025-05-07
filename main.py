@@ -188,10 +188,8 @@ def check_tile_collision_y():
             player.y = tile.y-player.height
             if player.jumping:
                 if player.crouching:
-                    for tile in tiles:
-                        tile.y += 2
                     global BACKGROUND_Y
-                    BACKGROUND_Y += .1
+                    BACKGROUND_Y += .4
                 player.jumping = False
         player.velocity_y = 0
     elif not touching_tile:
@@ -366,7 +364,6 @@ while True: #game loop
             if not player.crouching:
                 if not player.jumping:
                     BACKGROUND_Y -= round((PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT)/50,1)
-                    BACKGROUND_Y = round(BACKGROUND_Y,1)
                     player.y += PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT
             player.width = PLAYER_CROUCH_WIDTH
             player.height = PLAYER_CROUCH_HEIGHT
@@ -413,9 +410,8 @@ while True: #game loop
         player.direction = "right"
     if not (keys[pygame.K_LEFT] or keys[pygame.K_a]) and not (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
         if FRICTION < 1.5:
-                FRICTION += .1
+            FRICTION += .1
     FRICTION = round(FRICTION,3)
-    print(FRICTION)
     move()
     draw()
     pygame.display.update()
