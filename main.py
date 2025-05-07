@@ -27,8 +27,8 @@ BACKGROUND_WIDTH = 1024
 BACKGROUND_HEIGHT = 1024
 
 GRAVITY = .5
-FRICTION = 1
-PLAYER_VELOCITY_X = 6
+FRICTION = 1.5
+PLAYER_VELOCITY_X = 7
 PLAYER_VELOCITY_Y = -7
 global CROUCH_FRICTION
 CROUCH_FRICTION = 1
@@ -387,7 +387,7 @@ while True: #game loop
                 player.crouch_jump = False
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
         if FRICTION > 0:
-            FRICTION -= .05
+            FRICTION -= .1
         else:
             FRICTION = 0
         if player.velocity_x < 0:
@@ -398,10 +398,9 @@ while True: #game loop
         else:
             player.x = player.standing_x
         player.direction = "left"
-    FRICTION = round(FRICTION,3)
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
         if FRICTION > 0:
-            FRICTION -= .05
+            FRICTION -= .1
         else:
             FRICTION = 0
         if player.velocity_x > 0:
@@ -412,11 +411,11 @@ while True: #game loop
         else:
             player.x = player.standing_x
         player.direction = "right"
-    FRICTION = round(FRICTION,3)
     if not (keys[pygame.K_LEFT] or keys[pygame.K_a]) and not (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
-        if FRICTION < 1:
+        if FRICTION < 1.5:
                 FRICTION += .1
     FRICTION = round(FRICTION,3)
+    print(FRICTION)
     move()
     draw()
     pygame.display.update()
