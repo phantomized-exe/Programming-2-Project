@@ -234,8 +234,6 @@ def move():
     player.y += player.velocity_y
     BACKGROUND_Y -= round(player.velocity_y/25,1)
     BACKGROUND_Y = round(BACKGROUND_Y,1)
-    #for tile in tiles:
-        #tile.y -= player.velocity_y
     check_tile_collision_y()
     if not player.crouching:
         while player.y != player.standing_y:
