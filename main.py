@@ -236,7 +236,7 @@ def move():
     BACKGROUND_Y = round(BACKGROUND_Y,1)
     check_tile_collision_y()
     if not player.crouching:
-        while player.y != player.standing_y:
+        if player.y != player.standing_y:
             if player.y > player.standing_y:
                 player.y -= 1
                 for tile in tiles:
@@ -246,7 +246,7 @@ def move():
                 for tile in tiles:
                     tile.y += 1
     else:
-        while player.y != player.crouching_y:
+        if player.y != player.crouching_y:
             if player.y > player.crouching_y:
                 player.y -= 1
                 for tile in tiles:
@@ -255,7 +255,7 @@ def move():
                 player.y += 1
                 for tile in tiles:
                     tile.y += 1
-    player.y = player.crouching_y if player.crouching else player.standing_y
+    #player.y = player.crouching_y if player.crouching else player.standing_y
 
 def draw():
     global BACKGROUND_Y
