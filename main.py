@@ -8,8 +8,8 @@ level = Path("level_code.json")
 
 # game variables
 TILE_SIZE = 32
-GAME_WIDTH = 512
-GAME_HEIGHT = 512
+GAME_WIDTH = 640#512
+GAME_HEIGHT = 480#512
 
 PLAYER_WIDTH = 28
 PLAYER_HEIGHT = 58
@@ -210,7 +210,6 @@ def move():
     global crouch_adjust
     global touching_tile
     #x movement
-    player.x = player.crouching_x if player.crouching else player.standing_x
     if player.velocity_x > 0:
         player.velocity_x -= FRICTION
         if player.velocity_x < 0:
@@ -226,6 +225,7 @@ def move():
     for tile in tiles:
         tile.x -= player.velocity_x
     check_tile_collision_x()
+    player.x = player.crouching_x if player.crouching else player.standing_x
 
     #y movement
     if player.jumping:
@@ -235,13 +235,7 @@ def move():
     BACKGROUND_Y -= round(player.velocity_y/25,1)
     BACKGROUND_Y = round(BACKGROUND_Y,1)
     for tile in tiles:
-        if tile.y >= 0:
-            tile.y -= player.velocity_y
-        else:
-            if player.velocity_y < 0:
-                tile.y += abs(player.velocity_y)
-            else:
-                tile.y -= player.velocity_y
+        tile.y -= player.velocity_y
     check_tile_collision_y()
     if not player.crouching:
         while player.y != player.standing_y:
@@ -267,6 +261,7 @@ def move():
 
 def draw():
     global BACKGROUND_Y
+    global debug
     #window.fill("blue")
     #window.fill("#54de9e")
     #window.fill((84,222,158))
@@ -291,7 +286,12 @@ def draw():
         window.blit(tile.image, tile)
     player.update_image()
     window.blit(player.image,player)
-    pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
+    if keys[pygame.K_o]:
+        debug = True
+    elif keys[pygame.K_p]:
+        debug = False
+    if debug:
+        pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
 def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
@@ -315,11 +315,11 @@ for i in range(48):
     level_str = ""
     for j in range(48):
         # for straight line map generation
-        if i == 47:
+        if i == 47 or i == 38 or i == 37 or i == 36 or i == 35:
             rand_int = 0
         else:
             rand_int = 1
-        rand_int = random.randint(0,47-i) #generate random map
+        #rand_int = random.randint(0,47-i) #generate random map
         if rand_int == 0:
             level_str += "1"
         else:
@@ -340,6 +340,8 @@ feet_rect = Player()
 feet_rect.x = player.standing_x
 feet_rect.y = player.standing_y
 feet_rect.height = PLAYER_HEIGHT+1
+global debug
+debug = False
 create_map()
 '''
 if player.crouching:
