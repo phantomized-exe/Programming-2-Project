@@ -172,8 +172,8 @@ def check_tile_collision_y():
     global BACKGROUND_Y
     global coyote_time
     global touching_tile
-    feet_rect.height = player.height
-    feet_rect.y = player.crouching_y+1 if player.crouching else player.standing_y+1
+    feet_rect.height = player.height+2
+    feet_rect.y = player.crouching_y if player.crouching else player.standing_y
     for tile in tiles:
         if feet_rect.colliderect(tile):
             touching_tile = True
