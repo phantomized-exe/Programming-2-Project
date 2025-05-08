@@ -26,10 +26,10 @@ BACKGROUND_Y = -206*0
 BACKGROUND_WIDTH = 1024
 BACKGROUND_HEIGHT = 1024
 
-GRAVITY = .5
+GRAVITY = 1.2
 FRICTION = .6
 PLAYER_VELOCITY_X = 6
-PLAYER_VELOCITY_Y = -7
+PLAYER_VELOCITY_Y = -20
 global CROUCH_FRICTION
 CROUCH_FRICTION = 1
 
@@ -234,8 +234,8 @@ def move():
     player.y += player.velocity_y
     BACKGROUND_Y -= round(player.velocity_y/25,1)
     BACKGROUND_Y = round(BACKGROUND_Y,1)
-    for tile in tiles:
-        tile.y -= player.velocity_y
+    #for tile in tiles:
+        #tile.y -= player.velocity_y
     check_tile_collision_y()
     if not player.crouching:
         while player.y != player.standing_y:
