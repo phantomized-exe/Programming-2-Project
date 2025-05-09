@@ -12,11 +12,11 @@ GAME_WIDTH = 640#512
 GAME_HEIGHT = 480#512
 
 PLAYER_WIDTH = 28
-PLAYER_HEIGHT = 58
+PLAYER_HEIGHT = 64
 PLAYER_X = (GAME_WIDTH/2)
 PLAYER_Y = (GAME_HEIGHT/2)
 PLAYER_JUMP_WIDTH = 28
-PLAYER_JUMP_HEIGHT = 58
+PLAYER_JUMP_HEIGHT = 64
 PLAYER_CROUCH_WIDTH = 28
 PLAYER_CROUCH_HEIGHT = 32
 PLAYER_DISTANCE = 5
@@ -171,15 +171,14 @@ def check_tile_collision_x():
 def check_tile_collision_y():
     global BACKGROUND_Y
     global coyote_time
-    global touching_tile
     feet_rect.height = player.height+2
     #feet_rect.y = player.crouching_y if player.crouching else player.standing_y
     for tile in tiles:
         if feet_rect.colliderect(tile):
-            touching_tile = True
+            touching_tile_feet = True
             break
         else:
-            touching_tile = False
+            touching_tile_feet = False
     tile = check_tile_collision()
     if tile is not None:
         coyote_time = 0
@@ -195,8 +194,9 @@ def check_tile_collision_y():
                 else:
                     BACKGROUND_Y += .6
                 player.jumping = False
+                BACKGROUND_Y = round(BACKGROUND_Y,1)
         player.velocity_y = 0
-    elif not touching_tile:
+    elif not touching_tile_feet:
         if coyote_time >= 5 and not player.jumping:
             player.jumping = True
             coyote_time = 0
@@ -210,7 +210,6 @@ def move():
     global BACKGROUND_Y
     global time_walking
     global crouch_adjust
-    global touching_tile
     #x movement
     if player.velocity_x > 0:
         player.velocity_x -= FRICTION
@@ -271,6 +270,7 @@ def move():
     #y movement
     if player.jumping:
         player.velocity_y += GRAVITY
+    player.velocity_y = round(player.velocity_y,1)
     check_tile_collision_y()
     player.y += player.velocity_y
     BACKGROUND_Y -= round(player.velocity_y/25,1)
@@ -325,6 +325,8 @@ def move():
                 tile.y += 1
     feet_rect.x = player.x
     feet_rect.y = player.y
+    head_rect.x = player.x
+    head_rect.y = player.y-2
     #player.y = player.crouching_y if player.crouching else player.standing_y
 
 def draw():
@@ -360,6 +362,7 @@ def draw():
         debug = False
     if debug:
         pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
+        pygame.draw.rect(window, (0, 255, 0), head_rect, 2)
 def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
@@ -389,7 +392,7 @@ for i in range(48):
             level_str += "0"
     level_list.append(level_str)
 test_map = ["000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000010", "000000000000000000000000000000000000000000000010", "000000000000000000000000000000000000000000000011", "000000000000000000000000000000000000000000010010", "000000000000000000000000000000000000000010010000", "000000000000000000000000000000000000010010010000", "111111111111111111111111111111111111111111111111"]
-level_dump = json.dumps(level_list)
+level_dump = json.dumps(test_map)
 level.write_text(level_dump)
 global  coyote_time
 coyote_time = 0
@@ -404,6 +407,10 @@ feet_rect = Player()
 feet_rect.x = player.standing_x
 feet_rect.y = player.standing_y
 feet_rect.height = PLAYER_HEIGHT+2
+head_rect = Player()
+head_rect.x = player.standing_x
+head_rect.y = player.standing_y-2
+head_rect.height = PLAYER_HEIGHT+2
 global debug
 debug = False
 create_map()
@@ -425,9 +432,16 @@ while True: #game loop
         #KEYDOWN - key was pressed, KEYUP - key was pressed/release
     keys = pygame.key.get_pressed()
     if (keys[pygame.K_UP] or keys[pygame.K_w]) and not player.jumping and not player.crouching:
-        player.velocity_y = PLAYER_VELOCITY_Y
-        player.jumping = True
-        crouch_adjust = False
+        for tile in tiles:
+            if head_rect.colliderect(tile):
+                touching_tile_head = True
+                break
+            else:
+                touching_tile_head = False
+        if not touching_tile_head:
+            player.velocity_y = PLAYER_VELOCITY_Y
+            player.jumping = True
+            crouch_adjust = False
     check_crouch()
     if (keys[pygame.K_DOWN] or keys[pygame.K_s]) or force_crouch:
         if not player.crouch_jump:
