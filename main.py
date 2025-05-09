@@ -70,7 +70,7 @@ class Player(pygame.Rect):
     def __init__(self):
         pygame.Rect.__init__(self,PLAYER_X,PLAYER_Y,PLAYER_WIDTH,PLAYER_HEIGHT)
         self.velocity_x = 0
-        self.velocity_y = 0
+        self.velocity_y = 1
         self.direction = "right"
         self.jumping = False
         self.crouching = False
@@ -173,7 +173,7 @@ def check_tile_collision_y():
     global coyote_time
     global touching_tile
     feet_rect.height = player.height+2
-    feet_rect.y = player.crouching_y if player.crouching else player.standing_y
+    #feet_rect.y = player.crouching_y if player.crouching else player.standing_y
     for tile in tiles:
         if feet_rect.colliderect(tile):
             touching_tile = True
@@ -203,6 +203,7 @@ def check_tile_collision_y():
             coyote_time += 1
     else:
         coyote_time = 0
+    #print(coyote_time)
 
 def move():
     global BACKGROUND_Y
@@ -238,13 +239,23 @@ def move():
     if not player.crouching:
         if player.y != player.standing_y:
             if player.y > player.standing_y:
-                player.y -= 1
+                player.y -= (player.y+player.standing_y)/player.standing_y
                 for tile in tiles:
-                    tile.y -= 1
+                    tile.y -= (player.y+player.standing_y)/player.standing_y
             else:
-                player.y += 1
+                player.y += (player.y+player.standing_y)/player.standing_y
                 for tile in tiles:
-                    tile.y += 1
+                    tile.y += (player.y+player.standing_y)/player.standing_y
+            if player.y == player.standing_y+1 or player.y == player.standing_y-1:
+                if player.y == player.standing_y+1:
+                    player.y -= 1
+                    for tile in tiles:
+                        tile.y -= 1
+                elif player.y == player.standing_y+1:
+                    player.y += 1
+                    for tile in tiles:
+                        tile.y += 1
+            print(player.y)
     else:
         if player.y != player.crouching_y:
             if player.y > player.crouching_y:
@@ -255,6 +266,8 @@ def move():
                 player.y += 1
                 for tile in tiles:
                     tile.y += 1
+    feet_rect.x = player.x
+    feet_rect.y = player.y
     #player.y = player.crouching_y if player.crouching else player.standing_y
 
 def draw():
@@ -333,7 +346,7 @@ force_crouch = False
 feet_rect = Player()
 feet_rect.x = player.standing_x
 feet_rect.y = player.standing_y
-feet_rect.height = PLAYER_HEIGHT+1
+feet_rect.height = PLAYER_HEIGHT+2
 global debug
 debug = False
 create_map()
