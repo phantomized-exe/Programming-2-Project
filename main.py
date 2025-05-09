@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import json
 import random
+import time
 level = Path("level_code.json")
 
 # game variables
@@ -13,8 +14,8 @@ GAME_HEIGHT = 480#512
 
 PLAYER_WIDTH = 28
 PLAYER_HEIGHT = 64
-PLAYER_X = (GAME_WIDTH/2)
-PLAYER_Y = (GAME_HEIGHT/2)
+PLAYER_X = 0
+PLAYER_Y = 0
 PLAYER_JUMP_WIDTH = 28
 PLAYER_JUMP_HEIGHT = 64
 PLAYER_CROUCH_WIDTH = 28
@@ -29,7 +30,7 @@ BACKGROUND_HEIGHT = 1024
 GRAVITY = 1.1
 FRICTION = .6
 PLAYER_VELOCITY_X = 6
-PLAYER_VELOCITY_Y = -14.3
+PLAYER_VELOCITY_Y = -13.2
 global CROUCH_FRICTION
 CROUCH_FRICTION = 1
 
@@ -48,6 +49,7 @@ player_image_right2 = load_image("Test Sprite-right2.png.png",(PLAYER_WIDTH,PLAY
 player_image_left = load_image("Test Sprite-left.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
 player_image_left2 = load_image("Test Sprite-left2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
 image_icon = load_image("Test Sprite-icon.png.png")
+spawn_tile = load_image("Test Sprite-icon.png.png",(TILE_SIZE,TILE_SIZE))
 player_image_jump_right = load_image("Test Sprite-jump-right.png.png",(PLAYER_JUMP_WIDTH,PLAYER_JUMP_HEIGHT))
 player_image_jump_left = load_image("Test Sprite-jump-left.png.png",(PLAYER_JUMP_WIDTH,PLAYER_JUMP_HEIGHT))
 player_image_crouch_right = load_image("Test Sprite-crouch-right.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
@@ -137,7 +139,7 @@ class Player(pygame.Rect):
                     self.image = player_image_left
 
 class Tile(pygame.Rect):
-    def __init__(self,x,y,image):
+    def __init__(self,x,y,image=None):
         pygame.Rect.__init__(self,x,y,TILE_SIZE,TILE_SIZE)
         self.image = image
 
@@ -147,11 +149,17 @@ def create_map():
     for i in range(len(load_level)):
         row = load_level[i]
         for j in range(len(row)):
-            tile_code = row[j]
-            if tile_code == "1":
+            if row[j] == "1":
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
-                tile = Tile(x, y, floor_tile_image)
+                tile = Tile(x,y,floor_tile_image)
+                tiles.append(tile)
+            elif row[j] == "2":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,spawn_tile)
+                tile.width = TILE_SIZE
+                tile.height = TILE_SIZE
                 tiles.append(tile)
 
 def check_tile_collision():
@@ -172,6 +180,7 @@ def check_tile_collision_y():
     global BACKGROUND_Y
     global coyote_time
     feet_rect.height = player.height+2
+    head_rect.height = player.height+2
     #feet_rect.y = player.crouching_y if player.crouching else player.standing_y
     for tile in tiles:
         if feet_rect.colliderect(tile):
@@ -183,14 +192,13 @@ def check_tile_collision_y():
     if tile is not None:
         coyote_time = 0
         if player.velocity_y < 0:
-            #BACKGROUND_Y -= .4
             player.jumping = True
             player.y = tile.y+tile.height
         elif player.velocity_y > 0:
-            player.y = tile.y-player.height
+            player.y = tile.y-player.height#going down by .8
             if player.jumping:
                 if player.crouching:
-                    BACKGROUND_Y += 1.4
+                    BACKGROUND_Y += 1.3
                 else:
                     BACKGROUND_Y += .6
                 player.jumping = False
@@ -273,61 +281,101 @@ def move():
     player.velocity_y = round(player.velocity_y,1)
     check_tile_collision_y()
     player.y += player.velocity_y
-    BACKGROUND_Y -= round(player.velocity_y/25,1)
+    for tile in tiles:
+        if tile.image == spawn_tile:
+            BACKGROUND_Y = tile.y/25
     BACKGROUND_Y = round(BACKGROUND_Y,1)
     check_tile_collision_y()
+    if not player.crouching:
+        while player.y != player.standing_y:
+            if player.y > player.standing_y:
+                player.y -= 1
+                for tile in tiles:
+                    tile.y -= 1
+            else:
+                player.y += 1
+                for tile in tiles:
+                    tile.y += 1
+    else:
+        while player.y != player.crouching_y:
+            if player.y > player.crouching_y:
+                player.y -= 1
+                for tile in tiles:
+                    tile.y -= 1
+            else:
+                player.y += 1
+                for tile in tiles:
+                    tile.y += 1
+    '''
     velocity_backup_y = 0
     if player.velocity_y == 0:
         velocity_backup_y = 1
     if not player.crouching:
         if player.y > player.standing_y:
             player.y -= player.y/player.standing_y*(player.velocity_y+velocity_backup_y)
+            center.y -= player.y/player.standing_y*(player.velocity_y+velocity_backup_y)
             for tile in tiles:
                 tile.y -= player.y/player.standing_y*(player.velocity_y+velocity_backup_y)
         elif player.y < player.standing_y:
             if player.y > 106:
                 player.y += player.y/player.standing_y*-(player.velocity_y-velocity_backup_y)
+                center.y += player.y/player.standing_y*-(player.velocity_y+velocity_backup_y)
                 for tile in tiles:
                     tile.y += player.y/player.standing_y*-(player.velocity_y-velocity_backup_y)
             else:
                 player.y += 106/player.standing_y*-(player.velocity_y-velocity_backup_y)
+                center.y += 106/player.standing_y*-(player.velocity_y+velocity_backup_y)
                 for tile in tiles:
                     tile.y += 106/player.standing_y*-(player.velocity_y-velocity_backup_y)
         if player.y == player.standing_y+1:
             player.y -= 1
+            center.y -= 1
             for tile in tiles:
                 tile.y -= 1
         if player.y == player.standing_y-1:
             player.y += 1
+            center.y += 1
             for tile in tiles:
                 tile.y += 1
     else:
         if player.y > player.crouching_y:
             player.y -= player.y/player.crouching_y*(player.velocity_y+velocity_backup_y)
+            center.y -= player.y/player.crouching_y*(player.velocity_y+velocity_backup_y)
             for tile in tiles:
                 tile.y -= player.y/player.crouching_y*(player.velocity_y+velocity_backup_y)
         elif player.y < player.crouching_y:
             if player.y > 106:
                 player.y += player.y/player.crouching_y*-(player.velocity_y-velocity_backup_y)
+                center.y += player.y/player.crouching_y*-(player.velocity_y-velocity_backup_y)
                 for tile in tiles:
                     tile.y += player.y/player.crouching_y*-(player.velocity_y-velocity_backup_y)
             else:
                 player.y += 106/player.crouching_y*-(player.velocity_y-velocity_backup_y)
+                center.y += 106/player.crouching_y*-(player.velocity_y-velocity_backup_y)
                 for tile in tiles:
                     tile.y += 106/player.crouching_y*-(player.velocity_y-velocity_backup_y)
         if player.y == player.crouching_y+1:
             player.y -= 1
+            center.y -= 1
             for tile in tiles:
                 tile.y -= 1
         if player.y == player.crouching_y-1:
             player.y += 1
+            center.y += 1
             for tile in tiles:
                 tile.y += 1
-    feet_rect.x = player.x
-    feet_rect.y = player.y
-    head_rect.x = player.x
-    head_rect.y = player.y-2
-    #player.y = player.crouching_y if player.crouching else player.standing_y
+    '''
+    if player.crouching:
+        feet_rect.x = player.crouching_x+2
+        feet_rect.y = player.crouching_y
+        head_rect.x = player.crouching_x+2
+        head_rect.y = player.crouching_y-2
+    else:
+        feet_rect.x = player.standing_x+2
+        feet_rect.y = player.standing_y
+        head_rect.x = player.standing_x+2
+        head_rect.y = player.standing_y-2
+    player.y = player.crouching_y if player.crouching else player.standing_y
 
 def draw():
     global BACKGROUND_Y
@@ -386,34 +434,45 @@ for i in range(48):
     level_str = ""
     for j in range(48):
         rand_int = random.randint(0,47-i) #generate random map
+        if i == 24 and j == 24:
+            level_str += "2"
+            continue
         if rand_int == 0:
             level_str += "1"
         else:
             level_str += "0"
     level_list.append(level_str)
-test_map = ["000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000010", "000000000000000000000000000000000000000000000010", "000000000000000000000000000000000000000000000011", "000000000000000000000000000000000000000000010010", "000000000000000000000000000000000000000010010000", "000000000000000000000000000000000000010010010000", "111111111111111111111111111111111111111111111111"]
-level_dump = json.dumps(test_map)
+test_map = ["000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000010", "000000000000000000000000000000000000000000000010", "000000000000000000000000000000000010000000000011", "000000000000000000000000000000000000000000010010", "000000000000000000000000000000000000000010010000", "000000000000000000000000000000000200010010010000", "111111111111111111111111111111111111111111111111"]
+level_dump = json.dumps(level_list)
 level.write_text(level_dump)
 global  coyote_time
 coyote_time = 0
-player = Player()
-background = Background()
 tiles = []
+create_map()
+player = Player()
+for tile in tiles:
+    if tile.image == spawn_tile:
+        x_shift = tile.x
+        player.y = tile.y-PLAYER_HEIGHT
+        for i in tiles:
+            i.x -= x_shift-(10*32)+16
+background = Background()
 global time_walking
 time_walking = 0
 global force_crouch
 force_crouch = False
 feet_rect = Player()
-feet_rect.x = player.standing_x
+feet_rect.x = player.standing_x+2
 feet_rect.y = player.standing_y
 feet_rect.height = PLAYER_HEIGHT+2
+feet_rect.width = PLAYER_WIDTH-4
 head_rect = Player()
-head_rect.x = player.standing_x
+head_rect.x = player.standing_x+2
 head_rect.y = player.standing_y-2
 head_rect.height = PLAYER_HEIGHT+2
+head_rect.width = PLAYER_WIDTH-4
 global debug
 debug = False
-create_map()
 '''
 if player.crouching:
     player.x = player.crouching_x
@@ -431,6 +490,13 @@ while True: #game loop
 
         #KEYDOWN - key was pressed, KEYUP - key was pressed/release
     keys = pygame.key.get_pressed()
+    if keys[pygame.K_t]:
+        for tile in tiles:
+            if tile.image == spawn_tile:
+                x_shift = tile.x
+                player.y = tile.y-PLAYER_HEIGHT
+                for i in tiles:
+                    i.x -= x_shift-(10*32)+16
     if (keys[pygame.K_UP] or keys[pygame.K_w]) and not player.jumping and not player.crouching:
         for tile in tiles:
             if head_rect.colliderect(tile):
@@ -439,6 +505,8 @@ while True: #game loop
             else:
                 touching_tile_head = False
         if not touching_tile_head:
+            for tile in tiles:
+                tile.y -= PLAYER_VELOCITY_Y
             player.velocity_y = PLAYER_VELOCITY_Y
             player.jumping = True
             crouch_adjust = False
@@ -459,7 +527,6 @@ while True: #game loop
             if player.crouching:
                 if not player.jumping:
                     BACKGROUND_Y += round((PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT)/50,1)
-                    BACKGROUND_Y = round(BACKGROUND_Y,1)
                     player.y -= PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT
             CROUCH_FRICTION = 1
             player.width = PLAYER_WIDTH
