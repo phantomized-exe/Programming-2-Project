@@ -184,19 +184,20 @@ def check_tile_collision_y():
     if tile is not None:
         coyote_time = 0
         if player.velocity_y < 0:
+            #BACKGROUND_Y -= .4
             player.jumping = True
             player.y = tile.y+tile.height
         elif player.velocity_y > 0:
             player.y = tile.y-player.height
             if player.jumping:
                 if player.crouching:
-                    BACKGROUND_Y += .1
+                    BACKGROUND_Y += 1.4
                 else:
-                    BACKGROUND_Y += .3
+                    BACKGROUND_Y += .6
                 player.jumping = False
         player.velocity_y = 0
     elif not touching_tile:
-        if coyote_time >= 10 and not player.jumping:
+        if coyote_time >= 5 and not player.jumping:
             player.jumping = True
             coyote_time = 0
         elif not player.jumping:
@@ -226,6 +227,45 @@ def move():
     for tile in tiles:
         tile.x -= player.velocity_x
     check_tile_collision_x()
+    '''
+    velocity_backup_x = 0
+    if player.velocity_x == 0:
+        velocity_backup_x = 1
+    if not player.crouching:
+        if player.x > player.standing_x:
+            player.x -= player.x/player.standing_x*(player.velocity_x+velocity_backup_x)
+            for tile in tiles:
+                tile.x -= player.x/player.standing_x*(player.velocity_x+velocity_backup_x)
+        elif player.x < player.standing_x:
+            player.x += abs(player.x)/player.standing_x*-(player.velocity_x-velocity_backup_x)
+            for tile in tiles:
+                tile.x += abs(player.x)/player.standing_x*-(player.velocity_x-velocity_backup_x)
+        if player.x == player.standing_x+1:
+            player.x -= 1
+            for tile in tiles:
+                tile.x -= 1
+        if player.x == player.standing_x-1:
+            player.x += 1
+            for tile in tiles:
+                tile.x += 1
+    else:
+        if player.x > player.crouching_x:
+            player.x -= player.x/player.crouching_x*(player.velocity_x+velocity_backup_x)
+            for tile in tiles:
+                tile.x -= player.x/player.crouching_x*(player.velocity_x+velocity_backup_x)
+        elif player.x < player.crouching_x:
+            player.x += player.x/player.crouching_x*-(player.velocity_x-velocity_backup_x)
+            for tile in tiles:
+                tile.x += player.x/player.crouching_x*-(player.velocity_x-velocity_backup_x)
+        if player.x == player.crouching_x+1:
+            player.x -= 1
+            for tile in tiles:
+                tile.x -= 1
+        if player.x == player.crouching_x-1:
+            player.x += 1
+            for tile in tiles:
+                tile.x += 1
+    '''
     player.x = player.crouching_x if player.crouching else player.standing_x
 
     #y movement
@@ -236,36 +276,53 @@ def move():
     BACKGROUND_Y -= round(player.velocity_y/25,1)
     BACKGROUND_Y = round(BACKGROUND_Y,1)
     check_tile_collision_y()
+    velocity_backup_y = 0
+    if player.velocity_y == 0:
+        velocity_backup_y = 1
     if not player.crouching:
-        if player.y != player.standing_y:
-            if player.y > player.standing_y:
-                player.y -= (player.y+player.standing_y)/player.standing_y
+        if player.y > player.standing_y:
+            player.y -= player.y/player.standing_y*(player.velocity_y+velocity_backup_y)
+            for tile in tiles:
+                tile.y -= player.y/player.standing_y*(player.velocity_y+velocity_backup_y)
+        elif player.y < player.standing_y:
+            if player.y > 106:
+                player.y += player.y/player.standing_y*-(player.velocity_y-velocity_backup_y)
                 for tile in tiles:
-                    tile.y -= (player.y+player.standing_y)/player.standing_y
+                    tile.y += player.y/player.standing_y*-(player.velocity_y-velocity_backup_y)
             else:
-                player.y += (player.y+player.standing_y)/player.standing_y
+                player.y += 106/player.standing_y*-(player.velocity_y-velocity_backup_y)
                 for tile in tiles:
-                    tile.y += (player.y+player.standing_y)/player.standing_y
-            if player.y == player.standing_y+1 or player.y == player.standing_y-1:
-                if player.y == player.standing_y+1:
-                    player.y -= 1
-                    for tile in tiles:
-                        tile.y -= 1
-                elif player.y == player.standing_y+1:
-                    player.y += 1
-                    for tile in tiles:
-                        tile.y += 1
-            print(player.y)
+                    tile.y += 106/player.standing_y*-(player.velocity_y-velocity_backup_y)
+        if player.y == player.standing_y+1:
+            player.y -= 1
+            for tile in tiles:
+                tile.y -= 1
+        if player.y == player.standing_y-1:
+            player.y += 1
+            for tile in tiles:
+                tile.y += 1
     else:
-        if player.y != player.crouching_y:
-            if player.y > player.crouching_y:
-                player.y -= 1
+        if player.y > player.crouching_y:
+            player.y -= player.y/player.crouching_y*(player.velocity_y+velocity_backup_y)
+            for tile in tiles:
+                tile.y -= player.y/player.crouching_y*(player.velocity_y+velocity_backup_y)
+        elif player.y < player.crouching_y:
+            if player.y > 106:
+                player.y += player.y/player.crouching_y*-(player.velocity_y-velocity_backup_y)
                 for tile in tiles:
-                    tile.y -= 1
+                    tile.y += player.y/player.crouching_y*-(player.velocity_y-velocity_backup_y)
             else:
-                player.y += 1
+                player.y += 106/player.crouching_y*-(player.velocity_y-velocity_backup_y)
                 for tile in tiles:
-                    tile.y += 1
+                    tile.y += 106/player.crouching_y*-(player.velocity_y-velocity_backup_y)
+        if player.y == player.crouching_y+1:
+            player.y -= 1
+            for tile in tiles:
+                tile.y -= 1
+        if player.y == player.crouching_y-1:
+            player.y += 1
+            for tile in tiles:
+                tile.y += 1
     feet_rect.x = player.x
     feet_rect.y = player.y
     #player.y = player.crouching_y if player.crouching else player.standing_y
@@ -331,7 +388,7 @@ for i in range(48):
         else:
             level_str += "0"
     level_list.append(level_str)
-    test_map = ["000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000010", "000000000000000000000000000000000000000000000010", "000000000000000000000000000000000000000000000010", "000000000000000000000000000000000000000000010010", "000000000000000000000000000000000000000010010000", "000000000000000000000000000000000000010010010000", "111111111111111111111111111111111111111111111111"]
+test_map = ["000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000010", "000000000000000000000000000000000000000000000010", "000000000000000000000000000000000000000000000011", "000000000000000000000000000000000000000000010010", "000000000000000000000000000000000000000010010000", "000000000000000000000000000000000000010010010000", "111111111111111111111111111111111111111111111111"]
 level_dump = json.dumps(level_list)
 level.write_text(level_dump)
 global  coyote_time
@@ -407,10 +464,12 @@ while True: #game loop
         if player.velocity_x < 0:
             BACKGROUND_X += .08
         player.velocity_x = -PLAYER_VELOCITY_X//CROUCH_FRICTION
+        '''
         if player.crouching:
             player.x = player.crouching_x
         else:
             player.x = player.standing_x
+        '''
         player.direction = "left"
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
         time_walking += .1
