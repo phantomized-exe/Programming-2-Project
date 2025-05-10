@@ -14,8 +14,8 @@ GAME_HEIGHT = 480#512
 
 PLAYER_WIDTH = 28
 PLAYER_HEIGHT = 64
-PLAYER_X = 0
-PLAYER_Y = 0
+PLAYER_X = 306
+PLAYER_Y = 208
 PLAYER_JUMP_WIDTH = 28
 PLAYER_JUMP_HEIGHT = 64
 PLAYER_CROUCH_WIDTH = 28
@@ -27,7 +27,6 @@ BACKGROUND_Y = -206*0
 BACKGROUND_WIDTH = 1024
 BACKGROUND_HEIGHT = 1024
 
-BUFFER_DURATION = 1
 GRAVITY = 1.1
 FRICTION = .6
 PLAYER_VELOCITY_X = 6
@@ -82,7 +81,6 @@ class Player(pygame.Rect):
         self.crouching_y = (GAME_HEIGHT/2)-(PLAYER_CROUCH_HEIGHT/2)
         self.crouching_x = (GAME_WIDTH/2)-(PLAYER_CROUCH_WIDTH/2)
         self.crouch_jump = False
-        self.buffer_time = None
     def update(self):
         self.rect = (self.x, self.y, self.width, self.height)
     def update_image(self):
@@ -141,10 +139,6 @@ class Player(pygame.Rect):
                         self.player_animation += 1
                 else:
                     self.image = player_image_left
-    def handle_input(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_w] or keys[pygame.K_UP]:
-            self.buffer_time = pygame.time.get_ticks()/1000
 
 class Tile(pygame.Rect):
     def __init__(self,x,y,image=None):
@@ -189,6 +183,7 @@ def check_tile_collision_y():
     global coyote_time
     feet_rect.height = player.height+2
     head_rect.height = player.height+2
+    buffer_rect.height = player.height+8
     #feet_rect.y = player.crouching_y if player.crouching else player.standing_y
     for tile in tiles:
         if feet_rect.colliderect(tile):
@@ -225,7 +220,6 @@ def check_tile_collision_y():
 def move():
     global BACKGROUND_Y
     global time_walking
-    global crouch_adjust
     #x movement
     if player.velocity_x > 0:
         player.velocity_x -= FRICTION
@@ -378,11 +372,15 @@ def move():
         feet_rect.y = player.crouching_y
         head_rect.x = player.crouching_x+2
         head_rect.y = player.crouching_y-2
+        buffer_rect.x = player.crouching_x+2
+        buffer_rect.y = player.crouching_y
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
         head_rect.x = player.standing_x+2
         head_rect.y = player.standing_y-2
+        buffer_rect.x = player.crouching_x+2
+        buffer_rect.y = player.crouching_y
     player.y = player.crouching_y if player.crouching else player.standing_y
 
 def read_pos(str):
@@ -419,8 +417,8 @@ def draw():
         window.blit(tile.image, tile)
     player.update_image()
     window.blit(player.image,player)
-    #player2.update_image()
-    #window.blit(player2.image,player2)
+    player2.update_image()
+    window.blit(player2.image,player2)
     pygame.draw.rect(window, (0, 0, 255), player2, 2)
     if keys[pygame.K_o]:
         debug = True
@@ -429,6 +427,7 @@ def draw():
     if debug:
         pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
         pygame.draw.rect(window, (0, 255, 0), head_rect, 2)
+        pygame.draw.rect(window, (0, 0, 255), buffer_rect, 2)
 def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
@@ -467,8 +466,8 @@ global  coyote_time
 coyote_time = 0
 tiles = []
 create_map()
-#n = Network()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#startPos = read_pos(n.getPos())
+n = Network()
+startPos = read_pos(n.getPos())
 player = Player()
 player2 = Player()
 '''
@@ -479,11 +478,10 @@ for tile in tiles:
         for i in tiles:
             i.x -= x_shift-(10*32)+16
 '''
-#player.x = startPos[0]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#player.y = startPos[1]
+player.x = startPos[0]
+player.y = startPos[1]
 background = Background()
 global time_walking
-time_walking = 0
 global force_crouch
 force_crouch = False
 feet_rect = Player()
@@ -496,6 +494,12 @@ head_rect.x = player.standing_x+2
 head_rect.y = player.standing_y-2
 head_rect.height = PLAYER_HEIGHT+2
 head_rect.width = PLAYER_WIDTH-4
+buffer_rect = Player()
+buffer_rect.x = player.x+2
+buffer_rect.y = player.y
+buffer_rect.width = player.width-4
+buffer_rect.height = player.height+8
+touching_tile_buffer = False
 global debug
 debug = False
 '''
@@ -508,9 +512,15 @@ else:
 '''
 
 while True: #game loop
-    #player2Pos = read_pos(n.send(make_pos((player.x,player.y))))@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    #player2.x = player2Pos[0]
-    #player2.y = player2Pos[1]
+    spawn_x = 0
+    spawn_y = 0
+    for tile in tiles:
+        if tile.image == spawn_tile:
+            spawn_x = tile.x
+            spawn_y = tile.y
+    player2Pos = read_pos(n.send(make_pos((spawn_x,spawn_y))))
+    player2.x = spawn_x-player2Pos[0]+(10*32)-16
+    player2.y = spawn_y-player2Pos[1]+(10*32)-16-(player2.height+TILE_SIZE)
     player2.update()
     for event in pygame.event.get():
         if event.type == pygame.QUIT: #user clicks the X button in window
@@ -528,7 +538,6 @@ while True: #game loop
                     i.x -= x_shift-(10*32)+16
     if (keys[pygame.K_UP] or keys[pygame.K_w]) and not player.crouching:
         current_time = pygame.time.get_ticks() / 1000
-        print(player.buffer_time)
         for tile in tiles:
             if head_rect.colliderect(tile):
                 touching_tile_head = True
@@ -541,23 +550,32 @@ while True: #game loop
                 break
             else:
                 touching_tile_feet = False
+        for tile in tiles:
+            if buffer_rect.colliderect(tile):
+                touching_tile_buffer = True
+                break
+            else:
+                touching_tile_buffer = False
         if not touching_tile_head:
-            player.handle_input()
-            if player.buffer_time is not None and touching_tile_feet and current_time-player.buffer_time <= BUFFER_DURATION:
+            if touching_tile_buffer:
+                buffer = True
+            else:
+                buffer = False
+            if touching_tile_feet and not player.jumping and not player.crouching:
                 for tile in tiles:
                     tile.y -= PLAYER_VELOCITY_Y
                 player.velocity_y = PLAYER_VELOCITY_Y
                 player.jumping = True
-                crouch_adjust = False
-                player.buffer_time = None
-            elif not player.jumping:
-                for tile in tiles:
-                    tile.y -= PLAYER_VELOCITY_Y
-                player.velocity_y = PLAYER_VELOCITY_Y
-                player.jumping = True
-                crouch_adjust = False
+                touching_tile_buffer = False
+    if touching_tile_buffer and not player.jumping and not player.crouching:
+        for tile in tiles:
+            tile.y -= PLAYER_VELOCITY_Y
+        player.velocity_y = PLAYER_VELOCITY_Y
+        player.jumping = True
+        touching_tile_buffer = False
     check_crouch()
     if (keys[pygame.K_DOWN] or keys[pygame.K_s]) or force_crouch:
+        touching_tile_buffer = False
         if not player.crouch_jump:
             CROUCH_FRICTION = 2
             if not player.crouching:
@@ -581,7 +599,6 @@ while True: #game loop
             if not player.jumping:
                 player.crouch_jump = False
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        time_walking += .1
         '''
         if FRICTION > 0:
             FRICTION -= .1
@@ -599,7 +616,6 @@ while True: #game loop
         '''
         player.direction = "left"
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        time_walking += .1
         '''
         if FRICTION > 0:
             FRICTION -= .1
