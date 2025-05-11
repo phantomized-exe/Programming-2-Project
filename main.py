@@ -243,7 +243,7 @@ def check_tile_collision_y():
     else:
         feet_rect2.height = 64+2
     head_rect.height = player.height+2
-    buffer_rect.height = player.height+8
+    buffer_rect.height = player.height+16
     #feet_rect.y = player.crouching_y if player.crouching else player.standing_y
     for tile in tiles:
         if feet_rect.colliderect(tile):
@@ -268,7 +268,7 @@ def check_tile_collision_y():
                 BACKGROUND_Y = round(BACKGROUND_Y,1)
         player.velocity_y = 0
     elif not touching_tile_feet:
-        if coyote_time >= 5 and not player.jumping:
+        if coyote_time >= 10 and not player.jumping:
             player.jumping = True
             coyote_time = 0
         elif not player.jumping:
@@ -438,15 +438,15 @@ def move():
         feet_rect.y = player.standing_y
         head_rect.x = player.standing_x+2
         head_rect.y = player.standing_y-2
-        buffer_rect.x = player.crouching_x+2
-        buffer_rect.y = player.crouching_y
+        buffer_rect.x = player.standing_x+2
+        buffer_rect.y = player.standing_y
     player.y = player.crouching_y if player.crouching else player.standing_y
 
 def read_pos(str):
     s = str.strip()
     parts = s.split(",")
     if len(parts) != 4:
-        print(f"[NET DEBUG] bad response: {repr(s)}")
+        print(f"error: {repr(s)}")
         return None
     x_str, y_str, v_str, crouch_str = parts
     try:
@@ -455,7 +455,7 @@ def read_pos(str):
         v = float(v_str)
         crouch = (crouch_str == "True")
     except ValueError:
-        print(f"[NET DEBUG] could not parse fields: {parts}")
+        print(f"error: {parts}")
         return None
     return x, y, v, crouch
 
@@ -495,8 +495,8 @@ def draw():
         debug = True
     elif keys[pygame.K_p]:
         debug = False
-    pygame.draw.rect(window, (255, 255, 255), feet_rect2, 2)
     if debug:
+        pygame.draw.rect(window, (255, 255, 255), feet_rect2, 2)
         pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
         pygame.draw.rect(window, (0, 255, 0), head_rect, 2)
         pygame.draw.rect(window, (0, 0, 255), buffer_rect, 2)
@@ -576,7 +576,7 @@ buffer_rect = Player()
 buffer_rect.x = player.x+2
 buffer_rect.y = player.y
 buffer_rect.width = player.width-4
-buffer_rect.height = player.height+8
+buffer_rect.height = player.height+16
 touching_tile_buffer = False
 player2_crouching = False
 global debug
@@ -645,7 +645,6 @@ while True: #game loop
                 for i in tiles:
                     i.x -= x_shift-(10*32)+16
     if (keys[pygame.K_UP] or keys[pygame.K_w]) and not player.crouching:
-        current_time = pygame.time.get_ticks() / 1000
         for tile in tiles:
             if head_rect.colliderect(tile):
                 touching_tile_head = True
@@ -669,7 +668,7 @@ while True: #game loop
                 buffer = True
             else:
                 buffer = False
-            if touching_tile_feet and not player.jumping and not player.crouching:
+            if not player.jumping and not player.crouching:
                 for tile in tiles:
                     tile.y -= PLAYER_VELOCITY_Y
                 player.velocity_y = PLAYER_VELOCITY_Y
@@ -744,7 +743,6 @@ while True: #game loop
             player.x = player.standing_x
         '''
         player.direction = "right"
-    player2.update()
     move()
     draw()
     pygame.display.update()
