@@ -139,6 +139,62 @@ class Player(pygame.Rect):
                         self.player_animation += 1
                 else:
                     self.image = player_image_left
+    def update_image2(self):
+        if self.crouching:
+            if self.direction == "right":
+                if self.velocity_x > 0:
+                    if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                        self.image = player_image_crouch_right2
+                        self.player_animation += 1
+                        if self.player_animation >= 80//PLAYER_VELOCITY_X:
+                            self.player_animation = 0
+                    else:
+                        self.image = player_image_crouch_right
+                        self.player_animation += 1
+                else:
+                    self.image = player_image_crouch_right
+            elif self.direction == "left":
+                if self.velocity_x < 0:
+                    if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                        self.image = player_image_crouch_left2
+                        self.player_animation += 1
+                        if self.player_animation >= 80//PLAYER_VELOCITY_X:
+                            self.player_animation = 0
+                    else:
+                        self.image = player_image_crouch_left
+                        self.player_animation += 1
+                else:
+                    self.image = player_image_crouch_left
+        elif self.jumping:
+            if self.direction == "right":
+                self.image = player_image_jump_right
+            elif self.direction == "left":
+                self.image = player_image_jump_left
+        else:
+            if self.direction == "right":
+                if self.velocity_x > 0:
+                    if self.player_animation >= 20//PLAYER_VELOCITY_X:
+                        self.image = player_image_right2
+                        self.player_animation += 1
+                        if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                            self.player_animation = 0
+                    else:
+                        self.image = player_image_right
+                        self.player_animation += 1
+                else:
+                    self.image = player_image_right
+            elif self.direction == "left":
+                if self.velocity_x < 0:
+                    if self.player_animation >= 20//PLAYER_VELOCITY_X:
+                        self.image = player_image_left2
+                        self.player_animation += 1
+                        if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                            self.player_animation = 0
+                    else:
+                        self.image = player_image_left
+                        self.player_animation += 1
+                else:
+                    self.image = player_image_left
 
 class Tile(pygame.Rect):
     def __init__(self,x,y,image=None):
@@ -430,7 +486,7 @@ def draw():
         window.blit(tile.image, tile)
     player.update_image()
     window.blit(player.image,player)
-    player2.update_image()
+    player2.update_image2()
     window.blit(player2.image,player2)
     if keys[pygame.K_o]:
         debug = True
@@ -557,7 +613,7 @@ while True: #game loop
     rx, ry, rvx, rcrouch = read_pos(response)
     player2.x = spawn_x-rx+(10*32)-16
     player2.y = spawn_y-ry+(10*32)-16-(player2.height + TILE_SIZE)
-    player2.velocity_y = rvx
+    player2.velocity_x = rvx
     player2.crouching  = rcrouch
     if player2.velocity_x > 0:
         player2.direction = "right"
