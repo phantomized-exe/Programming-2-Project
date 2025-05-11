@@ -238,7 +238,10 @@ def check_tile_collision_y():
     global BACKGROUND_Y
     global coyote_time
     feet_rect.height = player.height+2
-    feet_rect2.height = player.height+2
+    if player2.crouching:
+        feet_rect2.height = 32+2
+    else:
+        feet_rect2.height = 64+2
     head_rect.height = player.height+2
     buffer_rect.height = player.height+8
     #feet_rect.y = player.crouching_y if player.crouching else player.standing_y
@@ -594,12 +597,12 @@ while True: #game loop
         if tile.image == spawn_tile:
             spawn_x = tile.x
             spawn_y = tile.y
-    if player2.crouching and not player2_crouching:
-        player2_crouching = True
+    if player2.crouching:
         player2.height = TILE_SIZE+16
-    elif not player2.crouching and player2_crouching:
-        player2_crouching = False
+        feet_rect2.height = 32+2
+    else:
         player2.height = PLAYER_HEIGHT
+        feet_rect2.height = 64+2
     '''
     player2Pos = read_pos(n.send(make_pos((spawn_x,spawn_y,player.velocity_x,player.crouching))))
     player2.x = spawn_x-player2Pos[0][0]+(10*32)-16
@@ -614,17 +617,13 @@ while True: #game loop
     player2.x = spawn_x-x+(10*32)-16
     player2.y = spawn_y-y+(10*32)-16-(player2.height + TILE_SIZE)
     player2.velocity_x = vx
-    player2.crouching  = crouch
+    player2.crouching = crouch
     if player2.velocity_x > 0:
         player2.direction = "right"
     elif player2.velocity_x < 0: 
         player2.direction = "left"
     feet_rect2.x = spawn_x - x + (10*32) - 16+2
     feet_rect2.y = spawn_y - y + (10*32) - 16 - (player2.height + TILE_SIZE)
-    if player2.crouching:
-        feet_rect2.height = 32+2
-    else:
-        feet_rect2.height = 64+2
     for tile in tiles:
         if feet_rect2.colliderect(tile):
             player2.jumping = False
