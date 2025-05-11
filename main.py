@@ -182,6 +182,7 @@ def check_tile_collision_y():
     global BACKGROUND_Y
     global coyote_time
     feet_rect.height = player.height+2
+    feet_rect2.height = player.height+2
     head_rect.height = player.height+2
     buffer_rect.height = player.height+8
     #feet_rect.y = player.crouching_y if player.crouching else player.standing_y
@@ -219,7 +220,6 @@ def check_tile_collision_y():
 
 def move():
     global BACKGROUND_Y
-    global time_walking
     #x movement
     if player.velocity_x > 0:
         player.velocity_x -= FRICTION
@@ -384,11 +384,24 @@ def move():
     player.y = player.crouching_y if player.crouching else player.standing_y
 
 def read_pos(str):
-    str = str.split(",")
-    return int(str[0]), int(str[1])
+    s = str.strip()
+    parts = s.split(",")
+    if len(parts) != 4:
+        print(f"[NET DEBUG] bad response: {repr(s)}")
+        return None
+    x_str, y_str, v_str, crouch_str = parts
+    try:
+        x = int(x_str)
+        y = int(y_str)
+        v = float(v_str)
+        crouch = (crouch_str == "True")
+    except ValueError:
+        print(f"[NET DEBUG] could not parse fields: {parts}")
+        return None
+    return x, y, v, crouch
 
 def make_pos(tup):
-    return str(tup[0]) + "," + str(tup[1])
+    return f"{tup[0]},{tup[1]},{tup[2]},{tup[3]}"
 
 def draw():
     global BACKGROUND_Y
@@ -419,11 +432,11 @@ def draw():
     window.blit(player.image,player)
     player2.update_image()
     window.blit(player2.image,player2)
-    pygame.draw.rect(window, (0, 0, 255), player2, 2)
     if keys[pygame.K_o]:
         debug = True
     elif keys[pygame.K_p]:
         debug = False
+    pygame.draw.rect(window, (255, 255, 255), feet_rect2, 2)
     if debug:
         pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
         pygame.draw.rect(window, (0, 255, 0), head_rect, 2)
@@ -470,6 +483,7 @@ n = Network()
 startPos = read_pos(n.getPos())
 player = Player()
 player2 = Player()
+player2.direction = "right"
 '''
 for tile in tiles:
     if tile.image == spawn_tile:
@@ -489,6 +503,11 @@ feet_rect.x = player.standing_x+2
 feet_rect.y = player.standing_y
 feet_rect.height = PLAYER_HEIGHT+2
 feet_rect.width = PLAYER_WIDTH-4
+feet_rect2 = Player()
+feet_rect2.x = player2.standing_x+2
+feet_rect2.y = player2.standing_y
+feet_rect2.height = player2.height+2
+feet_rect2.width = player2.width-4
 head_rect = Player()
 head_rect.x = player.standing_x+2
 head_rect.y = player.standing_y-2
@@ -500,6 +519,7 @@ buffer_rect.y = player.y
 buffer_rect.width = player.width-4
 buffer_rect.height = player.height+8
 touching_tile_buffer = False
+player2_crouching = False
 global debug
 debug = False
 '''
@@ -518,10 +538,43 @@ while True: #game loop
         if tile.image == spawn_tile:
             spawn_x = tile.x
             spawn_y = tile.y
-    player2Pos = read_pos(n.send(make_pos((spawn_x,spawn_y))))
-    player2.x = spawn_x-player2Pos[0]+(10*32)-16
-    player2.y = spawn_y-player2Pos[1]+(10*32)-16-(player2.height+TILE_SIZE)
+    if player2.crouching and not player2_crouching:
+        player2_crouching = True
+        player2.height = TILE_SIZE+16
+    elif not player2.crouching and player2_crouching:
+        player2_crouching = False
+        player2.height = PLAYER_HEIGHT
+    '''
+    player2Pos = read_pos(n.send(make_pos((spawn_x,spawn_y,player.velocity_x,player.crouching))))
+    player2.x = spawn_x-player2Pos[0][0]+(10*32)-16
+    player2.y = spawn_y-player2Pos[0][1]+(10*32)-16-(player2.height+TILE_SIZE)
+    player2.velocity_x = player2Pos[1]
+    player.crouching = player2Pos[2]
     player2.update()
+    '''
+    out_str = make_pos((spawn_x, spawn_y, player.velocity_x, player.crouching))
+    response = n.send(out_str)
+    rx, ry, rvx, rcrouch = read_pos(response)
+    player2.x = spawn_x-rx+(10*32)-16
+    player2.y = spawn_y-ry+(10*32)-16-(player2.height + TILE_SIZE)
+    player2.velocity_y = rvx
+    player2.crouching  = rcrouch
+    if player2.velocity_x > 0:
+        player2.direction = "right"
+    elif player2.velocity_x < 0: 
+        player2.direction = "left"
+    feet_rect2.x = spawn_x - rx + (10*32) - 16+2
+    feet_rect2.y = spawn_y - ry + (10*32) - 16 - (player2.height + TILE_SIZE)
+    if player2.crouching:
+        feet_rect2.height = 32+2
+    else:
+        feet_rect2.height = 64+2
+    for tile in tiles:
+        if feet_rect2.colliderect(tile):
+            player2.jumping = False
+            break
+        else:
+            player2.jumping = True
     for event in pygame.event.get():
         if event.type == pygame.QUIT: #user clicks the X button in window
             pygame.quit()
@@ -573,6 +626,10 @@ while True: #game loop
         player.velocity_y = PLAYER_VELOCITY_Y
         player.jumping = True
         touching_tile_buffer = False
+    if player2.velocity_x > 0:
+        player2.direction = "right"
+    elif player2.velocity_x < 0:
+        player2.direction = "left"
     check_crouch()
     if (keys[pygame.K_DOWN] or keys[pygame.K_s]) or force_crouch:
         touching_tile_buffer = False
@@ -632,13 +689,6 @@ while True: #game loop
             player.x = player.standing_x
         '''
         player.direction = "right"
-    if not (keys[pygame.K_LEFT] or keys[pygame.K_a]) and not (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
-        time_walking = 0
-    '''
-        if FRICTION < 1.5:
-            FRICTION += .1
-    FRICTION = round(FRICTION,3)
-    '''
     player2.update()
     move()
     draw()

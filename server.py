@@ -15,42 +15,57 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection, Server Started")
 
-def read_pos(str):
-    str = str.split(",")
-    return int(str[0]), int(str[1])
+def read_pos(s):
+    s = s.split(",")
+    return int(s[0]), int(s[1]), float(s[2]), s[3]=="True"
 
 def make_pos(tup):
-    return str(tup[0]) + "," + str(tup[1])
+    return f"{tup[0]},{tup[1]},{tup[2]},{tup[3]}"
 
-pos = [(306,208),(306,208)]
+pos = [(306,208,0,False),(306,208,0,False)]
 
-def threaded_client(conn,player):
+def threaded_client(conn, player):
     conn.send(str.encode(make_pos(pos[player])))
-    reply = ""
     while True:
         try:
-            data = read_pos(conn.recv(2048).decode())
-            pos[player] = data
-
-
-            if not data:
-                print("Disconnected")
+            raw = conn.recv(2048).decode()
+            if not raw:
+                print("Client disconnected (empty read).")
                 break
-            else:
-                if player == 1:
-                    reply = pos[0]
-                else:
-                    reply = pos[1]
 
-                print("Received: ", data)
-                print("Sending: ", reply)
+            raw = raw.strip()
+            parts = raw.split(",")
+            if len(parts) != 4:
+                print(f"[SERVER DEBUG] malformed packet from player {player!r}: {repr(raw)}")
+                continue
 
+            # parse safely
+            try:
+                x = int(parts[0])
+                y = int(parts[1])
+                vx = float(parts[2])
+                crouch = (parts[3] == "True")
+            except ValueError as verr:
+                print(f"[SERVER DEBUG] parse error {verr} on {parts}")
+                continue
+
+            # now we have a good 4-tuple
+            pos[player] = (x, y, vx, crouch)
+
+            # build the reply (the other player’s state)
+            reply = pos[1-player]
+
+            print(f"Player {player}: {pos[player]}; sending back {reply}")
             conn.sendall(str.encode(make_pos(reply)))
-        except:
+
+        except Exception as e:
+            print(f"Connection error with player {player}: {e}")
             break
 
-    print("Lost connection")
     conn.close()
+    print(f"Lost connection with player {player}")
+
+
 
 currentPlayer = 0
 while True:
