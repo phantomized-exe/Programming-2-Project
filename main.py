@@ -610,17 +610,17 @@ while True: #game loop
     '''
     out_str = make_pos((spawn_x, spawn_y, player.velocity_x, player.crouching))
     response = n.send(out_str)
-    rx, ry, rvx, rcrouch = read_pos(response)
-    player2.x = spawn_x-rx+(10*32)-16
-    player2.y = spawn_y-ry+(10*32)-16-(player2.height + TILE_SIZE)
-    player2.velocity_x = rvx
-    player2.crouching  = rcrouch
+    x, y, vx, crouch = read_pos(response)
+    player2.x = spawn_x-x+(10*32)-16
+    player2.y = spawn_y-y+(10*32)-16-(player2.height + TILE_SIZE)
+    player2.velocity_x = vx
+    player2.crouching  = crouch
     if player2.velocity_x > 0:
         player2.direction = "right"
     elif player2.velocity_x < 0: 
         player2.direction = "left"
-    feet_rect2.x = spawn_x - rx + (10*32) - 16+2
-    feet_rect2.y = spawn_y - ry + (10*32) - 16 - (player2.height + TILE_SIZE)
+    feet_rect2.x = spawn_x - x + (10*32) - 16+2
+    feet_rect2.y = spawn_y - y + (10*32) - 16 - (player2.height + TILE_SIZE)
     if player2.crouching:
         feet_rect2.height = 32+2
     else:
