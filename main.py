@@ -83,6 +83,7 @@ class Player(pygame.Rect):
         self.crouch_jump = False
     def update(self):
         self.rect = (self.x, self.y, self.width, self.height)
+    '''
     def update_image(self):
         if self.crouching:
             if self.direction == "right":
@@ -139,7 +140,8 @@ class Player(pygame.Rect):
                         self.player_animation += 1
                 else:
                     self.image = player_image_left
-    def update_image2(self):
+    '''
+    def update_image(self):
         if self.crouching:
             if self.direction == "right":
                 if self.velocity_x > 0:
@@ -268,7 +270,7 @@ def check_tile_collision_y():
                 BACKGROUND_Y = round(BACKGROUND_Y,1)
         player.velocity_y = 0
     elif not touching_tile_feet:
-        if coyote_time >= 10 and not player.jumping:
+        if coyote_time >= 8 and not player.jumping:
             player.jumping = True
             coyote_time = 0
         elif not player.jumping:
@@ -489,15 +491,17 @@ def draw():
         window.blit(tile.image, tile)
     player.update_image()
     window.blit(player.image,player)
-    player2.update_image2()
+    player2.update_image()
     window.blit(player2.image,player2)
     if keys[pygame.K_o]:
         debug = True
     elif keys[pygame.K_p]:
         debug = False
     if debug:
-        pygame.draw.rect(window, (255, 255, 255), feet_rect2, 2)
+        pygame.draw.rect(window, (255, 255, 255), player, 2)
+        pygame.draw.rect(window, (255, 255, 255), player2, 2)
         pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
+        pygame.draw.rect(window, (255, 0, 0), feet_rect2, 2)
         pygame.draw.rect(window, (0, 255, 0), head_rect, 2)
         pygame.draw.rect(window, (0, 0, 255), buffer_rect, 2)
 def check_crouch():
