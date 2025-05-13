@@ -69,6 +69,12 @@ player2_image_crouch_left2 = load_image("Test Sprite2-crouch-left2.png.png",(PLA
 floor_tile_image = load_image("Test Sprite Tile-legacy.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_image2 = load_image("Test Sprite Tile-legacy2.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_image3 = load_image("Test Sprite Tile-legacy3.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_image4 = load_image("Test Sprite Tile-lava.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_image5 = load_image("Test Sprite Tile-lava2.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_image6 = load_image("Test Sprite Tile-lava3.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_image7 = load_image("Test Sprite Tile-lava4.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_image8 = load_image("Test Sprite Tile-side.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_image9 = load_image("Test Sprite Tile-side2.png.png",(TILE_SIZE,TILE_SIZE))
 
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
@@ -301,12 +307,54 @@ def create_map():
                 y = i*TILE_SIZE
                 tile = Tile(x,y,floor_tile_image3)
                 tiles.append(tile)
+            elif row[j] == "5":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_image4)
+                tiles.append(tile)
+            elif row[j] == "6":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_image5)
+                tiles.append(tile)
+            elif row[j] == "7":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_image6)
+                tiles.append(tile)
+            elif row[j] == "8":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_image7)
+                tiles.append(tile)
+            elif row[j] == "9":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_image8)
+                tiles.append(tile)
+            elif row[j] == "a":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_image9)
+                tiles.append(tile)
 
 def check_tile_collision():
     for tile in tiles:
         if player.colliderect(tile):
             return tile
     return None
+def check_lava_collision():
+    for tile in tiles:
+        if feet_rect.colliderect(tile):
+            if tile.image == floor_tile_image4 or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7:
+                for tile in tiles:
+                    if tile.image == spawn_tile:
+                        spawn_x = tile.x-(10*32)+16
+                        spawn_y = tile.y-player.height-(10*32)+16
+                        for tile in tiles:
+                            tile.x -= spawn_x
+                            tile.y -= spawn_y
+                        break
 def check_tile_collision_x():
     tile = check_tile_collision()
     if tile is not None:
@@ -417,7 +465,7 @@ def move():
                 tile.x += 1
     '''
     player.x = player.crouching_x if player.crouching else player.standing_x
-
+    check_lava_collision()
     #y movement
     if player.jumping:
         player.velocity_y += GRAVITY
@@ -522,6 +570,7 @@ def move():
         head_rect.y = player.standing_y-2
         buffer_rect.x = player.standing_x+2
         buffer_rect.y = player.standing_y
+    check_lava_collision()
     player.y = player.crouching_y if player.crouching else player.standing_y
 
 def read_pos(str):
@@ -622,9 +671,9 @@ test_map = ["000000000000000000000000000000000000000000000000",
             "000000000000100000000001000000000000000000010010", 
             "000000000000000000000000000000000000000010010000", 
             "000000000000000000000000000000000200010010010000", 
-            "111111111111111111111111111111111111111111111111", 
-            "333333333333333333333333333333333333333333333333", 
-            "444444444444444444444444444444444444444444444444", 
+            "555561111111111111111111111111111111111111111111", 
+            "886719333333333333333333333333333333333333333333", 
+            "443334444444444444444444444444444444444444444444", 
             "444444444444444444444444444444444444444444444444", 
             "444444444444444444444444444444444444444444444444", 
             "444444444444444444444444444444444444444444444444", 
