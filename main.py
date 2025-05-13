@@ -56,9 +56,9 @@ player_image_crouch_right = load_image("Test Sprite-crouch-right.png.png",(PLAYE
 player_image_crouch_left = load_image("Test Sprite-crouch-left.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
 player_image_crouch_right2 = load_image("Test Sprite-crouch-right2.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
 player_image_crouch_left2 = load_image("Test Sprite-crouch-left2.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
-floor_tile_image = load_image("Test Sprite Tile.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_image2 = load_image("Test Sprite Tile-2.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_image3 = load_image("Test Sprite Tile-3.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_image = load_image("Test Sprite Tile-legacy.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_image2 = load_image("Test Sprite Tile-legacy2.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_image3 = load_image("Test Sprite Tile-legacy3.png.png",(TILE_SIZE,TILE_SIZE))
 
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
