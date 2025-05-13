@@ -1,7 +1,7 @@
 import socket
 from _thread import *
 import sys
-server = "10.30.51.47" #go to command prompt and type ipconfig
+server = "10.30.51.47" #ipconfig in command prompt, home ip: 172.16.0.2, school ip: 10.30.51.47
 port = 5555
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 try:
