@@ -48,6 +48,10 @@ player_image_right = load_image("Test Sprite-right.png.png",(PLAYER_WIDTH,PLAYER
 player_image_right2 = load_image("Test Sprite-right2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT)) #resizes player
 player_image_left = load_image("Test Sprite-left.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
 player_image_left2 = load_image("Test Sprite-left2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
+player2_image_right = load_image("Test Sprite2-right.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
+player2_image_right2 = load_image("Test Sprite2-right2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT)) #resizes player
+player2_image_left = load_image("Test Sprite2-left.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
+player2_image_left2 = load_image("Test Sprite2-left2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
 image_icon = load_image("Test Sprite-icon.png.png")
 spawn_tile = load_image("Test Sprite-icon.png.png",(TILE_SIZE,TILE_SIZE))
 player_image_jump_right = load_image("Test Sprite-jump-right.png.png",(PLAYER_JUMP_WIDTH,PLAYER_JUMP_HEIGHT))
@@ -56,6 +60,12 @@ player_image_crouch_right = load_image("Test Sprite-crouch-right.png.png",(PLAYE
 player_image_crouch_left = load_image("Test Sprite-crouch-left.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
 player_image_crouch_right2 = load_image("Test Sprite-crouch-right2.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
 player_image_crouch_left2 = load_image("Test Sprite-crouch-left2.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
+player2_image_jump_right = load_image("Test Sprite2-jump-right.png.png",(PLAYER_JUMP_WIDTH,PLAYER_JUMP_HEIGHT))
+player2_image_jump_left = load_image("Test Sprite2-jump-left.png.png",(PLAYER_JUMP_WIDTH,PLAYER_JUMP_HEIGHT))
+player2_image_crouch_right = load_image("Test Sprite2-crouch-right.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
+player2_image_crouch_left = load_image("Test Sprite2-crouch-left.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
+player2_image_crouch_right2 = load_image("Test Sprite2-crouch-right2.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
+player2_image_crouch_left2 = load_image("Test Sprite2-crouch-left2.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
 floor_tile_image = load_image("Test Sprite Tile-legacy.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_image2 = load_image("Test Sprite Tile-legacy2.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_image3 = load_image("Test Sprite Tile-legacy3.png.png",(TILE_SIZE,TILE_SIZE))
@@ -83,6 +93,7 @@ class Player(pygame.Rect):
         self.crouching_y = (GAME_HEIGHT/2)-(PLAYER_CROUCH_HEIGHT/2)
         self.crouching_x = (GAME_WIDTH/2)-(PLAYER_CROUCH_WIDTH/2)
         self.crouch_jump = False
+        self.player = 1
     def update(self):
         self.rect = (self.x, self.y, self.width, self.height)
     '''
@@ -144,61 +155,118 @@ class Player(pygame.Rect):
                     self.image = player_image_left
     '''
     def update_image(self):
-        if self.crouching:
-            if self.direction == "right":
-                if self.velocity_x > 0:
-                    if self.player_animation >= 40//PLAYER_VELOCITY_X:
-                        self.image = player_image_crouch_right2
-                        self.player_animation += 1
-                        if self.player_animation >= 80//PLAYER_VELOCITY_X:
-                            self.player_animation = 0
+        if self.player == 1:
+            if self.crouching:
+                if self.direction == "right":
+                    if self.velocity_x > 0:
+                        if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                            self.image = player_image_crouch_right2
+                            self.player_animation += 1
+                            if self.player_animation >= 80//PLAYER_VELOCITY_X:
+                                self.player_animation = 0
+                        else:
+                            self.image = player_image_crouch_right
+                            self.player_animation += 1
                     else:
                         self.image = player_image_crouch_right
-                        self.player_animation += 1
-                else:
-                    self.image = player_image_crouch_right
-            elif self.direction == "left":
-                if self.velocity_x < 0:
-                    if self.player_animation >= 40//PLAYER_VELOCITY_X:
-                        self.image = player_image_crouch_left2
-                        self.player_animation += 1
-                        if self.player_animation >= 80//PLAYER_VELOCITY_X:
-                            self.player_animation = 0
+                elif self.direction == "left":
+                    if self.velocity_x < 0:
+                        if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                            self.image = player_image_crouch_left2
+                            self.player_animation += 1
+                            if self.player_animation >= 80//PLAYER_VELOCITY_X:
+                                self.player_animation = 0
+                        else:
+                            self.image = player_image_crouch_left
+                            self.player_animation += 1
                     else:
                         self.image = player_image_crouch_left
-                        self.player_animation += 1
-                else:
-                    self.image = player_image_crouch_left
-        elif self.jumping:
-            if self.direction == "right":
-                self.image = player_image_jump_right
-            elif self.direction == "left":
-                self.image = player_image_jump_left
-        else:
-            if self.direction == "right":
-                if self.velocity_x > 0:
-                    if self.player_animation >= 20//PLAYER_VELOCITY_X:
-                        self.image = player_image_right2
-                        self.player_animation += 1
-                        if self.player_animation >= 40//PLAYER_VELOCITY_X:
-                            self.player_animation = 0
+            elif self.jumping:
+                if self.direction == "right":
+                    self.image = player_image_jump_right
+                elif self.direction == "left":
+                    self.image = player_image_jump_left
+            else:
+                if self.direction == "right":
+                    if self.velocity_x > 0:
+                        if self.player_animation >= 20//PLAYER_VELOCITY_X:
+                            self.image = player_image_right2
+                            self.player_animation += 1
+                            if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                                self.player_animation = 0
+                        else:
+                            self.image = player_image_right
+                            self.player_animation += 1
                     else:
                         self.image = player_image_right
-                        self.player_animation += 1
-                else:
-                    self.image = player_image_right
-            elif self.direction == "left":
-                if self.velocity_x < 0:
-                    if self.player_animation >= 20//PLAYER_VELOCITY_X:
-                        self.image = player_image_left2
-                        self.player_animation += 1
-                        if self.player_animation >= 40//PLAYER_VELOCITY_X:
-                            self.player_animation = 0
+                elif self.direction == "left":
+                    if self.velocity_x < 0:
+                        if self.player_animation >= 20//PLAYER_VELOCITY_X:
+                            self.image = player_image_left2
+                            self.player_animation += 1
+                            if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                                self.player_animation = 0
+                        else:
+                            self.image = player_image_left
+                            self.player_animation += 1
                     else:
                         self.image = player_image_left
-                        self.player_animation += 1
-                else:
-                    self.image = player_image_left
+        elif self.player == 2:
+            if self.crouching:
+                if self.direction == "right":
+                    if self.velocity_x > 0:
+                        if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                            self.image = player2_image_crouch_right2
+                            self.player_animation += 1
+                            if self.player_animation >= 80//PLAYER_VELOCITY_X:
+                                self.player_animation = 0
+                        else:
+                            self.image = player2_image_crouch_right
+                            self.player_animation += 1
+                    else:
+                        self.image = player2_image_crouch_right
+                elif self.direction == "left":
+                    if self.velocity_x < 0:
+                        if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                            self.image = player2_image_crouch_left2
+                            self.player_animation += 1
+                            if self.player_animation >= 80//PLAYER_VELOCITY_X:
+                                self.player_animation = 0
+                        else:
+                            self.image = player2_image_crouch_left
+                            self.player_animation += 1
+                    else:
+                        self.image = player2_image_crouch_left
+            elif self.jumping:
+                if self.direction == "right":
+                    self.image = player2_image_jump_right
+                elif self.direction == "left":
+                    self.image = player2_image_jump_left
+            else:
+                if self.direction == "right":
+                    if self.velocity_x > 0:
+                        if self.player_animation >= 20//PLAYER_VELOCITY_X:
+                            self.image = player2_image_right2
+                            self.player_animation += 1
+                            if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                                self.player_animation = 0
+                        else:
+                            self.image = player2_image_right
+                            self.player_animation += 1
+                    else:
+                        self.image = player2_image_right
+                elif self.direction == "left":
+                    if self.velocity_x < 0:
+                        if self.player_animation >= 20//PLAYER_VELOCITY_X:
+                            self.image = player2_image_left2
+                            self.player_animation += 1
+                            if self.player_animation >= 40//PLAYER_VELOCITY_X:
+                                self.player_animation = 0
+                        else:
+                            self.image = player2_image_left
+                            self.player_animation += 1
+                    else:
+                        self.image = player2_image_left
 
 class Tile(pygame.Rect):
     def __init__(self,x,y,image=None):
@@ -570,7 +638,9 @@ create_map()
 n = Network()
 startPos = read_pos(n.getPos())
 player = Player()
+player.player = 1
 player2 = Player()
+player2.player = 2
 player2.direction = "right"
 '''
 for tile in tiles:
