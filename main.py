@@ -386,17 +386,22 @@ def check_tile_collision():
             return tile
     return None
 def check_lava_collision():
+    global coyote_lava
     for tile in tiles:
-        if lava_rect.colliderect(tile):
-            if tile.image == floor_tile_image4 or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef:
-                for tile in tiles:
-                    if tile.image == spawn_tile:
-                        spawn_x = tile.x-(10*32)+16
-                        spawn_y = tile.y-player.height-(10*32)+16
-                        for tile in tiles:
-                            tile.x -= spawn_x
-                            tile.y -= spawn_y
-                        break
+        if lava_rect.colliderect(tile) or keys[pygame.K_r]:
+            if keys[pygame.K_r] or tile.image == floor_tile_image4 or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef:
+                if coyote_lava >= 8:
+                    coyote_lava = 0
+                    for tile in tiles:
+                        if tile.image == spawn_tile:
+                            spawn_x = tile.x-(10*32)+16
+                            spawn_y = tile.y-player.height-(10*32)+16
+                            for tile in tiles:
+                                tile.x -= spawn_x
+                                tile.y -= spawn_y
+                            break
+                else:
+                    coyote_lava += 1
 def check_tile_collision_x():
     tile = check_tile_collision()
     if tile is not None:
@@ -415,6 +420,7 @@ def check_tile_collision_y():
     else:
         feet_rect2.height = 64+2
     head_rect.height = player.height+2
+    lava_rect.height = player.height+16
     buffer_rect.height = player.height+16
     #feet_rect.y = player.crouching_y if player.crouching else player.standing_y
     for tile in tiles:
@@ -601,6 +607,8 @@ def move():
     if player.crouching:
         feet_rect.x = player.crouching_x+2
         feet_rect.y = player.crouching_y
+        lava_rect.x = player.crouching_x+14
+        lava_rect.y = player.crouching_y
         head_rect.x = player.crouching_x+2
         head_rect.y = player.crouching_y-2
         buffer_rect.x = player.crouching_x+2
@@ -608,6 +616,8 @@ def move():
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
+        lava_rect.x = player.standing_x+14
+        lava_rect.y = player.standing_y
         head_rect.x = player.standing_x+2
         head_rect.y = player.standing_y-2
         buffer_rect.x = player.standing_x+2
@@ -756,7 +766,7 @@ feet_rect.width = PLAYER_WIDTH-4
 lava_rect = Player()
 lava_rect.x = player.standing_x+(player.width/2)
 lava_rect.y = player.standing_y
-lava_rect.height = PLAYER_HEIGHT+2
+lava_rect.height = PLAYER_HEIGHT+16
 lava_rect.width = 2
 feet_rect2 = Player()
 feet_rect2.x = player2.standing_x+2
@@ -777,6 +787,8 @@ touching_tile_buffer = False
 player2_crouching = False
 global debug
 debug = False
+global coyote_lava
+coyote_lava = 0
 '''
 if player.crouching:
     player.x = player.crouching_x
