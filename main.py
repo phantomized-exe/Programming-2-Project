@@ -75,6 +75,13 @@ floor_tile_image6 = load_image("Test Sprite Tile-lava3.png.png",(TILE_SIZE,TILE_
 floor_tile_image7 = load_image("Test Sprite Tile-lava4.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_image8 = load_image("Test Sprite Tile-side.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_image9 = load_image("Test Sprite Tile-side2.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imagea = load_image("Test Sprite Tile-lava5.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imageb = load_image("Test Sprite Tile-lava6.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imagec = load_image("Test Sprite Tile-lava7.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imaged = load_image("Test Sprite Tile-lava8.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imagee = load_image("Test Sprite Tile-lava9.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imagef = load_image("Test Sprite Tile-lava10.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imageg = load_image("Test Sprite Tile-legacy4.png.png",(TILE_SIZE,TILE_SIZE))
 
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
@@ -285,6 +292,13 @@ def create_map():
     for i in range(len(load_level)):
         row = load_level[i]
         for j in range(len(row)):
+            if row[j] == "!":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,spawn_tile)
+                tile.width = TILE_SIZE
+                tile.height = TILE_SIZE
+                tiles.append(tile)
             if row[j] == "1":
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
@@ -293,49 +307,77 @@ def create_map():
             elif row[j] == "2":
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
-                tile = Tile(x,y,spawn_tile)
-                tile.width = TILE_SIZE
-                tile.height = TILE_SIZE
+                tile = Tile(x,y,floor_tile_image2)
                 tiles.append(tile)
             elif row[j] == "3":
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image2)
+                tile = Tile(x,y,floor_tile_image3)
                 tiles.append(tile)
             elif row[j] == "4":
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image3)
+                tile = Tile(x,y,floor_tile_image4)
                 tiles.append(tile)
             elif row[j] == "5":
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image4)
+                tile = Tile(x,y,floor_tile_image5)
                 tiles.append(tile)
             elif row[j] == "6":
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image5)
+                tile = Tile(x,y,floor_tile_image6)
                 tiles.append(tile)
             elif row[j] == "7":
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image6)
+                tile = Tile(x,y,floor_tile_image7)
                 tiles.append(tile)
             elif row[j] == "8":
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image7)
+                tile = Tile(x,y,floor_tile_image8)
                 tiles.append(tile)
             elif row[j] == "9":
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image8)
+                tile = Tile(x,y,floor_tile_image9)
                 tiles.append(tile)
             elif row[j] == "a":
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image9)
+                tile = Tile(x,y,floor_tile_imagea)
+                tiles.append(tile)
+            elif row[j] == "b":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imageb)
+                tiles.append(tile)
+            elif row[j] == "c":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imagec)
+                tiles.append(tile)
+            elif row[j] == "d":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imaged)
+                tiles.append(tile)
+            elif row[j] == "e":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imagee)
+                tiles.append(tile)
+            elif row[j] == "f":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imagef)
+                tiles.append(tile)
+            elif row[j] == "g":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imageg)
                 tiles.append(tile)
 
 def check_tile_collision():
@@ -345,8 +387,8 @@ def check_tile_collision():
     return None
 def check_lava_collision():
     for tile in tiles:
-        if feet_rect.colliderect(tile):
-            if tile.image == floor_tile_image4 or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7:
+        if lava_rect.colliderect(tile):
+            if tile.image == floor_tile_image4 or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef:
                 for tile in tiles:
                     if tile.image == spawn_tile:
                         spawn_x = tile.x-(10*32)+16
@@ -633,6 +675,7 @@ def draw():
         pygame.draw.rect(window, (255, 0, 0), feet_rect2, 2)
         pygame.draw.rect(window, (0, 255, 0), head_rect, 2)
         pygame.draw.rect(window, (0, 0, 255), buffer_rect, 2)
+        pygame.draw.rect(window, (0, 0, 0), lava_rect, 2)
 def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
@@ -670,14 +713,14 @@ test_map = ["000000000000000000000000000000000000000000000000",
             "000000000000010000100000000000000010000000000011", 
             "000000000000100000000001000011000000000000010010", 
             "000000000000000000000000000000000000000010010000", 
-            "000000000000000000000000000000000200010010010000", 
-            "555561111111111111111111111111111111111111111111", 
-            "886719333333333333333333333333333333333333333333", 
-            "443334444444444444444444444444444444444444444444", 
-            "444444444444444444444444444444444444444444444444", 
-            "444444444444444444444444444444444444444444444444", 
-            "444444444444444444444444444444444444444444444444", 
-            "444444444444444444444444444444444444444444444444"]
+            "000000000000000000000000000000000!00010010010000", 
+            "444441111111111111111111111111111111111111111111", 
+            "7cefd8222222222222222222222222222222222222222222", 
+            "333333333333333333333333333333333333333333333333", 
+            "333333333333333333333333333333333333333333333333", 
+            "333333333333333333333333333333333333333333333333", 
+            "333333333333333333333333333333333333333333333333", 
+            "333333333333333333333333333333333333333333333333"]
 level_dump = json.dumps(test_map)
 level.write_text(level_dump)
 global  coyote_time
@@ -710,6 +753,11 @@ feet_rect.x = player.standing_x+2
 feet_rect.y = player.standing_y
 feet_rect.height = PLAYER_HEIGHT+2
 feet_rect.width = PLAYER_WIDTH-4
+lava_rect = Player()
+lava_rect.x = player.standing_x+(player.width/2)
+lava_rect.y = player.standing_y
+lava_rect.height = PLAYER_HEIGHT+2
+lava_rect.width = 2
 feet_rect2 = Player()
 feet_rect2.x = player2.standing_x+2
 feet_rect2.y = player2.standing_y
