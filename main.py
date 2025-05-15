@@ -53,7 +53,10 @@ player2_image_right2 = load_image("Test Sprite2-right2.png.png",(PLAYER_WIDTH,PL
 player2_image_left = load_image("Test Sprite2-left.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
 player2_image_left2 = load_image("Test Sprite2-left2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
 image_icon = load_image("Test Sprite-icon.png.png")
+image_icon2 = load_image("Test Sprite-icon2.png.png")
 spawn_tile = load_image("Test Sprite-icon.png.png",(TILE_SIZE,TILE_SIZE))
+spawn_tile2 = load_image("Test Sprite-icon2.png.png",(TILE_SIZE,TILE_SIZE))
+bg = load_image("Test Sprite-bg.png.png",(TILE_SIZE,TILE_SIZE))
 player_image_jump_right = load_image("Test Sprite-jump-right.png.png",(PLAYER_JUMP_WIDTH,PLAYER_JUMP_HEIGHT))
 player_image_jump_left = load_image("Test Sprite-jump-left.png.png",(PLAYER_JUMP_WIDTH,PLAYER_JUMP_HEIGHT))
 player_image_crouch_right = load_image("Test Sprite-crouch-right.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
@@ -86,7 +89,7 @@ floor_tile_imageg = load_image("Test Sprite Tile-legacy4.png.png",(TILE_SIZE,TIL
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
 pygame.display.set_caption("test game") #title of window
-pygame.display.set_icon(image_icon)
+pygame.display.set_icon(image_icon2)
 clock = pygame.time.Clock() #used for the framerate
 
 class Background(pygame.Rect):
@@ -299,6 +302,20 @@ def create_map():
                 tile.width = TILE_SIZE
                 tile.height = TILE_SIZE
                 tiles.append(tile)
+            if row[j] == "@":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,bg)
+                tile.width = TILE_SIZE
+                tile.height = TILE_SIZE
+                tiles.append(tile)
+            if row[j] == "#":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,spawn_tile2)
+                tile.width = TILE_SIZE
+                tile.height = TILE_SIZE
+                tiles.append(tile)
             if row[j] == "1":
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
@@ -388,14 +405,14 @@ def check_tile_collision():
 def check_lava_collision():
     global coyote_lava
     for tile in tiles:
-        if lava_rect.colliderect(tile) or keys[pygame.K_r]:
+        if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or keys[pygame.K_r]:
             if keys[pygame.K_r] or tile.image == floor_tile_image4 or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef:
                 if coyote_lava >= 8:
                     coyote_lava = 0
                     for tile in tiles:
-                        if tile.image == spawn_tile:
+                        if tile.image == spawn_tile2:
                             spawn_x = tile.x-(10*32)+16
-                            spawn_y = tile.y-player.height-(10*32)+16
+                            spawn_y = tile.y-(10*32)+TILE_SIZE+16#-player.height
                             for tile in tiles:
                                 tile.x -= spawn_x
                                 tile.y -= spawn_y
@@ -425,8 +442,14 @@ def check_tile_collision_y():
     #feet_rect.y = player.crouching_y if player.crouching else player.standing_y
     for tile in tiles:
         if feet_rect.colliderect(tile):
-            touching_tile_feet = True
-            break
+            if tile.image == spawn_tile:
+                for i in tiles:
+                    if i.image == spawn_tile2:
+                        i.image = spawn_tile
+                tile.image = spawn_tile2
+            else:
+                touching_tile_feet = True
+                break
         else:
             touching_tile_feet = False
     tile = check_tile_collision()
@@ -521,7 +544,7 @@ def move():
     check_tile_collision_y()
     player.y += player.velocity_y
     for tile in tiles:
-        if tile.image == spawn_tile:
+        if tile.image == bg:
             BACKGROUND_Y = tile.y/25
     BACKGROUND_Y = round(BACKGROUND_Y,1)
     check_tile_collision_y()
@@ -609,6 +632,8 @@ def move():
         feet_rect.y = player.crouching_y
         lava_rect.x = player.crouching_x+14
         lava_rect.y = player.crouching_y
+        lava_rect2.x = player.crouching_x-5
+        lava_rect2.y = player.crouching_y+(player.height/2)
         head_rect.x = player.crouching_x+2
         head_rect.y = player.crouching_y-2
         buffer_rect.x = player.crouching_x+2
@@ -618,6 +643,8 @@ def move():
         feet_rect.y = player.standing_y
         lava_rect.x = player.standing_x+14
         lava_rect.y = player.standing_y
+        lava_rect2.x = player.standing_x-5
+        lava_rect2.y = player.standing_y+(player.height/2)
         head_rect.x = player.standing_x+2
         head_rect.y = player.standing_y-2
         buffer_rect.x = player.standing_x+2
@@ -686,6 +713,7 @@ def draw():
         pygame.draw.rect(window, (0, 255, 0), head_rect, 2)
         pygame.draw.rect(window, (0, 0, 255), buffer_rect, 2)
         pygame.draw.rect(window, (0, 0, 0), lava_rect, 2)
+        pygame.draw.rect(window, (0, 0, 0), lava_rect2, 2)
 def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
@@ -717,20 +745,41 @@ for i in range(48):
         else:
             level_str += "0"
     level_list.append(level_str)
-test_map = ["000000000000000000000000000000000000000000000000", 
-            "000000000000000000000000000000000000000000000010", 
-            "000000000000000000000000001000000000000000000010", 
-            "000000000000010000100000000000000010000000000011", 
-            "000000000000100000000001000011000000000000010010", 
-            "000000000000000000000000000000000000000010010000", 
-            "000000000000000000000000000000000!00010010010000", 
-            "444441111111111111111111111111111111111111111111", 
-            "7cefd8222222222222222222222222222222222222222222", 
-            "333333333333333333333333333333333333333333333333", 
-            "333333333333333333333333333333333333333333333333", 
-            "333333333333333333333333333333333333333333333333", 
-            "333333333333333333333333333333333333333333333333", 
-            "333333333333333333333333333333333333333333333333"]
+test_map = ["00000000000000000000000000000000000000000000000000000000000000001", 
+            "00000000000000000000000000000000000000000000001000000000000000001", 
+            "0000000000000000000000!0001000000000000000000010000010000100001!4", 
+            "00000000000001000010000000000000001000000000001100000000000000004", 
+            "@0000000000010000000000100001100000000000001001000000000000001004", 
+            "00000000000000000000000000000000000000001001000000000000000000004", 
+            "0000000000#0000000000000000000000!0001001001000000000000000010004", 
+            "44444111111111111111111111111111110111111111111100000000000000014", 
+            "7cefd822222222222222222222222222220222222222222200000000000100004", 
+            "33333333333333333333333333333333330333333333333310000000000000004", 
+            "33333333333333333333333333333333330333333333333300000000001000004", 
+            "33333333333333333333333333333333300333333333333300000000000000004", 
+            "33333333333333333333333333333333303333333333333310000000010000004", 
+            "33333333333333333333333333333333303333333333333300000000000000004",
+            "00000000000000000000000000000000000000000000000000000000100000004",
+            "00000000000000000000000000000000000000000000000010000000000000004",
+            "00000000000000000000000000000000000000000000000000000001000000004",
+            "00001000000010000000000000000000000000100000000000000000000000004",
+            "!0000000100000000111000000000000011000000000010010000010000000004",
+            "00000000000000100000000100000!00000000000000000000000000000000004",
+            "00001000000000000000000000000000000100000000100000000100000000004",
+            "00000000001000000000000000000000000000000000000010000000000000004",
+            "01000000000000000000111000000000000000000000000000001000000000004",
+            "00000000011100000000000000001110000100001000001000000000000000004",
+            "00011000000000000100000000000000000000000000000010010000000000004",
+            "00000000000000000000000000000000100000000000000000000000000000004",
+            "00011100000000001111000000110000000000100001100000100000000000004",
+            "00000000001000000000000001000000000001000000000010000000000000004",
+            "00000010000100000000001000000000100000000010000000000000000000004",
+            "00000000000000000000000000000100000100000000000000000000000000004",
+            "00100000000000001111111000111000000000110000100110000000000000004",
+            "00000000000000000000000000000000000000000000000000000000000000004",
+            "0000000000000000000000000000000000000000000000000000000000000004",
+            "000000000000000000000000000000000000000000000000000000000000004",
+            "44444444444444444444444444444444444444444444444444444444444444"]
 level_dump = json.dumps(test_map)
 level.write_text(level_dump)
 global  coyote_time
@@ -768,6 +817,11 @@ lava_rect.x = player.standing_x+(player.width/2)
 lava_rect.y = player.standing_y
 lava_rect.height = PLAYER_HEIGHT+16
 lava_rect.width = 2
+lava_rect2 = Player()
+lava_rect2.x = player.standing_x-2
+lava_rect2.y = player.standing_y+(player.height/2)
+lava_rect2.height = 2
+lava_rect2.width = PLAYER_WIDTH+10
 feet_rect2 = Player()
 feet_rect2.x = player2.standing_x+2
 feet_rect2.y = player2.standing_y
@@ -802,7 +856,7 @@ while True: #game loop
     spawn_x = 0
     spawn_y = 0
     for tile in tiles:
-        if tile.image == spawn_tile:
+        if tile.image == bg:
             spawn_x = tile.x
             spawn_y = tile.y
     if player2.crouching:
@@ -830,8 +884,8 @@ while True: #game loop
         player2.direction = "right"
     elif player2.velocity_x < 0: 
         player2.direction = "left"
-    feet_rect2.x = spawn_x - x + (10*32) - 16+2
-    feet_rect2.y = spawn_y - y + (10*32) - 16 - (player2.height + TILE_SIZE)
+    feet_rect2.x = spawn_x-x+(10*32)-16+2
+    feet_rect2.y = spawn_y-y+(10*32)-16-(player2.height + TILE_SIZE)
     for tile in tiles:
         if feet_rect2.colliderect(tile):
             player2.jumping = False
@@ -845,14 +899,16 @@ while True: #game loop
 
         #KEYDOWN - key was pressed, KEYUP - key was pressed/release
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_t]:
+    '''
+    if keys[pygame.K_r]:
         for tile in tiles:
-            if tile.image == spawn_tile:
+            if tile.image == spawn_tile2:
                 x_shift = tile.x
-                player.y = tile.y-PLAYER_HEIGHT
+                player.y = tile.y-(10*32)+TILE_SIZE+16
                 for i in tiles:
                     i.x -= x_shift-(10*32)+16
-    if (keys[pygame.K_UP] or keys[pygame.K_w]) and not player.crouching:
+    '''
+    if (keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_SPACE]) and not player.crouching:
         for tile in tiles:
             if head_rect.colliderect(tile):
                 touching_tile_head = True
