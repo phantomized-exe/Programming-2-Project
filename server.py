@@ -1,8 +1,8 @@
 import socket
 from _thread import *
 import sys
-server = "172.16.0.2" #ipconfig in command prompt, home ip: 172.16.0.2, school ip: ipconfig
-port = 5555
+server = "10.30.51.251" #ipconfig in command prompt, home ip: 172.16.0.2, school ip: ipconfig
+port = 12345
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 try:
     s.bind((server,port))
@@ -39,10 +39,10 @@ def threaded_client(conn, player):
                 continue
             pos[player] = (x, y, vx, crouch)
             reply = pos[1-player]
-            print(f"Player {player}: {pos[player]}; sending back {reply}")
+            print(f"Player {player+1}: {pos[player]}; sending back {reply}")
             conn.sendall(str.encode(make_pos(reply)))
         except Exception as e:
-            print(f"Connection error with player {player}: {e}")
+            print(f"Connection error with player {player+1}: {e}")
             break
     conn.close()
     print(f"Lost connection with player {player}")
