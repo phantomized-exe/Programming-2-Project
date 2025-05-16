@@ -13,11 +13,11 @@ GAME_WIDTH = 640#512
 GAME_HEIGHT = 480#512
 
 PLAYER_WIDTH = 28
-PLAYER_HEIGHT = 64
+PLAYER_HEIGHT = 58
 PLAYER_X = 306
 PLAYER_Y = 208
 PLAYER_JUMP_WIDTH = 28
-PLAYER_JUMP_HEIGHT = 64
+PLAYER_JUMP_HEIGHT = 58
 PLAYER_CROUCH_WIDTH = 28
 PLAYER_CROUCH_HEIGHT = 32
 PLAYER_DISTANCE = 5
@@ -436,7 +436,6 @@ def check_tile_collision_y():
         feet_rect2.height = 32+2
     else:
         feet_rect2.height = 64+2
-    head_rect.height = player.height+2
     lava_rect.height = player.height+8
     #feet_rect.y = player.crouching_y if player.crouching else player.standing_y
     for tile in tiles:
@@ -633,8 +632,6 @@ def move():
         lava_rect.y = player.crouching_y
         lava_rect2.x = player.crouching_x-5
         lava_rect2.y = player.crouching_y+(player.height/2)
-        head_rect.x = player.crouching_x+2
-        head_rect.y = player.crouching_y-2
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
@@ -642,8 +639,6 @@ def move():
         lava_rect.y = player.standing_y
         lava_rect2.x = player.standing_x-5
         lava_rect2.y = player.standing_y+(player.height/2)
-        head_rect.x = player.standing_x+2
-        head_rect.y = player.standing_y-2
     check_lava_collision()
     player.y = player.crouching_y if player.crouching else player.standing_y
 
@@ -705,9 +700,8 @@ def draw():
         pygame.draw.rect(window, (255, 255, 255), player2, 2)
         pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
         pygame.draw.rect(window, (255, 0, 0), feet_rect2, 2)
-        pygame.draw.rect(window, (0, 255, 0), head_rect, 2)
-        pygame.draw.rect(window, (0, 0, 0), lava_rect, 2)
-        pygame.draw.rect(window, (0, 0, 0), lava_rect2, 2)
+        pygame.draw.rect(window, (0, 255, 0), lava_rect, 2)
+        pygame.draw.rect(window, (0, 255, 0), lava_rect2, 2)
 def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
@@ -821,11 +815,6 @@ feet_rect2.x = player2.standing_x+2
 feet_rect2.y = player2.standing_y
 feet_rect2.height = player2.height+2
 feet_rect2.width = player2.width-4
-head_rect = Player()
-head_rect.x = player.standing_x+2
-head_rect.y = player.standing_y-2
-head_rect.height = PLAYER_HEIGHT+2
-head_rect.width = PLAYER_WIDTH-4
 touching_tile_buffer = False
 player2_crouching = False
 global debug
@@ -899,12 +888,6 @@ while True: #game loop
     '''
     if (keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_SPACE]) and not player.crouching:
         for tile in tiles:
-            if head_rect.colliderect(tile):
-                touching_tile_head = True
-                break
-            else:
-                touching_tile_head = False
-        for tile in tiles:
             if feet_rect.colliderect(tile):
                 touching_tile_feet = True
                 break
@@ -916,13 +899,12 @@ while True: #game loop
                 break
             else:
                 touching_tile_buffer = False
-        if not touching_tile_head:
-            if not player.jumping and not player.crouching:
-                for tile in tiles:
-                    tile.y -= PLAYER_VELOCITY_Y
-                player.velocity_y = PLAYER_VELOCITY_Y
-                player.jumping = True
-                touching_tile_buffer = False
+        if not player.jumping and not player.crouching:
+            for tile in tiles:
+                tile.y -= PLAYER_VELOCITY_Y
+            player.velocity_y = PLAYER_VELOCITY_Y
+            player.jumping = True
+            touching_tile_buffer = False
     if touching_tile_buffer and not player.jumping and not player.crouching:
         for tile in tiles:
             tile.y -= PLAYER_VELOCITY_Y
