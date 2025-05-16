@@ -492,7 +492,7 @@ def move():
     player.x = player.crouching_x if player.crouching else player.standing_x
     check_lava_collision()
     #y movement
-    if player.jumping:
+    if player.jumping and player.velocity_y < 500:
         player.velocity_y += GRAVITY
     player.velocity_y = round(player.velocity_y,1)
     check_tile_collision_y()
@@ -855,12 +855,12 @@ while True: #game loop
                 break
             else:
                 touching_tile_buffer = False
-        if not player.jumping and not player.crouching:
-            for tile in tiles:
-                tile.y -= PLAYER_VELOCITY_Y
-            player.velocity_y = PLAYER_VELOCITY_Y
-            player.jumping = True
-            touching_tile_buffer = False
+        #if not player.jumping and not player.crouching:
+        for tile in tiles:
+            tile.y -= PLAYER_VELOCITY_Y
+        player.velocity_y = PLAYER_VELOCITY_Y
+        player.jumping = True
+        touching_tile_buffer = False
     if touching_tile_buffer and not player.jumping and not player.crouching:
         for tile in tiles:
             tile.y -= PLAYER_VELOCITY_Y
