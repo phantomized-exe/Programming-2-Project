@@ -28,7 +28,7 @@ BACKGROUND_WIDTH = 1024
 BACKGROUND_HEIGHT = 1024
 
 GRAVITY = 1.1
-FRICTION = .6
+FRICTION = .8
 PLAYER_VELOCITY_X = 6
 PLAYER_VELOCITY_Y = -13.2
 global CROUCH_FRICTION
@@ -433,9 +433,9 @@ def check_tile_collision_y():
     global coyote_time
     feet_rect.height = player.height+2
     if player2.crouching:
-        feet_rect2.height = 32+2
+        feet_rect2.height = TILE_SIZE+2
     else:
-        feet_rect2.height = 64+2
+        feet_rect2.height = player.height+2
     lava_rect.height = player.height+8
     #feet_rect.y = player.crouching_y if player.crouching else player.standing_y
     for tile in tiles:
@@ -478,61 +478,17 @@ def check_tile_collision_y():
 
 def move():
     global BACKGROUND_Y
-    #x movement
-    if player.velocity_x > 0:
+    if abs(player.velocity_x) <= FRICTION:
+        player.velocity_x = 0
+    elif player.velocity_x > 0:
         player.velocity_x -= FRICTION
-        if player.velocity_x < 0:
-            player.velocity_x = 0
     elif player.velocity_x < 0:
         player.velocity_x += FRICTION
-        if player.velocity_x > 0:
-            player.velocity_x = 0
-    else:
-        player.velocity_x = 0
     player.x += player.velocity_x
     check_tile_collision_x()
     for tile in tiles:
         tile.x -= player.velocity_x
     check_tile_collision_x()
-    '''
-    velocity_backup_x = 0
-    if player.velocity_x == 0:
-        velocity_backup_x = 1
-    if not player.crouching:
-        if player.x > player.standing_x:
-            player.x -= player.x/player.standing_x*(player.velocity_x+velocity_backup_x)
-            for tile in tiles:
-                tile.x -= player.x/player.standing_x*(player.velocity_x+velocity_backup_x)
-        elif player.x < player.standing_x:
-            player.x += abs(player.x)/player.standing_x*-(player.velocity_x-velocity_backup_x)
-            for tile in tiles:
-                tile.x += abs(player.x)/player.standing_x*-(player.velocity_x-velocity_backup_x)
-        if player.x == player.standing_x+1:
-            player.x -= 1
-            for tile in tiles:
-                tile.x -= 1
-        if player.x == player.standing_x-1:
-            player.x += 1
-            for tile in tiles:
-                tile.x += 1
-    else:
-        if player.x > player.crouching_x:
-            player.x -= player.x/player.crouching_x*(player.velocity_x+velocity_backup_x)
-            for tile in tiles:
-                tile.x -= player.x/player.crouching_x*(player.velocity_x+velocity_backup_x)
-        elif player.x < player.crouching_x:
-            player.x += player.x/player.crouching_x*-(player.velocity_x-velocity_backup_x)
-            for tile in tiles:
-                tile.x += player.x/player.crouching_x*-(player.velocity_x-velocity_backup_x)
-        if player.x == player.crouching_x+1:
-            player.x -= 1
-            for tile in tiles:
-                tile.x -= 1
-        if player.x == player.crouching_x-1:
-            player.x += 1
-            for tile in tiles:
-                tile.x += 1
-    '''
     player.x = player.crouching_x if player.crouching else player.standing_x
     check_lava_collision()
     #y movement
@@ -838,11 +794,11 @@ while True: #game loop
             spawn_x = tile.x
             spawn_y = tile.y
     if player2.crouching:
-        player2.height = TILE_SIZE+16
-        feet_rect2.height = 32+2
+        player2.height = TILE_SIZE
+        feet_rect2.height = TILE_SIZE+2
     else:
         player2.height = PLAYER_HEIGHT
-        feet_rect2.height = 64+2
+        feet_rect2.height = player.height+2
     '''
     player2Pos = read_pos(n.send(make_pos((spawn_x,spawn_y,player.velocity_x,player.crouching))))
     player2.x = spawn_x-player2Pos[0][0]+(10*32)-16
