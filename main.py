@@ -114,64 +114,6 @@ class Player(pygame.Rect):
         self.player = 1
     def update(self):
         self.rect = (self.x, self.y, self.width, self.height)
-    '''
-    def update_image(self):
-        if self.crouching:
-            if self.direction == "right":
-                if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-                    if self.player_animation >= 40//PLAYER_VELOCITY_X:
-                        self.image = player_image_crouch_right2
-                        self.player_animation += 1
-                        if self.player_animation >= 80//PLAYER_VELOCITY_X:
-                            self.player_animation = 0
-                    else:
-                        self.image = player_image_crouch_right
-                        self.player_animation += 1
-                else:
-                    self.image = player_image_crouch_right
-            elif self.direction == "left":
-                if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-                    if self.player_animation >= 40//PLAYER_VELOCITY_X:
-                        self.image = player_image_crouch_left2
-                        self.player_animation += 1
-                        if self.player_animation >= 80//PLAYER_VELOCITY_X:
-                            self.player_animation = 0
-                    else:
-                        self.image = player_image_crouch_left
-                        self.player_animation += 1
-                else:
-                    self.image = player_image_crouch_left
-        elif self.jumping:
-            if self.direction == "right":
-                self.image = player_image_jump_right
-            elif self.direction == "left":
-                self.image = player_image_jump_left
-        else:
-            if self.direction == "right":
-                if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-                    if self.player_animation >= 20//PLAYER_VELOCITY_X:
-                        self.image = player_image_right2
-                        self.player_animation += 1
-                        if self.player_animation >= 40//PLAYER_VELOCITY_X:
-                            self.player_animation = 0
-                    else:
-                        self.image = player_image_right
-                        self.player_animation += 1
-                else:
-                    self.image = player_image_right
-            elif self.direction == "left":
-                if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-                    if self.player_animation >= 20//PLAYER_VELOCITY_X:
-                        self.image = player_image_left2
-                        self.player_animation += 1
-                        if self.player_animation >= 40//PLAYER_VELOCITY_X:
-                            self.player_animation = 0
-                    else:
-                        self.image = player_image_left
-                        self.player_animation += 1
-                else:
-                    self.image = player_image_left
-    '''
     def update_image(self):
         if self.player == 1:
             if self.crouching:
@@ -536,65 +478,6 @@ def move():
                 player.y += 1
                 for tile in tiles:
                     tile.y += 1
-    '''
-    velocity_backup_y = 0
-    if player.velocity_y == 0:
-        velocity_backup_y = 1
-    if not player.crouching:
-        if player.y > player.standing_y:
-            player.y -= player.y/player.standing_y*(player.velocity_y+velocity_backup_y)
-            center.y -= player.y/player.standing_y*(player.velocity_y+velocity_backup_y)
-            for tile in tiles:
-                tile.y -= player.y/player.standing_y*(player.velocity_y+velocity_backup_y)
-        elif player.y < player.standing_y:
-            if player.y > 106:
-                player.y += player.y/player.standing_y*-(player.velocity_y-velocity_backup_y)
-                center.y += player.y/player.standing_y*-(player.velocity_y+velocity_backup_y)
-                for tile in tiles:
-                    tile.y += player.y/player.standing_y*-(player.velocity_y-velocity_backup_y)
-            else:
-                player.y += 106/player.standing_y*-(player.velocity_y-velocity_backup_y)
-                center.y += 106/player.standing_y*-(player.velocity_y+velocity_backup_y)
-                for tile in tiles:
-                    tile.y += 106/player.standing_y*-(player.velocity_y-velocity_backup_y)
-        if player.y == player.standing_y+1:
-            player.y -= 1
-            center.y -= 1
-            for tile in tiles:
-                tile.y -= 1
-        if player.y == player.standing_y-1:
-            player.y += 1
-            center.y += 1
-            for tile in tiles:
-                tile.y += 1
-    else:
-        if player.y > player.crouching_y:
-            player.y -= player.y/player.crouching_y*(player.velocity_y+velocity_backup_y)
-            center.y -= player.y/player.crouching_y*(player.velocity_y+velocity_backup_y)
-            for tile in tiles:
-                tile.y -= player.y/player.crouching_y*(player.velocity_y+velocity_backup_y)
-        elif player.y < player.crouching_y:
-            if player.y > 106:
-                player.y += player.y/player.crouching_y*-(player.velocity_y-velocity_backup_y)
-                center.y += player.y/player.crouching_y*-(player.velocity_y-velocity_backup_y)
-                for tile in tiles:
-                    tile.y += player.y/player.crouching_y*-(player.velocity_y-velocity_backup_y)
-            else:
-                player.y += 106/player.crouching_y*-(player.velocity_y-velocity_backup_y)
-                center.y += 106/player.crouching_y*-(player.velocity_y-velocity_backup_y)
-                for tile in tiles:
-                    tile.y += 106/player.crouching_y*-(player.velocity_y-velocity_backup_y)
-        if player.y == player.crouching_y+1:
-            player.y -= 1
-            center.y -= 1
-            for tile in tiles:
-                tile.y -= 1
-        if player.y == player.crouching_y-1:
-            player.y += 1
-            center.y += 1
-            for tile in tiles:
-                tile.y += 1
-    '''
     if player.crouching:
         feet_rect.x = player.crouching_x+2
         feet_rect.y = player.crouching_y
@@ -791,15 +674,6 @@ global debug
 debug = False
 global coyote_lava
 coyote_lava = 0
-'''
-if player.crouching:
-    player.x = player.crouching_x
-    player.y = player.crouching_y
-else:
-    player.x = player.standing_x
-    player.y = player.standing_y
-'''
-
 while True: #game loop
     spawn_x = 0
     spawn_y = 0
@@ -813,14 +687,6 @@ while True: #game loop
     else:
         player2.height = PLAYER_HEIGHT
         feet_rect2.height = player.height+2
-    '''
-    player2Pos = read_pos(n.send(make_pos((spawn_x,spawn_y,player.velocity_x,player.crouching))))
-    player2.x = spawn_x-player2Pos[0][0]+(10*32)-16
-    player2.y = spawn_y-player2Pos[0][1]+(10*32)-16-(player2.height+TILE_SIZE)
-    player2.velocity_x = player2Pos[1]
-    player.crouching = player2Pos[2]
-    player2.update()
-    '''
     out_str = make_pos((spawn_x, spawn_y, player.velocity_x, player.crouching))
     response = n.send(out_str)
     x, y, vx, crouch = read_pos(response)
@@ -847,15 +713,6 @@ while True: #game loop
 
         #KEYDOWN - key was pressed, KEYUP - key was pressed/release
     keys = pygame.key.get_pressed()
-    '''
-    if keys[pygame.K_r]:
-        for tile in tiles:
-            if tile.image == spawn_tile2:
-                x_shift = tile.x
-                player.y = tile.y-(10*32)+TILE_SIZE+16
-                for i in tiles:
-                    i.x -= x_shift-(10*32)+16
-    '''
     if (keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_SPACE]) and not player.crouching:
         for tile in tiles:
             if feet_rect.colliderect(tile):
@@ -911,38 +768,14 @@ while True: #game loop
             if not player.jumping:
                 player.crouch_jump = False
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        '''
-        if FRICTION > 0:
-            FRICTION -= .1
-        else:
-            FRICTION = 0
-        '''
         if player.velocity_x < 0:
             BACKGROUND_X += .08
         player.velocity_x = -PLAYER_VELOCITY_X//CROUCH_FRICTION
-        '''
-        if player.crouching:
-            player.x = player.crouching_x
-        else:
-            player.x = player.standing_x
-        '''
         player.direction = "left"
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        '''
-        if FRICTION > 0:
-            FRICTION -= .1
-        else:
-            FRICTION = 0
-        '''
         if player.velocity_x > 0:
             BACKGROUND_X -= .08
         player.velocity_x = PLAYER_VELOCITY_X//CROUCH_FRICTION
-        '''
-        if player.crouching:
-            player.x = player.crouching_x
-        else:
-            player.x = player.standing_x
-        '''
         player.direction = "right"
     move()
     draw()
