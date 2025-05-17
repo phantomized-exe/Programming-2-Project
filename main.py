@@ -84,7 +84,9 @@ floor_tile_imagec = load_image("Test Sprite Tile-lava7.png.png",(TILE_SIZE,TILE_
 floor_tile_imaged = load_image("Test Sprite Tile-lava8.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imagee = load_image("Test Sprite Tile-lava9.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imagef = load_image("Test Sprite Tile-lava10.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imageg = load_image("Test Sprite Tile-legacy4.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imageg = load_image("Test Sprite Tile-lava11.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imageh = load_image("Test Sprite Tile-lava12.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imagei = load_image("Test Sprite Tile-legacy4.png.png",(TILE_SIZE,TILE_SIZE))
 
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
@@ -396,6 +398,16 @@ def create_map():
                 y = i*TILE_SIZE
                 tile = Tile(x,y,floor_tile_imageg)
                 tiles.append(tile)
+            elif row[j] == "h":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imageh)
+                tiles.append(tile)
+            elif row[j] == "i":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imagei)
+                tiles.append(tile)
 
 def check_tile_collision():
     for tile in tiles:
@@ -406,7 +418,7 @@ def check_lava_collision():
     global coyote_lava
     for tile in tiles:
         if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or keys[pygame.K_r]:
-            if keys[pygame.K_r] or tile.image == floor_tile_image4 or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef:
+            if keys[pygame.K_r] or tile.image == floor_tile_image4 or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh:
                 player.velocity_x = 0
                 player.velocity_y = 0
                 if coyote_lava >= 8:
@@ -698,8 +710,8 @@ test_map = ["00000000000000000000000000000000000000000000000000000000000000001",
             "@0000000000010000000000100001000000000000001001000000000000001004", 
             "00000000000000000000000000000000000000001001000000000000000000004", 
             "0000000000#0000000000000000001010!0001001001000000000000000010004", 
-            "44444111111111114141414141010101410141414141414100000000000000014", 
-            "7cefd822222222222222222222020202220222222222222200000000000100004", 
+            "5555h111111111114141414141010101410141414141414100000000000000014", 
+            "iiiii822222222222222222222020202220222222222222200000000000100004", 
             "33333333333333333333333333030303330333333333333310000000000000004", 
             "33333333333333333333333333000000000333333333333300000000001000004", 
             "33333333333333333333333333030303330333333333333300000000000000004", 
