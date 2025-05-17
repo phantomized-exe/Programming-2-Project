@@ -726,6 +726,13 @@ while True: #game loop
                     player.velocity_y = PLAYER_VELOCITY_Y
                     player.jumping = True
                     player.jump_count += 1
+                else:
+                    for tile in tiles:
+                        if lava_rect.colliderect(tile):
+                            touching_tile_buffer = True
+                            break
+                        else:
+                            touching_tile_buffer = False
     keys = pygame.key.get_pressed()
     if touching_tile_buffer and not player.jumping and not player.crouching:
         for tile in tiles:
