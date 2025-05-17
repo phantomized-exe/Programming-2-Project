@@ -30,6 +30,7 @@ BACKGROUND_HEIGHT = 1024
 GRAVITY = 1.1
 FRICTION = .8
 PLAYER_VELOCITY_X = 6
+global PLAYER_VELOCITY_Y
 PLAYER_VELOCITY_Y = -13.2
 global CROUCH_FRICTION
 CROUCH_FRICTION = 1
@@ -114,7 +115,7 @@ class Player(pygame.Rect):
         self.crouch_jump = False
         self.player = 1
         self.jump_count = 0
-        self.max_jumps = 2
+        self.max_jumps = 1
     def update(self):
         self.rect = (self.x, self.y, self.width, self.height)
     def update_image(self):
@@ -367,19 +368,19 @@ def check_tile_collision():
 def check_lava_collision():
     global coyote_lava
     for tile in tiles:
-        if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or keys[pygame.K_r]:
+        if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or player.colliderect(tile) or keys[pygame.K_r]:
             if keys[pygame.K_r] or tile.image == floor_tile_image4 or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh:
                 player.velocity_x = 0
                 player.velocity_y = 0
                 if coyote_lava >= 8:
                     coyote_lava = 0
-                    for tile in tiles:
-                        if tile.image == spawn_tile2:
-                            spawn_x = tile.x-(10*32)+16
-                            spawn_y = tile.y-(10*32)+TILE_SIZE+16#-player.height
-                            for tile in tiles:
-                                tile.x -= spawn_x
-                                tile.y -= spawn_y
+                    for i in tiles:
+                        if i.image == spawn_tile2:
+                            spawn_x = i.x-(10*32)+16
+                            spawn_y = i.y-(10*32)+TILE_SIZE+16+3#-player.height
+                            for j in tiles:
+                                j.x -= spawn_x
+                                j.y -= spawn_y
                             break
                 else:
                     coyote_lava += 1
@@ -387,13 +388,15 @@ def check_tile_collision_x():
     tile = check_tile_collision()
     if tile is not None:
         if player.velocity_x < 0:# or player.direction == "right":
-            player.x = tile.x+tile.width
+            #player.x = tile.x+tile.width
+            player.velocity_x = 0
         elif player.velocity_x > 0:# or player.direction == "left":
-            player.x = tile.x-player.width
-        player.velocity_x = 0
+            #player.x = tile.x-32
+            player.velocity_x = 0
 
 def check_tile_collision_y():
     global BACKGROUND_Y
+    global PLAYER_VELOCITY_Y
     global coyote_time
     feet_rect.height = player.height+2
     if player2.crouching:
@@ -410,10 +413,11 @@ def check_tile_collision_y():
                         i.image = spawn_tile
                 tile.image = spawn_tile2
             elif tile.image == floor_tile_imagej:
-                player.max_jumps = 2
-            else:
-                touching_tile_feet = True
-                break
+                if player.max_jumps != 2 and PLAYER_VELOCITY_Y != -12.1:
+                    player.max_jumps = 2
+                    PLAYER_VELOCITY_Y = -12.1
+            touching_tile_feet = True
+            break
         else:
             touching_tile_feet = False
     tile = check_tile_collision()
@@ -489,14 +493,14 @@ def move():
         feet_rect.y = player.crouching_y
         lava_rect.x = player.crouching_x+14
         lava_rect.y = player.crouching_y-2
-        lava_rect2.x = player.crouching_x-5
+        lava_rect2.x = player.crouching_x-2
         lava_rect2.y = player.crouching_y+(player.height/2)
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
         lava_rect.x = player.standing_x+14
         lava_rect.y = player.standing_y-2
-        lava_rect2.x = player.standing_x-5
+        lava_rect2.x = player.standing_x-2
         lava_rect2.y = player.standing_y+(player.height/2)
     check_lava_collision()
     player.y = player.crouching_y if player.crouching else player.standing_y
@@ -627,7 +631,72 @@ test_map = ["00000000000000000000000000000000000000000000000000000000000000001",
             "0000000000000000000000000000000000000000000000000000000000000004",
             "j00000000000000000000000000000000000000000000000000000000000004",
             "44444444444444444444444444444444444444444444444444444444444444"]
-level_dump = json.dumps(test_map)
+test_level2 = [
+    "1111111111111111111111111111111",
+    "0000000000000000000000000000404",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000400",
+    "0000000000000000000000000000010",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000004000000",
+    "0000000000000000000000100000001",
+    "0000040000000000000000000000000",
+    "0000010000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000400000000000",
+    "0!00010000100000010000001000000",
+    "0000004400000440000000000000000",
+    "0000000000000000000000000000000",
+    "4444400000100000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000001",
+    "0000000400000000000004144000000",
+    "0000004414000000000000000000000",
+    "0000000000000000040000000000010",
+    "0000000000000004144400000000000",
+    "0000000041000000000000000000000",
+    "0000000000000000000000000000010",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000010",
+    "0000000001100000000000000000000",
+    "00000000000000000000!0000000000",
+    "0000000000000000000000000000010",
+    "0000000000000414000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000010",
+    "000000000000000000@j00000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000044440010",
+    "0000000000001110000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000040000000000000010",
+    "0000000111000000110000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000010",
+    "0000011100000000001111000000000",
+    "0000000000000000000000000000000",
+    "0000000000000410000000000040010",
+    "!000000001110000000001110000000",
+    "0000000000000000000000000000000",
+    "0000000000000041000000000444444",
+    "0000111000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000001444100000000000000",
+    "0000000000000000000011100000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000010000100",
+    "0000000000000000000000000000000",
+    "0000001000000400000000000000000",
+    "0#00001000000400000000000000010",
+    "1111111111111411111111111111111",
+]
+
+level_dump = json.dumps(test_level2)
 level.write_text(level_dump)
 global  coyote_time
 coyote_time = 0
@@ -637,20 +706,19 @@ n = Network()
 startPos = read_pos(n.getPos())
 player = Player()
 player.player = 1
-player.max_jumps = 1
+for tile in tiles:
+    if tile.image == spawn_tile2:
+        spawn_x = tile.x-(10*32)+16
+        spawn_y = tile.y-(10*32)+TILE_SIZE+16+3#-player.height
+        for i in tiles:
+            i.x -= spawn_x
+            i.y -= spawn_y
+        break
 player2 = Player()
 player2.player = 2
 player2.direction = "right"
-'''
-for tile in tiles:
-    if tile.image == spawn_tile:
-        x_shift = tile.x
-        player.y = tile.y-PLAYER_HEIGHT
-        for i in tiles:
-            i.x -= x_shift-(10*32)+16
-'''
-player.x = startPos[0]
-player.y = startPos[1]
+player2.x = startPos[0]
+player2.y = startPos[1]
 background = Background()
 global time_walking
 global force_crouch
@@ -669,7 +737,7 @@ lava_rect2 = Player()
 lava_rect2.x = player.standing_x-2
 lava_rect2.y = player.standing_y+(player.height/2)
 lava_rect2.height = 2
-lava_rect2.width = PLAYER_WIDTH+10
+lava_rect2.width = PLAYER_WIDTH+4
 feet_rect2 = Player()
 feet_rect2.x = player2.standing_x+2
 feet_rect2.y = player2.standing_y
