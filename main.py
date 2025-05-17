@@ -368,12 +368,12 @@ def check_tile_collision():
 def check_lava_collision():
     global coyote_lava
     for tile in tiles:
-        if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or player.colliderect(tile) or keys[pygame.K_r]:
+        if lava_rect.colliderect(tile) or player.colliderect(tile) or keys[pygame.K_r]:
             if keys[pygame.K_r] or tile.image == floor_tile_image4 or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh:
-                player.velocity_x = 0
-                player.velocity_y = 0
-                if coyote_lava >= 16:
+                if coyote_lava >= 8:
                     coyote_lava = 0
+                    player.velocity_x = 0
+                    player.velocity_y = 0
                     for i in tiles:
                         if i.image == spawn_tile2:
                             spawn_x = i.x-(10*32)+16
@@ -381,12 +381,12 @@ def check_lava_collision():
                             for j in tiles:
                                 j.x -= spawn_x
                                 j.y -= spawn_y
-                            break
-                    break
+                            return
                 else:
                     coyote_lava += 1
-                    break
+                    return
 def check_tile_collision_x():
+    check_lava_collision()
     tile = check_tile_collision()
     if tile is not None:
         if player.velocity_x < 0:# or player.direction == "right":
@@ -400,6 +400,7 @@ def check_tile_collision_y():
     global BACKGROUND_Y
     global PLAYER_VELOCITY_Y
     global coyote_time
+    check_lava_collision()
     feet_rect.height = player.height+2
     if player2.crouching:
         feet_rect2.height = TILE_SIZE+2
@@ -495,15 +496,11 @@ def move():
         feet_rect.y = player.crouching_y
         lava_rect.x = player.crouching_x+14
         lava_rect.y = player.crouching_y-2
-        lava_rect2.x = player.crouching_x-2
-        lava_rect2.y = player.crouching_y+(player.height/2)
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
         lava_rect.x = player.standing_x+14
         lava_rect.y = player.standing_y-2
-        lava_rect2.x = player.standing_x-2
-        lava_rect2.y = player.standing_y+(player.height/2)
     player.y = player.crouching_y if player.crouching else player.standing_y
 
 def read_pos(str):
@@ -565,7 +562,6 @@ def draw():
         pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
         pygame.draw.rect(window, (255, 0, 0), feet_rect2, 2)
         pygame.draw.rect(window, (0, 255, 0), lava_rect, 2)
-        pygame.draw.rect(window, (0, 255, 0), lava_rect2, 2)
 def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
@@ -734,11 +730,6 @@ lava_rect.x = player.standing_x+(player.width/2)-2
 lava_rect.y = player.standing_y
 lava_rect.height = PLAYER_HEIGHT+10
 lava_rect.width = 2
-lava_rect2 = Player()
-lava_rect2.x = player.standing_x-2
-lava_rect2.y = player.standing_y+(player.height/2)
-lava_rect2.height = 2
-lava_rect2.width = PLAYER_WIDTH+4
 feet_rect2 = Player()
 feet_rect2.x = player2.standing_x+2
 feet_rect2.y = player2.standing_y
@@ -790,6 +781,7 @@ while True: #game loop
         elif event.type == pygame.KEYDOWN and not player.crouching:
             if event.key in (pygame.K_UP, pygame.K_w, pygame.K_SPACE):
                 if player.jump_count < player.max_jumps:
+                    coyote_lava = 0
                     for tile in tiles:
                         tile.y -= PLAYER_VELOCITY_Y
                     player.velocity_y = PLAYER_VELOCITY_Y
@@ -804,6 +796,7 @@ while True: #game loop
                             touching_tile_buffer = False
     keys = pygame.key.get_pressed()
     if touching_tile_buffer and not player.jumping and not player.crouching:
+        coyote_lava = 0
         for tile in tiles:
             tile.y -= PLAYER_VELOCITY_Y
         player.velocity_y = PLAYER_VELOCITY_Y
