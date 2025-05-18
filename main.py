@@ -381,10 +381,19 @@ def check_lava_collision():
                             for j in tiles:
                                 j.x -= spawn_x
                                 j.y -= spawn_y
-                            return
+                            break
                 else:
                     coyote_lava += 1
-                    return
+                    break
+    for tile in tiles:
+        if lava_rect2.colliderect(tile):
+            touching_tile_x = True
+            break
+        else:
+            touching_tile_x = False
+    if not touching_tile_x:
+        coyote_lava = 0
+
 def check_tile_collision_x():
     check_lava_collision()
     tile = check_tile_collision()
@@ -496,11 +505,15 @@ def move():
         feet_rect.y = player.crouching_y
         lava_rect.x = player.crouching_x+14
         lava_rect.y = player.crouching_y-2
+        lava_rect2.x = player.crouching_x-5
+        lava_rect2.y = player.crouching_y+16
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
         lava_rect.x = player.standing_x+14
         lava_rect.y = player.standing_y-2
+        lava_rect2.x = player.standing_x-5
+        lava_rect2.y = player.standing_y+29
     player.y = player.crouching_y if player.crouching else player.standing_y
 
 def read_pos(str):
@@ -562,6 +575,7 @@ def draw():
         pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
         pygame.draw.rect(window, (255, 0, 0), feet_rect2, 2)
         pygame.draw.rect(window, (0, 255, 0), lava_rect, 2)
+        pygame.draw.rect(window, (0, 255, 0), lava_rect2, 2)
 def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
@@ -730,6 +744,11 @@ lava_rect.x = player.standing_x+(player.width/2)-2
 lava_rect.y = player.standing_y
 lava_rect.height = PLAYER_HEIGHT+10
 lava_rect.width = 2
+lava_rect2 = Player()
+lava_rect2.x = player.standing_x+(player.width/2)-5
+lava_rect2.y = player.standing_y
+lava_rect2.height = 2
+lava_rect2.width = PLAYER_WIDTH+10
 feet_rect2 = Player()
 feet_rect2.x = player2.standing_x+2
 feet_rect2.y = player2.standing_y
