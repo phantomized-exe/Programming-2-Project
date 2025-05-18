@@ -386,12 +386,18 @@ def check_lava_collision():
                     coyote_lava += 1
                     break
     for tile in tiles:
-        if lava_rect2.colliderect(tile):
+        if lava_rect.colliderect(tile):
             touching_tile_x = True
             break
         else:
             touching_tile_x = False
-    if not touching_tile_x:
+    for tile in tiles:
+        if lava_rect2.colliderect(tile):
+            touching_tile_x2 = True
+            break
+        else:
+            touching_tile_x2 = False
+    if not touching_tile_x and not touching_tile_x2:
         coyote_lava = 0
 
 def check_tile_collision_x():
