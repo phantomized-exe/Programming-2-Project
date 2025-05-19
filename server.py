@@ -1,13 +1,14 @@
 import socket
 from _thread import *
-import sys
+#import sys
 server = "10.30.51.90" #ipconfig in command prompt
 port = 12345
+connected = [False, False]
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 try:
     s.bind((server,port))
 except socket.error as e:
-    str(e)
+    print(str(e))
 s.listen(2)
 print("Waiting for a connection, Server Started")
 def read_pos(s):
@@ -45,10 +46,22 @@ def threaded_client(conn, player):
             print(f"Connection error with player {player+1}: {e}")
             break
     conn.close()
+    connected[player] = False
     print(f"Lost connection with player {player}")
 currentPlayer = 0
 while True:
     conn, addr = s.accept()
     print("Connected to:", addr)
-    start_new_thread(threaded_client, (conn,currentPlayer))
-    currentPlayer += 1
+    #start_new_thread(threaded_client, (conn,currentPlayer))
+    #currentPlayer += 1
+    player = None
+    for i in range(2):
+        if not connected[i]:
+            player = i
+            break
+    if player is None:
+        print("Server full, rejecting connection.")
+        conn.close()
+        continue
+    connected[player] = True
+    start_new_thread(threaded_client, (conn, player))
