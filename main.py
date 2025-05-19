@@ -512,17 +512,17 @@ def move():
     if player.crouching:
         feet_rect.x = player.crouching_x+2
         feet_rect.y = player.crouching_y
-        lava_rect.x = player.crouching_x+14
-        lava_rect.y = player.crouching_y-2
+        lava_rect.x = player.crouching_x+(player.width/2)-5
+        lava_rect.y = player.crouching_y
         lava_rect2.x = player.crouching_x-5
-        lava_rect2.y = player.crouching_y+16
+        lava_rect2.y = player.crouching_y+(player.height/2)-5
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
-        lava_rect.x = player.standing_x+14
-        lava_rect.y = player.standing_y-2
+        lava_rect.x = player.standing_x+(player.width/2)-5
+        lava_rect.y = player.standing_y
         lava_rect2.x = player.standing_x-5
-        lava_rect2.y = player.standing_y+29
+        lava_rect2.y = player.standing_y+(player.height/2)-5
     player.y = player.crouching_y if player.crouching else player.standing_y
 
 def read_pos(str):
@@ -759,14 +759,14 @@ feet_rect.y = player.standing_y
 feet_rect.height = PLAYER_HEIGHT+2
 feet_rect.width = PLAYER_WIDTH-4
 lava_rect = Player()
-lava_rect.x = player.standing_x+(player.width/2)-2
+lava_rect.x = player.standing_x+(player.width/2)-5
 lava_rect.y = player.standing_y
 lava_rect.height = PLAYER_HEIGHT+10
-lava_rect.width = 2
+lava_rect.width = 10
 lava_rect2 = Player()
 lava_rect2.x = player.standing_x+(player.width/2)-5
-lava_rect2.y = player.standing_y
-lava_rect2.height = 2
+lava_rect2.y = player.standing_y-5
+lava_rect2.height = 10
 lava_rect2.width = PLAYER_WIDTH+10
 feet_rect2 = Player()
 feet_rect2.x = player2.standing_x+2
