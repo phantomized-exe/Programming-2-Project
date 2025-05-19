@@ -443,6 +443,7 @@ def check_tile_collision_y():
         coyote_time = 0
         if player.velocity_y < 0:
             player.jumping = True
+            player.velocity_y = 0
             player.y = tile.y+tile.height
         elif player.velocity_y > 0:
             CROUCH_FRICTION = 1
