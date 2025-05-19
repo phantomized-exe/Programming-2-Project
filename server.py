@@ -1,7 +1,7 @@
 import socket
 from _thread import *
 import sys
-server = "192.168.0.8" #ipconfig
+server = "10.30.51.90" #ipconfig in command prompt
 port = 12345
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 try:
