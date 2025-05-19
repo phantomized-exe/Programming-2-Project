@@ -414,6 +414,7 @@ def check_tile_collision_x():
 def check_tile_collision_y():
     global BACKGROUND_Y
     global PLAYER_VELOCITY_Y
+    global CROUCH_FRICTION
     global coyote_time
     check_lava_collision()
     feet_rect.height = player.height+2
@@ -444,6 +445,7 @@ def check_tile_collision_y():
             player.jumping = True
             player.y = tile.y+tile.height
         elif player.velocity_y > 0:
+            CROUCH_FRICTION = 1
             player.y = tile.y - player.height
             if player.jumping:
                 player.jumping = False
@@ -844,8 +846,11 @@ while True: #game loop
     check_crouch()
     if (keys[pygame.K_DOWN] or keys[pygame.K_s]) or force_crouch:
         touching_tile_buffer = False
-        if not player.crouch_jump:
+        if player.jumping:
+            CROUCH_FRICTION = 1
+        else:
             CROUCH_FRICTION = 2
+        if not player.crouch_jump:
             if not player.crouching:
                 if not player.jumping:
                     BACKGROUND_Y -= round((PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT)/50,1)
