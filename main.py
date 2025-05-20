@@ -89,6 +89,10 @@ floor_tile_imageg = load_image("Test Sprite Tile-lava11.png.png",(TILE_SIZE,TILE
 floor_tile_imageh = load_image("Test Sprite Tile-lava12.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imagei = load_image("Test Sprite Tile-legacy4.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imagej = load_image("Test Sprite-star.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imagek = load_image("Test Sprite Tile-lava13.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imagel = load_image("Test Sprite Tile-lava14.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imagem = load_image("Test Sprite Tile-lava15.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imagen = load_image("Test Sprite Tile-lava16.png.png",(TILE_SIZE,TILE_SIZE))
 
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
@@ -359,6 +363,26 @@ def create_map():
                 y = i*TILE_SIZE
                 tile = Tile(x,y,floor_tile_imagej)
                 tiles.append(tile)
+            elif row[j] == "k":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imagek)
+                tiles.append(tile)
+            elif row[j] == "l":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imagel)
+                tiles.append(tile)
+            elif row[j] == "m":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imagem)
+                tiles.append(tile)
+            elif row[j] == "n":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imagen)
+                tiles.append(tile)
 
 def check_tile_collision():
     for tile in tiles:
@@ -388,7 +412,7 @@ def check_lava_collision():
                     break
     for tile in tiles:
         if lava_rect.colliderect(tile):
-            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh:
+            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen:
                 touching_tile_x = True
                 break
             else:
@@ -397,7 +421,7 @@ def check_lava_collision():
             touching_tile_x = False
     for tile in tiles:
         if lava_rect2.colliderect(tile):
-            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh:
+            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen:
                 touching_tile_x2 = True
                 break
             else:
@@ -671,19 +695,19 @@ test_level2 = [
     "0000000000000000000000000000011",
     "0000000000000000000000000000000",
     "0000000000000000000000000000000",
-    "0000000000000!11100000000000000",
+    "0000004000000111100000000000000",
     "0000000000000000000000000000000",
-    "0000000000000000000001400000111",
+    "0000000000000000000001400000001",
+    "0000011000000000000000400000000",
+    "0000004000000000000000000000000",
+    "0000004000000000000000000000000",
     "0000000000000000000000000000000",
-    "0000000000000000000000000000000",
-    "0000000000000000000000000000000",
-    "0000000000000000000000000000000",
-    "0!00014000100000410000001000001",
-    "0000000000000000000000000000000",
+    "0!00000000100000410000000000001",
+    "0000000000000000000000001000000",
     "0000000000000000000000000000000",
     "0000000000100000000000000000000",
     "0000000000000000000000000000000",
-    "0000000000000000000000000000010",
+    "0000000000000000000000000000010000000!",
     "0000000400000000000004144000000",
     "0000004414000000000000000000000",
     "0000000000000000040000000000010",
@@ -724,15 +748,16 @@ test_level2 = [
     "0000000000000000000000000000000",
     "1000001000000400000000000000000",
     "1#00001000000400000000000000010",
-    "1111111111111611111111111111111",
-    "2222222222222222222222222222222",
-    "3333333333333333333333333333333",
-    "3333333333333333333333333333333",
-    "3333333333333333333333333333333",
-    "3333333333333333333333333333333",
-    "3333333333333333333333333333333",
-    "3333333333333333333333333333333"
+    "1111111111111611111111111111111gk55555555",
+    "22222222222222222222222222222222222222222",
+    "33333333333333333333333333333333333333333",
+    "33333333333333333333333333333333333333333",
+    "33333333333333333333333333333333333333333",
+    "33333333333333333333333333333333333333333",
+    "33333333333333333333333333333333333333333",
+    "33333333333333333333333333333333333333333"
 ]
+#mr smith aux gym
 
 level_dump = json.dumps(test_level2)
 level.write_text(level_dump)
