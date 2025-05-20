@@ -93,6 +93,9 @@ floor_tile_imagek = load_image("Test Sprite Tile-lava13.png.png",(TILE_SIZE,TILE
 floor_tile_imagel = load_image("Test Sprite Tile-lava14.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imagem = load_image("Test Sprite Tile-lava15.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imagen = load_image("Test Sprite Tile-lava16.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imageo = load_image("Test Sprite Tile-lava17.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imagep = load_image("Test Sprite Tile-lava18.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imageq = load_image("Test Sprite Tile-lava19.png.png",(TILE_SIZE,TILE_SIZE))
 
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
@@ -383,6 +386,21 @@ def create_map():
                 y = i*TILE_SIZE
                 tile = Tile(x,y,floor_tile_imagen)
                 tiles.append(tile)
+            elif row[j] == "o":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imageo)
+                tiles.append(tile)
+            elif row[j] == "p":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imagep)
+                tiles.append(tile)
+            elif row[j] == "q":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imageq)
+                tiles.append(tile)
 
 def check_tile_collision():
     for tile in tiles:
@@ -392,9 +410,9 @@ def check_tile_collision():
 def check_lava_collision():
     global coyote_lava
     for tile in tiles:
-        if lava_rect.colliderect(tile) or player.colliderect(tile) or keys[pygame.K_r]:
-            if keys[pygame.K_r] or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh:
-                if coyote_lava >= 12 or keys[pygame.K_r]:
+        if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or player.colliderect(tile) or keys[pygame.K_r]:
+            if keys[pygame.K_r] or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq:
+                if coyote_lava >= 32 or keys[pygame.K_r]:
                     coyote_lava = 0
                     player.velocity_x = 0
                     player.velocity_y = 0
@@ -412,7 +430,7 @@ def check_lava_collision():
                     break
     for tile in tiles:
         if lava_rect.colliderect(tile):
-            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen:
+            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq:
                 touching_tile_x = True
                 break
             else:
@@ -421,7 +439,7 @@ def check_lava_collision():
             touching_tile_x = False
     for tile in tiles:
         if lava_rect2.colliderect(tile):
-            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen:
+            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq:
                 touching_tile_x2 = True
                 break
             else:
@@ -546,14 +564,14 @@ def move():
         feet_rect.y = player.crouching_y
         lava_rect.x = player.crouching_x+(player.width/2)-4
         lava_rect.y = player.crouching_y
-        lava_rect2.x = player.crouching_x-5
+        lava_rect2.x = player.crouching_x-4
         lava_rect2.y = player.crouching_y+(player.height/2)-5
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
         lava_rect.x = player.standing_x+(player.width/2)-4
         lava_rect.y = player.standing_y
-        lava_rect2.x = player.standing_x-5
+        lava_rect2.x = player.standing_x-4
         lava_rect2.y = player.standing_y+(player.height/2)-5
     player.y = player.crouching_y if player.crouching else player.standing_y
 
@@ -735,7 +753,7 @@ test_level2 = [
     "4000011100000000001411000000000",
     "0000000000000000000000000000000",
     "0000000000000000000000000000010",
-    "!000000000000000000001110000000",
+    "!000000000000000000000000410000",
     "0000000000000000000000000000000",
     "0000000000000000000000000000000",
     "0000111100000000000000000000000",
@@ -748,7 +766,7 @@ test_level2 = [
     "0000000000000000000000000000000",
     "1000001000000400000000000000000",
     "1#00001000000400000000000000010",
-    "111111111111161111111111g55h111gk55555555",
+    "111111111111161111111111gqqh111gk55555555",
     "22222222222222222222222222222222222222222",
     "33333333333333333333333333333333333333333",
     "33333333333333333333333333333333333333333",
@@ -797,10 +815,10 @@ lava_rect.y = player.standing_y
 lava_rect.height = PLAYER_HEIGHT+10
 lava_rect.width = 8
 lava_rect2 = Player()
-lava_rect2.x = player.standing_x+(player.width/2)-5
+lava_rect2.x = player.standing_x+(player.width/2)-4
 lava_rect2.y = player.standing_y-5
 lava_rect2.height = 10
-lava_rect2.width = PLAYER_WIDTH+10
+lava_rect2.width = PLAYER_WIDTH+8
 feet_rect2 = Player()
 feet_rect2.x = player2.standing_x+2
 feet_rect2.y = player2.standing_y
