@@ -2,9 +2,9 @@ import socket
 
 
 class Network:
-    def __init__(self):
+    def __init__(self,network_ip):
         self.client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        self.server = "192.168.0.8" #ipconfig in command prompt
+        self.server = network_ip #ipconfig in command prompt
         self.port = 12345
         self.addr = (self.server,self.port)
         self.pos = self.connect()

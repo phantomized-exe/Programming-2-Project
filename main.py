@@ -783,7 +783,8 @@ global  coyote_time
 coyote_time = 0
 tiles = []
 create_map()
-n = Network()
+network_ip = input("Enter server IP: ")
+n = Network(network_ip)
 startPos = read_pos(n.getPos())
 player = Player()
 player.player = 1

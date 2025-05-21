@@ -1,7 +1,18 @@
 import socket
+import random
 from _thread import *
 #import sys
-server = "192.168.0.8" #ipconfig in command prompt
+def get_local_ip():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        sock.connect(('8.8.8.8', 80)) 
+        return sock.getsockname()[0]
+    except:
+        return '127.0.0.1'
+    finally:
+        sock.close()
+print(f"Clients connect to {get_local_ip()}")
+server = "0.0.0.0" #ipconfig in command prompt
 port = 12345
 connected = [False, False]
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -10,6 +21,7 @@ try:
 except socket.error as e:
     print(str(e))
 s.listen(2)
+
 print("Waiting for a connection, Server Started")
 def read_pos(s):
     s = s.split(",")
