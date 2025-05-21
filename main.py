@@ -410,7 +410,7 @@ def check_tile_collision():
 def check_lava_collision():
     global coyote_lava
     for tile in tiles:
-        if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or player.colliderect(tile) or keys[pygame.K_r]:
+        if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or keys[pygame.K_r]:
             if keys[pygame.K_r] or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq:
                 if coyote_lava >= 32 or keys[pygame.K_r]:
                     coyote_lava = 0
@@ -454,13 +454,21 @@ def check_tile_collision_x():
     check_lava_collision()
     tile = check_tile_collision()
     if tile is not None:
-        if player.velocity_x < 0:# or player.direction == "right":
-            #player.x = tile.x+tile.width
-            player.velocity_x = 0
-        elif player.velocity_x > 0:# or player.direction == "left":
-            #player.x = tile.x-32
-            player.velocity_x = 0
-    player.x = player.crouching_x if player.crouching else player.standing_x
+        player.velocity_x = 0 
+        if player.velocity_x < 0 or player.direction == "left":
+            player.x = tile.x+TILE_SIZE
+        elif player.velocity_x > 0 or player.direction == "right":
+            player.x = tile.x-player.width
+        if player.x > player.standing_y:
+            for tile in tiles:
+                tile.x -= player.x-player.standing_x
+            player.x -= player.x-player.standing_x
+        else:
+            for tile in tiles:
+                tile.x += player.x-player.standing_x
+            player.x += player.x-player.standing_x
+
+    #player.x = player.crouching_x if player.crouching else player.standing_x
 def check_tile_collision_y():
     global BACKGROUND_Y
     global PLAYER_VELOCITY_Y
@@ -514,6 +522,7 @@ def check_tile_collision_y():
 
 def move():
     global BACKGROUND_Y
+    global BACKGROUND_X
     if abs(player.velocity_x) <= FRICTION:
         player.velocity_x = 0
     elif player.velocity_x > 0:
@@ -537,6 +546,7 @@ def move():
     for tile in tiles:
         if tile.image == bg:
             BACKGROUND_Y = tile.y/25
+            BACKGROUND_X = tile.x/25
     BACKGROUND_Y = round(BACKGROUND_Y,1)
     check_tile_collision_y()
     if not player.crouching:
@@ -564,14 +574,14 @@ def move():
         feet_rect.y = player.crouching_y
         lava_rect.x = player.crouching_x+(player.width/2)-4
         lava_rect.y = player.crouching_y
-        lava_rect2.x = player.crouching_x-4
+        lava_rect2.x = player.crouching_x-2
         lava_rect2.y = player.crouching_y+(player.height/2)-5
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
         lava_rect.x = player.standing_x+(player.width/2)-4
         lava_rect.y = player.standing_y
-        lava_rect2.x = player.standing_x-4
+        lava_rect2.x = player.standing_x-2
         lava_rect2.y = player.standing_y+(player.height/2)-5
     player.y = player.crouching_y if player.crouching else player.standing_y
 
@@ -602,22 +612,30 @@ def draw():
     #window.fill("#54de9e")
     #window.fill((84,222,158))
     background_y = BACKGROUND_Y
+    background_x = BACKGROUND_X
     window.fill((20,18,167))
     background_y = round(BACKGROUND_Y/4,1)
+    background_x = round(BACKGROUND_X/4,1)
     round(background_y,1)
-    window.blit(background_image3, (BACKGROUND_X//4,background_y))
+    window.blit(background_image3, (background_x,background_y))
     background_y = BACKGROUND_Y
     background_y = round(background_y/2,1)-103
+    background_x = BACKGROUND_X
+    background_x = round(background_x/2,1)-206
     round(background_y,1)
-    window.blit(background_image, (BACKGROUND_X//2-206,background_y))
+    window.blit(background_image, (background_x,background_y))
     background_y = BACKGROUND_Y
     background_y = background_y-103
+    background_x = BACKGROUND_X
+    background_x = background_x-206
     round(background_y,1)
-    window.blit(background_image0, (BACKGROUND_X-206,background_y))
+    window.blit(background_image0, (background_x,background_y))
     background_y = BACKGROUND_Y
     background_y = background_y*2
+    background_x = BACKGROUND_X
+    background_x = background_x*2
     round(background_y,1)
-    window.blit(background_image2, (BACKGROUND_X*2,background_y))
+    window.blit(background_image2, (BACKGROUND_X,background_y))
     for tile in tiles:
         window.blit(tile.image, tile)
     player.update_image()
@@ -702,10 +720,37 @@ test_map = ["00000000000000000000000000000000000000000000000000000000000000001",
             "j00000000000000000000000000000000000000000000000000000000000004",
             "44444444444444444444444444444444444444444444444444444444444444"]
 test_level2 = [
+    "0000000000000000000000000000000",
+    "1101111!00000000000000000000000",
+    "0100400000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0140000000000000000000000000000",
+    "0000000010000000000000000000000",
+    "0000000000000001000000000000000",
+    "0000000000000000000000010000000",
+    "0000000000000000000000000000001",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "!110000000000000000000000000000",
+    "0000000010000000000000000000001",
+    "0000000004000000000000010000000",
+    "0000000000000000100000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000001",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000001",
+    "0000001000000041000000000000000",
+    "1000000000000000000000001000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
     "0004000040004000400000000000000",
     "0040000400000000000040000000000",
-    "0000000000000000000000000400000",
-    "!000010000100010001000100000104",
+    "!000000000000000000000000400000",
+    "0000010000100010001000100000104",
     "0000000000000000000000000000404",
     "0000000000000000000000000000004",
     "0000000000000000000000000000004",
@@ -741,7 +786,7 @@ test_level2 = [
     "0000000000000414000000000000000",
     "0000000000000000000000000000000",
     "0000000000000000000000000000010",
-    "000000000000000000@j00000000000",
+    "0000000000000000001j00000000000",
     "0000000000000000000000000000000",
     "0000000000000000000000000000010",
     "0000000000001110000000000000000",
@@ -766,7 +811,7 @@ test_level2 = [
     "0000000000000000000000000000000",
     "1000001000000400000000000000000",
     "1#00001000000400000000000000010",
-    "111111111111161111111111gqqh111gk55555555",
+    "1@1111111111161111111111gqqh111gk55555555",
     "22222222222222222222222222222222222222222",
     "33333333333333333333333333333333333333333",
     "33333333333333333333333333333333333333333",
@@ -787,6 +832,7 @@ network_ip = input("Enter server IP: ")
 n = Network(network_ip)
 startPos = read_pos(n.getPos())
 player = Player()
+player.width = PLAYER_WIDTH
 player.player = 1
 for tile in tiles:
     if tile.image == spawn_tile2:
@@ -817,9 +863,9 @@ lava_rect.height = PLAYER_HEIGHT+10
 lava_rect.width = 8
 lava_rect2 = Player()
 lava_rect2.x = player.standing_x+(player.width/2)-4
-lava_rect2.y = player.standing_y-5
+lava_rect2.y = player.standing_y+(player.height/2)-5
 lava_rect2.height = 10
-lava_rect2.width = PLAYER_WIDTH+8
+lava_rect2.width = PLAYER_WIDTH+4
 feet_rect2 = Player()
 feet_rect2.x = player2.standing_x+2
 feet_rect2.y = player2.standing_y
@@ -923,13 +969,9 @@ while True: #game loop
             if not player.jumping:
                 player.crouch_jump = False
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        if player.velocity_x < 0:
-            BACKGROUND_X += .08
         player.velocity_x = -PLAYER_VELOCITY_X//CROUCH_FRICTION
         player.direction = "left"
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        if player.velocity_x > 0:
-            BACKGROUND_X -= .08
         player.velocity_x = PLAYER_VELOCITY_X//CROUCH_FRICTION
         player.direction = "right"
     move()
