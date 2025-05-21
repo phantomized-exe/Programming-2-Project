@@ -480,7 +480,7 @@ def check_tile_collision_y():
         feet_rect2.height = TILE_SIZE+2
     else:
         feet_rect2.height = player.height+2
-    lava_rect.height = player.height+10
+    lava_rect.height = player.height+12
     for tile in tiles:
         if feet_rect.colliderect(tile):
             if tile.image == spawn_tile:
@@ -523,19 +523,6 @@ def check_tile_collision_y():
 def move():
     global BACKGROUND_Y
     global BACKGROUND_X
-    if abs(player.velocity_x) <= FRICTION:
-        player.velocity_x = 0
-    elif player.velocity_x > 0:
-        player.velocity_x -= FRICTION
-    elif player.velocity_x < 0:
-        player.velocity_x += FRICTION
-    player.x += player.velocity_x
-    check_lava_collision()
-    check_tile_collision_x()
-    for tile in tiles:
-        tile.x -= player.velocity_x
-    check_tile_collision_x()
-    player.x = player.crouching_x if player.crouching else player.standing_x
     #y movement
     if player.jumping and player.velocity_y < 500:
         player.velocity_y += GRAVITY
@@ -549,6 +536,20 @@ def move():
             BACKGROUND_X = tile.x/25
     BACKGROUND_Y = round(BACKGROUND_Y,1)
     check_tile_collision_y()
+    #x movement
+    if abs(player.velocity_x) <= FRICTION:
+        player.velocity_x = 0
+    elif player.velocity_x > 0:
+        player.velocity_x -= FRICTION
+    elif player.velocity_x < 0:
+        player.velocity_x += FRICTION
+    player.x += player.velocity_x
+    check_lava_collision()
+    check_tile_collision_x()
+    for tile in tiles:
+        tile.x -= player.velocity_x
+    check_tile_collision_x()
+    player.x = player.crouching_x if player.crouching else player.standing_x
     if not player.crouching:
         while player.y != player.standing_y:
             if player.y > player.standing_y:
@@ -572,15 +573,15 @@ def move():
     if player.crouching:
         feet_rect.x = player.crouching_x+2
         feet_rect.y = player.crouching_y
-        lava_rect.x = player.crouching_x+(player.width/2)-4
-        lava_rect.y = player.crouching_y
+        lava_rect.x = player.crouching_x+(player.width/2)-3
+        lava_rect.y = player.crouching_y-2
         lava_rect2.x = player.crouching_x-2
         lava_rect2.y = player.crouching_y+(player.height/2)-5
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
-        lava_rect.x = player.standing_x+(player.width/2)-4
-        lava_rect.y = player.standing_y
+        lava_rect.x = player.standing_x+(player.width/2)-3
+        lava_rect.y = player.standing_y-2
         lava_rect2.x = player.standing_x-2
         lava_rect2.y = player.standing_y+(player.height/2)-5
     player.y = player.crouching_y if player.crouching else player.standing_y
@@ -756,7 +757,7 @@ test_level2 = [
     "0000000000000000000000000000004",
     "0000000000000000000000000000004",
     "0000000000000000000000000000011",
-    "0000000000000000000000000000000",
+    "0000000000000000000000004000000",
     "0000000000000000000000000000000",
     "0000004000000111100000000000000",
     "0000000000000000000000000000000",
@@ -773,45 +774,45 @@ test_level2 = [
     "0000000000000000000000000000010000000!",
     "0000000400000000000004144000000",
     "0000004414000000000000000000000",
-    "0000000000000000040000000000010",
-    "0000000000000004144400000000000",
+    "0000000000000000040000000000000",
+    "0000000000000004144400000000010",
     "0000000041000000000000000000000",
-    "0000000000000000000000000000010",
     "0000000000000000000000000000000",
     "0000000000000000000000000000000",
     "0000000000000000000000000000010",
+    "0000000000000000000000000000000",
     "0000000001100000000000000000000",
     "00000000000000000000!0000000000",
     "0000000000000000000000000000010",
     "0000000000000414000000000000000",
     "0000000000000000000000000000000",
-    "0000000000000000000000000000010",
-    "0000000000000000001j00000000000",
     "0000000000000000000000000000000",
-    "0000000000000000000000000000010",
+    "0000000000000000001j00000000010",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
     "0000000000001110000000000000000",
-    "0000000000000000000000000000000",
     "0000000000000000000000000000010",
+    "0000000000000000000000000000000",
     "0000000001000000010000000000000",
     "0000000000000000000000000000000",
     "0000000000000000000000000000010",
     "4000011100000000001411000000000",
     "0000000000000000000000000000000",
-    "0000000000000000000000000000010",
-    "!000000000000000000000000410000",
+    "0000000000000000000000000000000",
+    "!000000000000000000000000411000",
     "0000000000000000000000000000000",
     "0000000000000000000000000000000",
-    "0000111100000000000000000000000",
+    "0001000100000000000000000000000",
     "0000000000000000000000000000000",
     "0000000000001000100000000000000",
-    "0000000000000000000011100000000",
+    "0000000000000000000041000000000",
     "0000000000000000000000000000000",
     "0000000000000000000000000000000",
     "0000000000000000000000010000100",
-    "0000000000000000000000000000000",
+    "0000001000000000000000000000000",
     "1000001000000400000000000000000",
     "1#00001000000400000000000000010",
-    "1@1111111111161111111111gqqh111gk55555555",
+    "1@gqqh111111161111111111gqqh111gk55555555",
     "22222222222222222222222222222222222222222",
     "33333333333333333333333333333333333333333",
     "33333333333333333333333333333333333333333",
@@ -857,10 +858,10 @@ feet_rect.y = player.standing_y
 feet_rect.height = PLAYER_HEIGHT+2
 feet_rect.width = PLAYER_WIDTH-4
 lava_rect = Player()
-lava_rect.x = player.standing_x+(player.width/2)-4
-lava_rect.y = player.standing_y
-lava_rect.height = PLAYER_HEIGHT+10
-lava_rect.width = 8
+lava_rect.x = player.standing_x+(player.width/2)-3
+lava_rect.y = player.standing_y-2
+lava_rect.height = PLAYER_HEIGHT+12
+lava_rect.width = 6
 lava_rect2 = Player()
 lava_rect2.x = player.standing_x+(player.width/2)-4
 lava_rect2.y = player.standing_y+(player.height/2)-5
