@@ -47,8 +47,8 @@ def threaded_client(conn, player):
                 y = int(parts[1])
                 vx = float(parts[2])
                 crouch = (parts[3] == "True")
-            except ValueError as verr:
-                print(f"parse error {verr} on {parts}")
+            except ValueError as e:
+                print(f"parse error {e} on {parts}")
                 continue
             pos[player] = (x, y, vx, crouch)
             reply = pos[1-player]
