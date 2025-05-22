@@ -609,6 +609,7 @@ def make_pos(tup):
 def draw():
     global BACKGROUND_Y
     global debug
+    global cheat
     #window.fill("blue")
     #window.fill("#54de9e")
     #window.fill((84,222,158))
@@ -643,18 +644,22 @@ def draw():
     window.blit(player.image,player)
     player2.update_image()
     window.blit(player2.image,player2)
+    if keys[pygame.K_l]:
+        cheat = True
     if keys[pygame.K_o]:
         debug = True
-    elif keys[pygame.K_p]:
+    if keys[pygame.K_p]:
         debug = False
+        cheat = False
     if debug:
-        player.jump_count = 0
         pygame.draw.rect(window, (255, 255, 255), player, 2)
         pygame.draw.rect(window, (255, 255, 255), player2, 2)
         pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
         pygame.draw.rect(window, (255, 0, 0), feet_rect2, 2)
         pygame.draw.rect(window, (0, 255, 0), lava_rect, 2)
         pygame.draw.rect(window, (0, 255, 0), lava_rect2, 2)
+    if cheat:
+        player.jump_count = 0
 def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
@@ -728,14 +733,14 @@ test_level2 = [
     "0000440000000000000000000000000",
     "0000440000000000000000000000000",
     "0000440000000000000000000000000",
-    "0111441!44444444444444444444444",
-    "0044444444444444444444444444444",
-    "0004444000444400044440000444000",
-    "0000440000044000004400000044000",
-    "0000000000044000004400000044!00",
-    "0410000010004000004400000044000",
-    "0000000000000000000400000044000",
-    "0000000000000001000000000004000",
+    "011144!1gqqqqqqqqqqqqqqqqqq44qq",
+    "0011441111111111111111111114411",
+    "0002442000222200022220000224000",
+    "000004000003300000330000003a000",
+    "0000000000033000003300000033!00",
+    "0410000010003000003300000033000",
+    "0000000000000000000300000033000",
+    "0000000000000001000000000003000",
     "0000000000000000000000010000000",
     "0000000000000000000000000000001",
     "0000000000000000000000000000000",
@@ -882,6 +887,8 @@ touching_tile_buffer = False
 player2_crouching = False
 global debug
 debug = False
+global cheat
+cheat = False
 global coyote_lava
 coyote_lava = 0
 while True: #game loop
