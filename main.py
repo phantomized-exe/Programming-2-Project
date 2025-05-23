@@ -55,6 +55,7 @@ player2_image_left = load_image("Test Sprite2-left.png.png",(PLAYER_WIDTH,PLAYER
 player2_image_left2 = load_image("Test Sprite2-left2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
 image_icon = load_image("Test Sprite-icon.png.png")
 image_icon2 = load_image("Test Sprite-icon2.png.png")
+image_icon3 = load_image("Test Sprite-icon3.png.png")
 spawn_tile = load_image("Test Sprite-icon.png.png",(TILE_SIZE,TILE_SIZE))
 spawn_tile2 = load_image("Test Sprite-icon2.png.png",(TILE_SIZE,TILE_SIZE))
 bg = load_image("Test Sprite-bg.png.png",(TILE_SIZE,TILE_SIZE))
@@ -100,7 +101,7 @@ floor_tile_imageq = load_image("Test Sprite Tile-lava19.png.png",(TILE_SIZE,TILE
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
 pygame.display.set_caption("Celeste 2") #title of window
-pygame.display.set_icon(image_icon2)
+pygame.display.set_icon(image_icon3)
 clock = pygame.time.Clock() #used for the framerate
 
 class Background(pygame.Rect):
@@ -833,7 +834,7 @@ test_map = [
     "00000000000000000000000000001!1",
     "0000000000000000000000000000000",
     "0000000000000000000000000000000",
-    "0001440000000000000000000001100",
+    "0001400000000000000000000001100",
     "0001000000000000000000000000000",
     "0001000000000000000000000000000",
     "!101000001000000000000000000011",

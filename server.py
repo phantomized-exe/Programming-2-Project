@@ -40,7 +40,7 @@ def threaded_client(conn, player):
             raw = raw.strip()
             parts = raw.split(",")
             if len(parts) != 4:
-                print(f"error player {player!r}: {repr(raw)}")
+                print(f"error player {player+1!r}: {repr(raw)}")
                 continue
             try:
                 x = int(parts[0])
@@ -50,7 +50,7 @@ def threaded_client(conn, player):
             except ValueError as e:
                 print(f"parse error {e} on {parts}")
                 continue
-            pos[player] = (x, y, vx, crouch)
+            pos[player] = (x, y+3, vx, crouch)
             reply = pos[1-player]
             print(f"Player {player+1}: {pos[player]}; sending back {reply}")
             conn.sendall(str.encode(make_pos(reply)))
@@ -59,7 +59,7 @@ def threaded_client(conn, player):
             break
     conn.close()
     connected[player] = False
-    print(f"Lost connection with player {player}")
+    print(f"Lost connection with player {player+1}")
 currentPlayer = 0
 while True:
     conn, addr = s.accept()

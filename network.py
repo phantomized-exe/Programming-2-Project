@@ -1,6 +1,5 @@
 import socket
 global rand_ip
-rand_ip = -1
 
 class Network:
     def __init__(self,server_ip):
@@ -18,7 +17,6 @@ class Network:
             self.client.connect(self.addr)
             return self.client.recv(2048).decode()
         except Exception as e:
-            print("test")
             print(f"Error: {e}")
 
     def send(self,data):
