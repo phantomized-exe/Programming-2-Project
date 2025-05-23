@@ -2,14 +2,10 @@ import socket
 global rand_ip
 rand_ip = -1
 
-def get_server_ip():
-    global rand_ip
-    rand_ip += 1
-    return f"192.168.0.{rand_ip}"
 class Network:
-    def __init__(self):
+    def __init__(self,server_ip):
         self.client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        self.server = get_server_ip
+        self.server = server_ip
         self.port = 12345
         self.addr = (self.server,self.port)
         self.pos = self.connect()
@@ -22,6 +18,7 @@ class Network:
             self.client.connect(self.addr)
             return self.client.recv(2048).decode()
         except Exception as e:
+            print("test")
             print(f"Error: {e}")
 
     def send(self,data):
