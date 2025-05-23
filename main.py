@@ -97,6 +97,7 @@ floor_tile_imagen = load_image("Test Sprite Tile-lava16.png.png",(TILE_SIZE,TILE
 floor_tile_imageo = load_image("Test Sprite Tile-lava17.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imagep = load_image("Test Sprite Tile-lava18.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imageq = load_image("Test Sprite Tile-lava19.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imager = load_image("Test Sprite Tile-bounce.png.png",(TILE_SIZE,TILE_SIZE))
 
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
@@ -402,6 +403,11 @@ def create_map():
                 y = i*TILE_SIZE
                 tile = Tile(x,y,floor_tile_imageq)
                 tiles.append(tile)
+            elif row[j] == "r":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imager)
+                tiles.append(tile)
 
 def check_tile_collision():
     for tile in tiles:
@@ -493,6 +499,12 @@ def check_tile_collision_y():
                 if player.max_jumps != 2 and PLAYER_VELOCITY_Y != -12.1:
                     player.max_jumps = 2
                     PLAYER_VELOCITY_Y = -12.1
+            elif tile.image == floor_tile_imager:
+                for tile in tiles:
+                    tile.y -= PLAYER_VELOCITY_Y*1.5
+                player.velocity_y = PLAYER_VELOCITY_Y*1.5
+                player.jumping = True
+                player.jump_count += 1
             touching_tile_feet = True
             break
         else:
@@ -771,7 +783,7 @@ test_map = [
     "0000000000000000000000000000011",
     "0000000000000000000000004000000",
     "0000000000000000000000000000000",
-    "00000040000001!1100000000000000",
+    "00000000000001!1100000000000000",
     "0000000000000000000000400000000",
     "0000040000000000000001400000001",
     "0000001000000000000000400000000",
@@ -793,7 +805,7 @@ test_map = [
     "0000000000000000000000000000000",
     "0000000000000000000000000000010",
     "0000000000000000000000000000000",
-    "0000000001100000000000000000000",
+    "0000000001r00000000000000000000",
     "00000000000000000000!0000000000",
     "0000000000000000000000000000010",
     "0000000000000414000000000000000",
@@ -823,13 +835,13 @@ test_map = [
     "0000000000000000000000010000100",
     "0000001000000000000000000000000",
     "0000001000000400000000000000000",
-    "0!00001000000400000000000000010",
-    "110000100001gqh@00000111gqqh111",
+    "0000001000000400000000000000010",
+    "000000100001gqh@00000111gqqh111",
     "0000002000022222000002222222222",
-    "0000003000033333000003333333333",
-    "1000000000000033000003300000000",
+    "0r00003000033333000003333333333",
+    "01!0000000000033000003300000000",
     "0000000000000000000000000000000",
-    "0011001100000000000000000000000",
+    "0000001100000000000000000000000",
     "0000000000110011000001110000000",
     "00000000000000000000000000001!1",
     "0000000000000000000000000000000",
@@ -864,7 +876,7 @@ test_map = [
     "11000000000000000000000000111#1",
     "1100000000000000000011000011111",
     "1100001111000111000011000011111",
-    "11144411114441114444114444111114444444444",
+    "11r44411114441114444114444111114444444444",
     "iiiqqqiiiiqqqiiiqqqqiiqqqqiiiiiqqqqqqqqqq",
     "22222222222222222222222222222222222222222",
     "33333333333333333333333333333333333333333",
