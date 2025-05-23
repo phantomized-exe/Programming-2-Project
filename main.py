@@ -486,7 +486,7 @@ def check_tile_collision_y():
     if player2.crouching:
         feet_rect2.height = TILE_SIZE+2
     else:
-        feet_rect2.height = player.height+2
+        feet_rect2.height = player2.height+2
     lava_rect.height = player.height+12
     for tile in tiles:
         if feet_rect.colliderect(tile):
@@ -539,6 +539,8 @@ def move():
     #y movement
     if player.jumping and player.velocity_y < 500:
         player.velocity_y += GRAVITY
+    if player2.crouching:
+        player2.y -= 13
     player.velocity_y = round(player.velocity_y,1)
     check_lava_collision()
     check_tile_collision_y()
@@ -958,7 +960,7 @@ while True: #game loop
         feet_rect2.height = TILE_SIZE+2
     else:
         player2.height = PLAYER_HEIGHT
-        feet_rect2.height = player.height+2
+        feet_rect2.height = player2.height+2
     out_str = make_pos((spawn_x, spawn_y, player.velocity_x, player.crouching))
     response = n.send(out_str)
     x, y, vx, crouch = read_pos(response)
