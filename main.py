@@ -497,6 +497,7 @@ def check_tile_collision_y():
                 tile.image = spawn_tile2
             elif tile.image == floor_tile_imagej:
                 if player.max_jumps != 2 and PLAYER_VELOCITY_Y != -12.1:
+                    print("Double jump unlocked!")
                     player.max_jumps = 2
                     PLAYER_VELOCITY_Y = -12.1
             elif tile.image == floor_tile_imager:
