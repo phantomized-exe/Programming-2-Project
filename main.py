@@ -99,7 +99,7 @@ floor_tile_imageq = load_image("Test Sprite Tile-lava19.png.png",(TILE_SIZE,TILE
 
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
-pygame.display.set_caption("test game") #title of window
+pygame.display.set_caption("Celeste 2") #title of window
 pygame.display.set_icon(image_icon2)
 clock = pygame.time.Clock() #used for the framerate
 
