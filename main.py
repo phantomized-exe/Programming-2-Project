@@ -434,6 +434,9 @@ def check_lava_collision():
                                 j.y -= spawn_y
                             break
                     player.jump_count = 0
+                    if player.collide_rect(player2):
+                        for tile in tiles:
+                            tile.y += player2.height
                 else:
                     coyote_lava += 1
                     break
@@ -980,7 +983,7 @@ while True: #game loop
     feet_rect2.x = spawn_x-x+(10*32)-16+2
     feet_rect2.y = spawn_y-y+(10*32)-16-(player2.height + TILE_SIZE)
     for tile in tiles:
-        if feet_rect2.colliderect(tile):
+        if feet_rect2.colliderect(tile) or feet_rect2.colliderect(player2):
             player2.jumping = False
             break
         else:
