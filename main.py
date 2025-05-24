@@ -434,7 +434,7 @@ def check_lava_collision():
                                 j.y -= spawn_y
                             break
                     player.jump_count = 0
-                    if player.collide_rect(player2):
+                    if player.colliderect(player2):
                         for tile in tiles:
                             tile.y += player2.height
                 else:
