@@ -413,6 +413,8 @@ def check_tile_collision():
     for tile in tiles:
         if player.colliderect(tile):
             return tile
+    if player.colliderect(player2):
+        return player2
     return None
 def check_lava_collision():
     global coyote_lava
@@ -510,6 +512,8 @@ def check_tile_collision_y():
             break
         else:
             touching_tile_feet = False
+        if feet_rect.colliderect(player2):
+            touching_tile_feet = True
     tile = check_tile_collision()
     if tile is not None:
         coyote_time = 0
@@ -656,10 +660,10 @@ def draw():
     window.blit(background_image2, (BACKGROUND_X,background_y))
     for tile in tiles:
         window.blit(tile.image, tile)
-    player.update_image()
-    window.blit(player.image,player)
     player2.update_image()
     window.blit(player2.image,player2)
+    player.update_image()
+    window.blit(player.image,player)
     if keys[pygame.K_l]:
         cheat = True
     if keys[pygame.K_o]:
@@ -901,6 +905,11 @@ create_map()
 server_ip = input("Enter server IP: ")
 n = Network(server_ip)
 startPos = read_pos(n.getPos())
+player2 = Player()
+player2.player = 2
+player2.direction = "right"
+player2.x = startPos[0]
+player2.y = startPos[1]
 player = Player()
 player.width = PLAYER_WIDTH
 player.player = 1
@@ -912,11 +921,6 @@ for tile in tiles:
             i.x -= spawn_x
             i.y -= spawn_y
         break
-player2 = Player()
-player2.player = 2
-player2.direction = "right"
-player2.x = startPos[0]
-player2.y = startPos[1]
 background = Background()
 global time_walking
 global force_crouch
