@@ -410,10 +410,9 @@ def create_map():
                 tiles.append(tile)
 
 def check_tile_collision():
+    if player.colliderect(player2):
+        return player2
     for tile in tiles:
-        if player.colliderect(player2) and feet_rect.colliderect(tile):
-            if tile.image != spawn_tile2:
-                return player2
         if player.colliderect(tile):
             return tile
     return None
@@ -435,7 +434,6 @@ def check_lava_collision():
                                 j.y -= spawn_y
                             break
                     player.jump_count = 0
-                    player.velocity_x = 1
                     check_tile_collision_x()
                     check_tile_collision_y()
                 else:
@@ -1004,7 +1002,7 @@ while True: #game loop
     spawn_y = 0
     for tile in tiles:
         if tile.image == bg:
-            spawn_x = tile.x
+            spawn_x = tile.x+2
             spawn_y = tile.y
     if player2.crouching:
         player2.height = TILE_SIZE
@@ -1024,7 +1022,10 @@ while True: #game loop
     elif player2.velocity_x < 0: 
         player2.direction = "left"
     feet_rect2.x = spawn_x-x+(10*32)-16+2
-    feet_rect2.y = spawn_y-y+(10*32)-16-(player2.height + TILE_SIZE)
+    if not player2.crouching:
+        feet_rect2.y = spawn_y-y+(10*32)-16-(player2.height+TILE_SIZE)
+    else:
+        feet_rect2.y = spawn_y-y+(10*32)-32+3-(player2.height+TILE_SIZE)
     for tile in tiles:
         if feet_rect2.colliderect(tile) or feet_rect2.colliderect(player2):
             player2.jumping = False
