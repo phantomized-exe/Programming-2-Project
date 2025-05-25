@@ -434,8 +434,6 @@ def check_lava_collision():
                                 j.y -= spawn_y
                             break
                     player.jump_count = 0
-                    check_tile_collision_x()
-                    check_tile_collision_y()
                 else:
                     coyote_lava += 1
                     break
@@ -547,6 +545,20 @@ def check_tile_collision_y():
 def move():
     global BACKGROUND_Y
     global BACKGROUND_X
+    #x movement
+    if abs(player.velocity_x) <= FRICTION:
+        player.velocity_x = 0
+    elif player.velocity_x > 0:
+        player.velocity_x -= FRICTION
+    elif player.velocity_x < 0:
+        player.velocity_x += FRICTION
+    player.x += player.velocity_x
+    check_lava_collision()
+    check_tile_collision_x()
+    for tile in tiles:
+        tile.x -= player.velocity_x
+    check_tile_collision_x()
+    player.x = player.crouching_x if player.crouching else player.standing_x
     #y movement
     if player.jumping and player.velocity_y < 500:
         player.velocity_y += GRAVITY
@@ -562,20 +574,6 @@ def move():
             BACKGROUND_X = tile.x/25
     BACKGROUND_Y = round(BACKGROUND_Y,1)
     check_tile_collision_y()
-    #x movement
-    if abs(player.velocity_x) <= FRICTION:
-        player.velocity_x = 0
-    elif player.velocity_x > 0:
-        player.velocity_x -= FRICTION
-    elif player.velocity_x < 0:
-        player.velocity_x += FRICTION
-    player.x += player.velocity_x
-    check_lava_collision()
-    check_tile_collision_x()
-    for tile in tiles:
-        tile.x -= player.velocity_x
-    check_tile_collision_x()
-    player.x = player.crouching_x if player.crouching else player.standing_x
     if not player.crouching:
         while player.y != player.standing_y:
             if player.y > player.standing_y:
