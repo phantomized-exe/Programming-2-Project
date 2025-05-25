@@ -410,9 +410,10 @@ def create_map():
                 tiles.append(tile)
 
 def check_tile_collision():
-    if player.colliderect(player2):
-        return player2
     for tile in tiles:
+        if player.colliderect(player2) and feet_rect.colliderect(tile):
+            if tile.image != spawn_tile2:
+                return player2
         if player.colliderect(tile):
             return tile
     return None
@@ -434,7 +435,9 @@ def check_lava_collision():
                                 j.y -= spawn_y
                             break
                     player.jump_count = 0
+                    player.velocity_x = 1
                     check_tile_collision_x()
+                    check_tile_collision_y()
                 else:
                     coyote_lava += 1
                     break
