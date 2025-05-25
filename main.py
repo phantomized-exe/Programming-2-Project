@@ -541,20 +541,6 @@ def check_tile_collision_y():
 def move():
     global BACKGROUND_Y
     global BACKGROUND_X
-    #x movement
-    if abs(player.velocity_x) <= FRICTION:
-        player.velocity_x = 0
-    elif player.velocity_x > 0:
-        player.velocity_x -= FRICTION
-    elif player.velocity_x < 0:
-        player.velocity_x += FRICTION
-    player.x += player.velocity_x
-    check_lava_collision()
-    check_tile_collision_x()
-    for tile in tiles:
-        tile.x -= player.velocity_x
-    check_tile_collision_x()
-    player.x = player.crouching_x if player.crouching else player.standing_x
     #y movement
     if player.jumping and player.velocity_y < 500:
         player.velocity_y += GRAVITY
@@ -590,6 +576,20 @@ def move():
                 player.y += 1
                 for tile in tiles:
                     tile.y += 1
+    #x movement
+    if abs(player.velocity_x) <= FRICTION:
+        player.velocity_x = 0
+    elif player.velocity_x > 0:
+        player.velocity_x -= FRICTION
+    elif player.velocity_x < 0:
+        player.velocity_x += FRICTION
+    player.x += player.velocity_x
+    check_lava_collision()
+    check_tile_collision_x()
+    for tile in tiles:
+        tile.x -= player.velocity_x
+    check_tile_collision_x()
+    player.x = player.crouching_x if player.crouching else player.standing_x
     if player.crouching:
         feet_rect.x = player.crouching_x+2
         feet_rect.y = player.crouching_y
