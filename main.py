@@ -410,7 +410,7 @@ def create_map():
                 tiles.append(tile)
 
 def check_tile_collision():
-    if player.colliderect(player2) and not left.colliderect(left2) and not right.colliderect(right2):
+    if player.colliderect(player2):
         return player2
     for tile in tiles:
         if player.colliderect(tile):
