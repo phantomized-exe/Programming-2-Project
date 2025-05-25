@@ -464,9 +464,9 @@ def check_tile_collision_x():
     tile = check_tile_collision()
     if tile is not None and player.velocity_x != 0:
         player.velocity_x = 0 
-        if left.colliderect(tile):
+        if player.velocity_x < 0 or player.direction == "left":
             player.x = tile.x+(TILE_SIZE if tile.x != player2.x else player2.width)
-        elif right.colliderect(tile):
+        elif player.velocity_x > 0 or player.direction == "right":
             player.x = tile.x-player.width
         if player.x > player.standing_y:
             for tile in tiles:
@@ -966,12 +966,12 @@ feet_rect2.y = player2.standing_y
 feet_rect2.height = player2.height+2
 feet_rect2.width = player2.width-4
 left = Player()
-left.x = player.standing_x-2
+left.x = player.standing_x
 left.y = player.standing_y+2
 left.height = player.height-4
 left.width = 2
 right = Player()
-right.x = player.standing_x+player.width
+right.x = player.standing_x+player.width-2
 right.y = player.standing_y+2
 right.height = player.height-4
 right.width = 2
