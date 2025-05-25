@@ -492,10 +492,10 @@ def check_tile_collision_y():
     else:
         feet_rect2.height = player2.height+2
     lava_rect.height = player.height+12
-    left.height = player.height
-    right.height = player.height
-    left2.height = player2.height
-    right2.height = player2.height
+    left.height = player.height-4
+    right.height = player.height-4
+    left2.height = player2.height-4
+    right2.height = player2.height-4
     for tile in tiles:
         if feet_rect.colliderect(tile):
             if tile.image == spawn_tile:
@@ -601,10 +601,10 @@ def move():
         feet_rect.y = player.crouching_y
         lava_rect.x = player.crouching_x+(player.width/2)-3
         lava_rect.y = player.crouching_y-2
-        left.y = player.crouching_y
-        right.y = player.crouching_y
-        left2.y = player2.y
-        right2.y = player2.y
+        left.y = player.crouching_y+2
+        right.y = player.crouching_y+2
+        left2.y = player2.y+2
+        right2.y = player2.y+2
         left2.x = player2.x-2
         right2.x = player2.x+player2.width
         lava_rect2.x = player.crouching_x-2
@@ -614,10 +614,10 @@ def move():
         feet_rect.y = player.standing_y
         lava_rect.x = player.standing_x+(player.width/2)-3
         lava_rect.y = player.standing_y-2
-        left.y = player.standing_y
-        right.y = player.standing_y
-        left2.y = player2.y
-        right2.y = player2.y
+        left.y = player.standing_y+2
+        right.y = player.standing_y+2
+        left2.y = player2.y+2
+        right2.y = player2.y+2
         left2.x = player2.x-2
         right2.x = player2.x+player2.width
         lava_rect2.x = player.standing_x-2
@@ -969,23 +969,23 @@ feet_rect2.height = player2.height+2
 feet_rect2.width = player2.width-4
 left = Player()
 left.x = player.standing_x-2
-left.y = player.standing_y
-left.height = player.height
+left.y = player.standing_y+2
+left.height = player.height-4
 left.width = 2
 right = Player()
 right.x = player.standing_x+player.width
-right.y = player.standing_y
-right.height = player.height
+right.y = player.standing_y+2
+right.height = player.height-4
 right.width = 2
 left2 = Player()
 left2.x = player2.standing_x-2
-left2.y = player2.standing_y
-left2.height = player2.height
+left2.y = player2.standing_y+2
+left2.height = player2.height-4
 left2.width = 2
 right2 = Player()
 right2.x = player2.standing_x+player2.width
-right2.y = player2.standing_y
-right2.height = player2.height
+right2.y = player2.standing_y+2
+right2.height = player2.height-4
 right2.width = 2
 touching_tile_buffer = False
 player2_crouching = False
@@ -1002,7 +1002,7 @@ while True: #game loop
     spawn_y = 0
     for tile in tiles:
         if tile.image == bg:
-            spawn_x = tile.x+2
+            spawn_x = tile.x
             spawn_y = tile.y
     if player2.crouching:
         player2.height = TILE_SIZE
@@ -1013,7 +1013,7 @@ while True: #game loop
     out_str = make_pos((spawn_x, spawn_y, player.velocity_x, player.crouching))
     response = n.send(out_str)
     x, y, vx, crouch = read_pos(response)
-    player2.x = spawn_x-x+(10*32)-16
+    player2.x = spawn_x-x+(10*32)-16+2
     player2.y = spawn_y-y+(10*32)-16-(player2.height + TILE_SIZE)
     player2.velocity_x = vx
     player2.crouching = crouch
@@ -1021,11 +1021,8 @@ while True: #game loop
         player2.direction = "right"
     elif player2.velocity_x < 0: 
         player2.direction = "left"
-    feet_rect2.x = spawn_x-x+(10*32)-16+2
-    if not player2.crouching:
-        feet_rect2.y = spawn_y-y+(10*32)-16-(player2.height+TILE_SIZE)
-    else:
-        feet_rect2.y = spawn_y-y+(10*32)-32+3-(player2.height+TILE_SIZE)
+    feet_rect2.x = player2.x+2
+    feet_rect2.y = player2.y
     for tile in tiles:
         if feet_rect2.colliderect(tile) or feet_rect2.colliderect(player2):
             player2.jumping = False
