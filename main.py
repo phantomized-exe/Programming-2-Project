@@ -410,11 +410,11 @@ def create_map():
                 tiles.append(tile)
 
 def check_tile_collision():
+    if player.colliderect(player2) and not left.colliderect(left2) and not right.colliderect(right2):
+        return player2
     for tile in tiles:
         if player.colliderect(tile):
             return tile
-    if player.colliderect(player2) and not left.colliderect(left2) and not right.colliderect(right2):
-        return player2
     return None
 def check_lava_collision():
     global coyote_lava
@@ -427,13 +427,14 @@ def check_lava_collision():
                     player.velocity_y = 0
                     for i in tiles:
                         if i.image == spawn_tile2:
-                            spawn_x = i.x-(10*32)+random.randint(0,TILE_SIZE)#+16
+                            spawn_x = i.x-(10*32)+16#+random.randint(0,TILE_SIZE)
                             spawn_y = i.y-(10*32)+TILE_SIZE+16+3#-player.height
                             for j in tiles:
                                 j.x -= spawn_x
                                 j.y -= spawn_y
                             break
                     player.jump_count = 0
+                    check_tile_collision_x()
                 else:
                     coyote_lava += 1
                     break
@@ -462,7 +463,7 @@ def check_lava_collision():
 def check_tile_collision_x():
     check_lava_collision()
     tile = check_tile_collision()
-    if tile is not None:
+    if tile is not None and player.velocity_x != 0:
         player.velocity_x = 0 
         if left.colliderect(tile):
             player.x = tile.x+(TILE_SIZE if tile.x != player2.x else player2.width)
@@ -993,6 +994,8 @@ global cheat
 cheat = False
 global coyote_lava
 coyote_lava = 0
+keys = pygame.key.get_pressed()
+check_tile_collision_x()
 while True: #game loop
     spawn_x = 0
     spawn_y = 0
