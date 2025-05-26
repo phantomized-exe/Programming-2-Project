@@ -510,6 +510,9 @@ def check_tile_collision_y():
                 player.jump_count += 1
             touching_tile_feet = True
             break
+        elif feet_rect.colliderect(player2):
+            while player.colliderect(player2):
+                player.y += 1
         else:
             touching_tile_feet = False
         if feet_rect.colliderect(player2):
