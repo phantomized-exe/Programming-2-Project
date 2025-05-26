@@ -489,8 +489,6 @@ def check_tile_collision_y():
         feet_rect2.height = TILE_SIZE+2
     else:
         feet_rect2.height = player2.height+2
-        while player.colliderect(player2):
-            player.y -= 1
     lava_rect.height = player.height+12
     for tile in tiles:
         if feet_rect.colliderect(tile):
@@ -955,6 +953,7 @@ global cheat
 cheat = False
 global coyote_lava
 coyote_lava = 0
+player2_crouching = False
 keys = pygame.key.get_pressed()
 check_tile_collision_x()
 while True: #game loop
@@ -967,8 +966,13 @@ while True: #game loop
     if player2.crouching:
         player2.height = TILE_SIZE
         feet_rect2.height = TILE_SIZE+2
+        if not player2_crouching:
+            player2_crouching = True
     else:
         player2.height = PLAYER_HEIGHT
+        if player2_crouching:
+            player.y -= 26
+            player2_crouching = False
         feet_rect2.height = player2.height+2
     out_str = make_pos((spawn_x, spawn_y, player.velocity_x, player.crouching))
     response = n.send(out_str)
