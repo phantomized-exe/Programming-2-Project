@@ -1049,6 +1049,8 @@ while True: #game loop
             CROUCH_FRICTION = 1
         else:
             CROUCH_FRICTION = 2
+        if up.colliderect(feet_rect2):
+            force_crouch = True
         if not player.crouch_jump:
             if not player.crouching:
                 if not player.jumping:
