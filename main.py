@@ -970,7 +970,7 @@ while True: #game loop
             player2_crouching = True
     else:
         player2.height = PLAYER_HEIGHT
-        if player2_crouching:
+        if player2_crouching and feet_rect.colliderect(player2):
             player.y -= 26
             player2_crouching = False
         feet_rect2.height = player2.height+2
