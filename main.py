@@ -522,6 +522,8 @@ def check_tile_collision_y():
             touching_tile_feet = False
         if feet_rect.colliderect(player2):
             touching_tile_feet = True
+        if player.colliderect(tile):
+            player.y = tile.y-player.height
     tile = check_tile_collision()
     if tile is not None:
         coyote_time = 0
