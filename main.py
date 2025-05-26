@@ -515,7 +515,7 @@ def check_tile_collision_y():
         if feet_rect.colliderect(player2):
             touching_tile_feet = True
     if feet_foot.colliderect(player2):
-        player.y = player2.y+player2.height
+        player.y = player2.y-player2.height
     tile = check_tile_collision()
     if tile is not None:
         coyote_time = 0
@@ -599,7 +599,7 @@ def move():
         lava_rect.y = player.crouching_y-2
         lava_rect2.x = player.crouching_x-2
         lava_rect2.y = player.crouching_y+(player.height/2)-5
-        feet_foot.y = player.y+player.height
+        feet_foot.y = player.y+player.height-4
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
@@ -607,7 +607,7 @@ def move():
         lava_rect.y = player.standing_y-2
         lava_rect2.x = player.standing_x-2
         lava_rect2.y = player.standing_y+(player.height/2)-5
-        feet_foot.y = player.y+player.height
+        feet_foot.y = player.y+player.height-4
     player.y = player.crouching_y if player.crouching else player.standing_y
 
 def read_pos(str):
@@ -952,7 +952,7 @@ feet_rect2.height = player2.height+2
 feet_rect2.width = player2.width-4
 feet_foot = Player()
 feet_foot.x = player.x+2
-feet_foot.y = player.y+player.height
+feet_foot.y = player.y+player.height-4
 feet_foot.height = 2
 feet_foot.width = player.width-4
 touching_tile_buffer = False
