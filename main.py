@@ -489,6 +489,8 @@ def check_tile_collision_y():
         feet_rect2.height = TILE_SIZE+2
     else:
         feet_rect2.height = player2.height+2
+        while player.colliderect(player2):
+            player.y -= 1
     lava_rect.height = player.height+12
     for tile in tiles:
         if feet_rect.colliderect(tile):
