@@ -712,7 +712,7 @@ def check_crouch():
                 player.height = PLAYER_CROUCH_HEIGHT
                 player.crouching = True
                 force_crouch = True
-        if tile_count == 0:
+        if tile_count == 0 and not up.colliderect(feet_rect2):
             force_crouch = False
 #start game
 level_list = []
@@ -1010,7 +1010,7 @@ while True: #game loop
     feet_rect2.x = player2.x+2
     feet_rect2.y = player2.y
     for tile in tiles:
-        if feet_rect2.colliderect(tile) or feet_rect2.colliderect(player2):
+        if feet_rect2.colliderect(tile) or feet_rect2.colliderect(player):
             player2.jumping = False
             break
         else:
@@ -1053,8 +1053,6 @@ while True: #game loop
             CROUCH_FRICTION = 1
         else:
             CROUCH_FRICTION = 2
-        if up.colliderect(feet_rect2):
-            force_crouch = True
         if not player.crouch_jump:
             if not player.crouching:
                 if not player.jumping:
