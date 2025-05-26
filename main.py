@@ -487,8 +487,10 @@ def check_tile_collision_y():
     feet_rect.height = player.height+2
     if player2.crouching:
         feet_rect2.height = TILE_SIZE+2
+        feet_rect2.y = player2.y
     else:
         feet_rect2.height = player2.height+2
+        feet_rect2.y = player2.y
     lava_rect.height = player.height+12
     for tile in tiles:
         if feet_foot.colliderect(player2) and feet_rect2.colliderect(tile):
