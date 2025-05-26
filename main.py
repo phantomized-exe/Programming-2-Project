@@ -508,14 +508,14 @@ def check_tile_collision_y():
                 player.velocity_y = PLAYER_VELOCITY_Y*1.5
                 player.jumping = True
                 player.jump_count += 1
-            elif feet_foot.colliderect(player2):
-                player.y = player2.y+player2.height
             touching_tile_feet = True
             break
         else:
             touching_tile_feet = False
         if feet_rect.colliderect(player2):
             touching_tile_feet = True
+    if feet_foot.colliderect(player2):
+        player.y = player2.y+player2.height
     tile = check_tile_collision()
     if tile is not None:
         coyote_time = 0
