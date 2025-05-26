@@ -508,6 +508,8 @@ def check_tile_collision_y():
                 player.velocity_y = PLAYER_VELOCITY_Y*1.5
                 player.jumping = True
                 player.jump_count += 1
+            elif feet_foot.colliderect(player2):
+                player.y = player2.y+player2.height
             touching_tile_feet = True
             break
         else:
@@ -597,6 +599,7 @@ def move():
         lava_rect.y = player.crouching_y-2
         lava_rect2.x = player.crouching_x-2
         lava_rect2.y = player.crouching_y+(player.height/2)-5
+        feet_foot.y = player.y+player.height
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
@@ -604,6 +607,7 @@ def move():
         lava_rect.y = player.standing_y-2
         lava_rect2.x = player.standing_x-2
         lava_rect2.y = player.standing_y+(player.height/2)-5
+        feet_foot.y = player.y+player.height
     player.y = player.crouching_y if player.crouching else player.standing_y
 
 def read_pos(str):
@@ -675,6 +679,7 @@ def draw():
         pygame.draw.rect(window, (255, 255, 255), player, 2)
         pygame.draw.rect(window, (255, 255, 255), player2, 2)
         pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
+        pygame.draw.rect(window, (0, 0, 0), feet_foot, 2)
         pygame.draw.rect(window, (255, 0, 0), feet_rect2, 2)
         pygame.draw.rect(window, (0, 255, 0), lava_rect, 2)
         pygame.draw.rect(window, (0, 255, 0), lava_rect2, 2)
@@ -945,6 +950,11 @@ feet_rect2.x = player2.standing_x+2
 feet_rect2.y = player2.standing_y
 feet_rect2.height = player2.height+2
 feet_rect2.width = player2.width-4
+feet_foot = Player()
+feet_foot.x = player.x+2
+feet_foot.y = player.y+player.height
+feet_foot.height = 2
+feet_foot.width = player.width-4
 touching_tile_buffer = False
 player2_crouching = False
 global debug
