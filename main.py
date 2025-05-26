@@ -495,6 +495,17 @@ def check_tile_collision_y():
     for tile in tiles:
         if feet_foot.colliderect(player2) and feet_rect2.colliderect(tile):
             player.y = player2.y-player.height
+            player.velocity_y = 0
+        elif feet_foot.colliderect(player2) and not feet_rect2.colliderect(tile):
+            if player.y > player2.y:
+                player.y = player2.y-player.height
+            elif player.y < player2.y:
+                player.y = player2.y+player2.height
+            else:
+                if random.randint(0,1) == 1:
+                    player.y = player2.y-player.height
+                else:
+                    player.y = player2.y+player2.height
         if feet_rect.colliderect(tile):
             if tile.image == spawn_tile:
                 for i in tiles:
