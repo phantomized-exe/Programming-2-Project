@@ -491,6 +491,8 @@ def check_tile_collision_y():
         feet_rect2.height = player2.height+2
     lava_rect.height = player.height+12
     for tile in tiles:
+        if feet_foot.colliderect(player2) and feet_rect2.colliderect(tile):
+            player.y = player2.y-player.height
         if feet_rect.colliderect(tile):
             if tile.image == spawn_tile:
                 for i in tiles:
@@ -514,8 +516,6 @@ def check_tile_collision_y():
             touching_tile_feet = False
         if feet_rect.colliderect(player2):
             touching_tile_feet = True
-    if feet_foot.colliderect(player2):
-        player.y = player2.y-player.height
     tile = check_tile_collision()
     if tile is not None:
         coyote_time = 0
