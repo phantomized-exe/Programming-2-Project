@@ -492,6 +492,10 @@ def check_tile_collision_y():
         feet_rect2.height = player2.height+2
         feet_rect2.y = player2.y
     lava_rect.height = player.height+12
+    num_touch = 0
+    for num in tiles:
+        if feet_rect.colliderect(num):
+            num_touch += 1
     for tile in tiles:
         if down.colliderect(tile):
             player.y = tile.y-player.height
@@ -501,7 +505,7 @@ def check_tile_collision_y():
         elif up.colliderect(tile):
             player.y = tile.y+tile.height
             player.velocity_y = 0
-        if not feet_rect.colliderect(tile):
+        elif num_touch == 0:# and player.velocity_y != 0:
             if down.colliderect(player2):
                 player.y = player2.y-player.height
                 player.velocity_y = 0
