@@ -501,14 +501,15 @@ def check_tile_collision_y():
         elif up.colliderect(tile):
             player.y = tile.y+tile.height
             player.velocity_y = 0
-        elif down.colliderect(player2):
-            player.y = player2.y-player.height
-            player.velocity_y = 0
-            player.jumping = False
-            player.jump_count = 0
-        elif up.colliderect(player2):
-            player.velocity_y = 0
-            player.y = player2.y+player2.height
+        else:
+            if down.colliderect(player2):
+                player.y = player2.y-player.height
+                player.velocity_y = 0
+                player.jumping = False
+                player.jump_count = 0
+            elif up.colliderect(player2):
+                player.velocity_y = 0
+                player.y = player2.y+player2.height
         if feet_rect.colliderect(tile) or feet_rect.colliderect(player2):
             player.jump_count = 0
             if tile.image == spawn_tile:
@@ -708,11 +709,9 @@ def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
     collide_crouch = pygame.Rect(player.x, player.y-(PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT), PLAYER_WIDTH, PLAYER_HEIGHT)
-    future_player = pygame.Rect(player.standing_x-26,player.standing_y-26,PLAYER_WIDTH,PLAYER_HEIGHT)
-    pygame.draw.rect(window, (0, 0, 0), future_player)
     if player.crouching:
         for tile in tiles:#32 crouch 58 tall
-            if collide_crouch.colliderect(tile) or future_player.colliderect(feet_rect2):
+            if collide_crouch.colliderect(tile) or up.colliderect(feet_rect2):
                 CROUCH_FRICTION = 2
                 player.width = PLAYER_CROUCH_WIDTH
                 player.height = PLAYER_CROUCH_HEIGHT
