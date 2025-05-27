@@ -559,6 +559,14 @@ def check_tile_collision_y():
             #player.velocity_y = 0
     else:
         coyote_time = 0
+    if player2.crouching and feet_rect.colliderect(player2) and not crouch_jump2:
+        crouch_jump2 = True
+    elif not player2.crouching and feet_rect.colliderect(player2) and crouch_jump2:
+        crouch_jump2 = False
+        for tile in tiles:
+            tile.y -= PLAYER_VELOCITY_Y
+        player.velocity_y = PLAYER_VELOCITY_Y
+        player.jumping = True
     feet_rect.y = player.crouching_y if player.crouching else player.standing_y
 
 def move():
@@ -1046,15 +1054,6 @@ while True: #game loop
                             break
                         else:
                             touching_tile_buffer = False
-    if player2.crouching and feet_rect.colliderect(player2) and not crouch_jump2:
-        crouch_jump2 = True
-    elif not player2.crouching and feet_rect.colliderect(player2) and crouch_jump2:
-        crouch_jump2 = False
-        for tile in tiles:
-            tile.y -= PLAYER_VELOCITY_Y
-        player.velocity_y = PLAYER_VELOCITY_Y
-        player.jumping = True
-        player.jump_count += 1
     keys = pygame.key.get_pressed()
     if touching_tile_buffer and not player.jumping and not player.crouching and not player.colliderect(feet_rect2):
         for tile in tiles:
