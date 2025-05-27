@@ -713,16 +713,17 @@ def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
     collide_crouch = pygame.Rect(player.x, player.y-(PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT), PLAYER_WIDTH, PLAYER_HEIGHT)
-    for tile in tiles:#32 crouch 58 tall
-        if collide_crouch.colliderect(tile):
-            CROUCH_FRICTION = 2
-            player.width = PLAYER_CROUCH_WIDTH
-            player.height = PLAYER_CROUCH_HEIGHT
-            player.crouching = True
-            force_crouch = True
-            break
-        else:
-            force_crouch = False
+    if player.crouching or feet_rect.colliderect(player2):
+        for tile in tiles:#32 crouch 58 tall
+            if collide_crouch.colliderect(tile):
+                CROUCH_FRICTION = 2
+                player.width = PLAYER_CROUCH_WIDTH
+                player.height = PLAYER_CROUCH_HEIGHT
+                player.crouching = True
+                force_crouch = True
+                break
+            else:
+                force_crouch = False
 #start game
 level_list = []
 rand_int = 0
