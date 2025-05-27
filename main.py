@@ -493,17 +493,24 @@ def check_tile_collision_y():
         feet_rect2.y = player2.y
     lava_rect.height = player.height+12
     for tile in tiles:
-        if player.colliderect(tile):
+        if down.colliderect(tile):
             player.y = tile.y-player.height
+            player.velocity_y = 0
             player.jumping = False
+            player.jump_count = 0
+        elif up.colliderect(tile):
+            player.y = tile.y+tile.height
+            player.velocity_y = 0
         elif down.colliderect(player2):
             player.y = player2.y-player.height
             player.velocity_y = 0
             player.jumping = False
+            player.jump_count = 0
         elif up.colliderect(player2):
             player.velocity_y = 0
             player.y = player2.y+player2.height
-        if feet_rect.colliderect(tile):
+        if feet_rect.colliderect(tile) or feet_rect.colliderect(player2):
+            player.jump_count = 0
             if tile.image == spawn_tile:
                 for i in tiles:
                     if i.image == spawn_tile2:
@@ -524,8 +531,6 @@ def check_tile_collision_y():
             break
         else:
             touching_tile_feet = False
-        if feet_rect.colliderect(player2):
-            touching_tile_feet = True
     tile = check_tile_collision()
     if tile is not None:
         coyote_time = 0
@@ -546,6 +551,7 @@ def check_tile_collision_y():
             coyote_time = 0
         elif not player.jumping:
             coyote_time += 1
+            #player.velocity_y = 0
     else:
         coyote_time = 0
     feet_rect.y = player.crouching_y if player.crouching else player.standing_y
