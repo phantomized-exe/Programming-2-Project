@@ -483,6 +483,7 @@ def check_tile_collision_y():
     global PLAYER_VELOCITY_Y
     global CROUCH_FRICTION
     global coyote_time
+    global crouch_jump2
     check_lava_collision()
     feet_rect.height = player.height+2
     if player2.crouching:
@@ -999,6 +1000,7 @@ global cheat
 cheat = False
 global coyote_lava
 coyote_lava = 0
+global crouch_jump2
 crouch_jump2 = False
 keys = pygame.key.get_pressed()
 check_tile_collision_x()
