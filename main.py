@@ -991,6 +991,7 @@ global cheat
 cheat = False
 global coyote_lava
 coyote_lava = 0
+crouch_jump2 = False
 keys = pygame.key.get_pressed()
 check_tile_collision_x()
 while True: #game loop
@@ -1045,6 +1046,15 @@ while True: #game loop
                             break
                         else:
                             touching_tile_buffer = False
+    if player2.crouching and feet_rect.colliderect(player2) and not crouch_jump2:
+        crouch_jump2 = True
+    elif not player2.crouching and feet_rect.colliderect(player2) and crouch_jump2:
+        crouch_jump2 = False
+        for tile in tiles:
+            tile.y -= PLAYER_VELOCITY_Y
+        player.velocity_y = PLAYER_VELOCITY_Y
+        player.jumping = True
+        player.jump_count += 1
     keys = pygame.key.get_pressed()
     if touching_tile_buffer and not player.jumping and not player.crouching and not player.colliderect(feet_rect2):
         for tile in tiles:
