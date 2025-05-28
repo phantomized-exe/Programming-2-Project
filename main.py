@@ -472,8 +472,10 @@ def check_tile_collision_x():
         adjust_bg = True
         if player.velocity_x < 0 or player.direction == "left":
             player.x = tile.x+(TILE_SIZE if tile.x != player2.x else player2.width)
+            player.velocity_x = 0
         elif player.velocity_x > 0 or player.direction == "right":
             player.x = tile.x-player.width
+            player.velocity_x = 0
     if adjust_bg:
         if player.x > player.standing_y:
             for tile in tiles:
