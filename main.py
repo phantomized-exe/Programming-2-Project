@@ -478,9 +478,9 @@ def check_tile_collision_x():
             player.x += player.x-player.standing_x
     elif tile is not None and player.velocity_x == 0 and player2.velocity_x != 0:
         if right.colliderect(player2):
-            player.x += player2.velocity_x
+            player.x = player2.x-player.width
         elif left.colliderect(player2):
-            player.x -= player2.velocity_x
+            player.x = player2.x+player2.width
 
     #player.x = player.crouching_x if player.crouching else player.standing_x
 def check_tile_collision_y():
