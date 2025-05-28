@@ -105,13 +105,16 @@ floor_tile_imaget = load_image("Test Sprite Tile-lava21.png.png",(TILE_SIZE,TILE
 floor_tile_imageu = load_image("Test Sprite Tile-lava22.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imagev = load_image("Test Sprite Tile-lava23.png.png",(TILE_SIZE,TILE_SIZE))
 
-hosting = input("Host or join game? (host/join) ").strip().lower()
-if hosting == "host":
-    server_process = subprocess.Popen(["python", "server.py"])
-    server_ip = "127.0.0.1"
-    print("Server started. You are hosting the game.")
-else:
-    server_ip = input("Enter server IP: ")
+while True:
+    hosting = input("Host or join game? (host/join) ")
+    if hosting == "h" or hosting == "host":
+        server_process = subprocess.Popen(["python", "server.py"])
+        server_ip = "127.0.0.1"
+        #print("Server started. You are hosting the game.")
+        break
+    elif hosting == "j" or hosting == "join":
+        server_ip = input("Enter server IP: ")
+        break
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
 pygame.display.set_caption("Celeste 2") #title of window
@@ -572,7 +575,9 @@ def check_tile_collision_y():
                 tile.image = spawn_tile2
             elif tile.image == floor_tile_imagej:
                 if player.max_jumps != 2 and PLAYER_VELOCITY_Y != -12.1:
+                    print()
                     print("Double jump unlocked!")
+                    print()
                     player.max_jumps = 2
                     PLAYER_VELOCITY_Y = -12.1
             elif tile.image == floor_tile_imager:

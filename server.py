@@ -1,6 +1,8 @@
 import socket
 import random
 from _thread import *
+global conn_available
+conn_available = False
 #import sys
 def get_local_ip():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -11,7 +13,7 @@ def get_local_ip():
         return '127.0.0.1'
     finally:
         sock.close()
-print(f"Clients connect to {get_local_ip()}")
+#print(f"Clients connect to {get_local_ip()}")
 server = "0.0.0.0" #ipconfig in command prompt
 port = 12345
 connected = [False, False]
@@ -30,17 +32,22 @@ def make_pos(tup):
     return f"{tup[0]},{tup[1]},{tup[2]},{tup[3]}"
 pos = [(0,0,0,False),(-1000,-1000,0,False)]
 def threaded_client(conn, player):
+    global conn_available
     conn.send(str.encode(make_pos(pos[player])))
     while True:
         try:
             raw = conn.recv(2048).decode()
             if not raw:
                 print("Client disconnected.")
+                conn_available = True
                 break
+            elif raw and conn_available:
+                print("Client connected")
+                conn_available = False
             raw = raw.strip()
             parts = raw.split(",")
             if len(parts) != 4:
-                print(f"error player {player+1!r}: {repr(raw)}")
+                print(f"Error player {player+1}: {repr(raw)}")
                 continue
             try:
                 x = int(parts[0])
@@ -55,15 +62,16 @@ def threaded_client(conn, player):
             #print(f"Player {player+1}: {pos[player]}; sending back {reply}")
             conn.sendall(str.encode(make_pos(reply)))
         except Exception as e:
-            print(f"Connection error with player {player+1}: {e}")
+            print(f"Error player {player+1}: {e}")
             break
     conn.close()
     connected[player] = False
     print(f"Lost connection with player {player+1}")
-currentPlayer = 0
+#currentPlayer = 0
 while True:
     conn, addr = s.accept()
-    print("Connected to:", addr)
+    #print("Connected to:", addr)
+    print(f"IP: {addr[0]}\nPort: {addr[1]}")
     #start_new_thread(threaded_client, (conn,currentPlayer))
     #currentPlayer += 1
     player = None
@@ -72,7 +80,7 @@ while True:
             player = i
             break
     if player is None:
-        print("Server full, rejecting connection.")
+        print("Server full")
         conn.close()
         continue
     connected[player] = True
