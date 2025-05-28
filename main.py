@@ -476,6 +476,11 @@ def check_tile_collision_x():
             for tile in tiles:
                 tile.x += player.x-player.standing_x
             player.x += player.x-player.standing_x
+    elif tile is not None and player.velocity_x == 0 and player2.velocity_x != 0:
+        if right.colliderect(player2):
+            player.x -= player2.velocity_x
+        elif left.colliderect(player2):
+            player.x += player2.velocity_x
 
     #player.x = player.crouching_x if player.crouching else player.standing_x
 def check_tile_collision_y():
@@ -486,6 +491,8 @@ def check_tile_collision_y():
     global crouch_jump2
     check_lava_collision()
     feet_rect.height = player.height+2
+    left.height = player.height-4
+    right.height = player.height-4
     if player2.crouching:
         feet_rect2.height = TILE_SIZE+2
         feet_rect2.y = player2.y
@@ -631,6 +638,8 @@ def move():
         lava_rect2.y = player.crouching_y+(player.height/2)-5
         down.y = player.y+player.height-2
         up.y = player.y
+        left.y = player.y+2
+        right.y = player.y+2
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
@@ -640,6 +649,8 @@ def move():
         lava_rect2.y = player.standing_y+(player.height/2)-5
         down.y = player.y+player.height-2
         up.y = player.y
+        left.y = player.y+2
+        right.y = player.y+2
     player.y = player.crouching_y if player.crouching else player.standing_y
 
 def read_pos(str):
@@ -713,6 +724,8 @@ def draw():
         pygame.draw.rect(window, (255, 0, 0), feet_rect, 2)
         pygame.draw.rect(window, (0, 0, 0), down, 2)
         pygame.draw.rect(window, (0, 0, 0), up, 2)
+        pygame.draw.rect(window, (0, 0, 0), left, 2)
+        pygame.draw.rect(window, (0, 0, 0), right, 2)
         pygame.draw.rect(window, (255, 0, 0), feet_rect2, 2)
         pygame.draw.rect(window, (0, 255, 0), lava_rect, 2)
         pygame.draw.rect(window, (0, 255, 0), lava_rect2, 2)
@@ -992,6 +1005,16 @@ up.x = player.standing_x+(player.width/2)-3
 up.y = player.y
 up.height = 2
 up.width = 6
+left = Player()
+left.x = player.x
+left.y = player.y+2
+left.height = player.height-4
+left.width = 2
+right = Player()
+right.x = player.x+player.width-2
+right.y = player.y+2
+right.height = player.height-4
+right.width = 2
 touching_tile_buffer = False
 player2_crouching = False
 global debug
