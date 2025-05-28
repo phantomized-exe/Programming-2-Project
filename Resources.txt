@@ -2,3 +2,5 @@ These are my resources
 https://www.youtube.com/watch?v=Hp0M8iExfDc
 https://www.youtube.com/playlist?list=PLnKe36F30Y4alXrjE6oL5VWtDsYdONpfj
 https://www.youtube.com/playlist?list=PLzMcBGfZo4-kR7Rh-7JCVDN8lm3Utumvq
+https://pythonprogramming.net/converting-pygame-executable-cx_freeze/#:~:text=Once%20you%20have%20cx_Freeze%20installed,an%20executable%20or%20an%20installer.&text=From%20there%2C%20we%20specify%20the,included%20file%2C%20which%20is%20racecar.
+https://github.com/marcelotduarte/cx_Freeze/
