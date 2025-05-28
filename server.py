@@ -13,7 +13,7 @@ def get_local_ip():
         return '127.0.0.1'
     finally:
         sock.close()
-#print(f"Clients connect to {get_local_ip()}")
+print(f"Clients connect to {get_local_ip()}")
 server = "0.0.0.0" #ipconfig in command prompt
 port = 12345
 connected = [False, False]
@@ -71,7 +71,7 @@ def threaded_client(conn, player):
 while True:
     conn, addr = s.accept()
     #print("Connected to:", addr)
-    print(f"IP: {addr[0]}\nPort: {addr[1]}")
+    #print(f"IP: {addr[0]}\nPort: {addr[1]}")
     #start_new_thread(threaded_client, (conn,currentPlayer))
     #currentPlayer += 1
     player = None
