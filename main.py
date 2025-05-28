@@ -1052,7 +1052,7 @@ while True: #game loop
             joystick = pygame.joystick.Joystick(i)
             joystick.init()
             joysticks.append(joystick)
-            print(f"{joystick.get_name()} detected")
+            print(f"{joystick.get_name()} connected")
     spawn_x = 0
     spawn_y = 0
     for tile in tiles:
@@ -1090,7 +1090,7 @@ while True: #game loop
             pygame.quit()
             exit()
         if event.type == pygame.JOYDEVICEREMOVED:
-            print(f"{joystick.get_name()} disconnected.")
+            print(f"{joystick.get_name()} disconnected")
             for joy in joysticks:
                 if joy.get_instance_id() == event.instance_id:
                     joysticks.remove(joy)
