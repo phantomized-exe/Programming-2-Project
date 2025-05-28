@@ -6,6 +6,7 @@ import json
 import random
 from network import Network
 import time
+import subprocess
 level = Path("level_code.json")
 
 # game variables
@@ -104,7 +105,13 @@ floor_tile_imaget = load_image("Test Sprite Tile-lava21.png.png",(TILE_SIZE,TILE
 floor_tile_imageu = load_image("Test Sprite Tile-lava22.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imagev = load_image("Test Sprite Tile-lava23.png.png",(TILE_SIZE,TILE_SIZE))
 
-server_ip = input("Enter server IP: ")
+hosting = input("Host or join game? (host/join) ").strip().lower()
+if hosting == "host":
+    server_process = subprocess.Popen(["python", "server.py"])
+    server_ip = "127.0.0.1"
+    print("Server started. You are hosting the game.")
+else:
+    server_ip = input("Enter server IP: ")
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
 pygame.display.set_caption("Celeste 2") #title of window
@@ -888,7 +895,7 @@ test_map = [
     "0000000000000000000000000000000",
     "0000004400000000000000000000000",
     "0000004000000000000000000000000",
-    "0000004000000000011#11000000000",
+    "0000004000000000011!11000000000",
     "000000410000000000utt1000000000",
     "0000004t4000000000044t000000000",
     "0000004000000000000444000000000",
@@ -1056,7 +1063,7 @@ test_map = [
     "01!1000000000000000000000000000",
     "0000000000000000000000000000000",
     "0000000000000000000000000000000",
-    "11000000000000000000000000111!1",
+    "11000000000000000000000000111#1",
     "1100000000000000000011000011111",
     "1100001111000111000011000011111",
     "11r44411114441114444114444111114444444444",

@@ -48,11 +48,11 @@ def threaded_client(conn, player):
                 vx = float(parts[2])
                 crouch = (parts[3] == "True")
             except ValueError as e:
-                print(f"parse error {e} on {parts}")
+                print(e)
                 continue
             pos[player] = (x, y+3, vx, crouch)
             reply = pos[1-player]
-            print(f"Player {player+1}: {pos[player]}; sending back {reply}")
+            #print(f"Player {player+1}: {pos[player]}; sending back {reply}")
             conn.sendall(str.encode(make_pos(reply)))
         except Exception as e:
             print(f"Connection error with player {player+1}: {e}")
