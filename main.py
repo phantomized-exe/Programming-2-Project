@@ -5,6 +5,7 @@ from pathlib import Path
 import json
 import random
 from network import Network
+import time
 level = Path("level_code.json")
 
 # game variables
@@ -99,6 +100,8 @@ floor_tile_imagep = load_image("Test Sprite Tile-lava18.png.png",(TILE_SIZE,TILE
 floor_tile_imageq = load_image("Test Sprite Tile-lava19.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imager = load_image("Test Sprite Tile-bounce.png.png",(TILE_SIZE,TILE_SIZE))
 
+server_ip = input("Enter server IP: ")
+time.sleep(1)
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
 pygame.display.set_caption("Celeste 2") #title of window
@@ -463,7 +466,7 @@ def check_tile_collision_x():
     check_lava_collision()
     tile = check_tile_collision()
     adjust_bg = False
-    if tile is not None and player.velocity_x == 0 and player2.velocity_x != 0:
+    if (right.colliderect(player2) or left.colliderect(player2)) and player.velocity_x == 0 and player2.velocity_x != 0:
         adjust_bg = True
         player.velocity_x = player2.velocity_x
     elif tile is not None and player.velocity_x != 0:
@@ -953,7 +956,6 @@ global  coyote_time
 coyote_time = 0
 tiles = []
 create_map()
-server_ip = input("Enter server IP: ")
 n = Network(server_ip)
 startPos = read_pos(n.getPos())
 player2 = Player()
