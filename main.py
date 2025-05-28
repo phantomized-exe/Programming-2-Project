@@ -516,7 +516,6 @@ def check_tile_collision_y():
                 player.velocity_y = 0
                 player.y = player2.y+player2.height
         if feet_rect.colliderect(tile) or feet_rect.colliderect(player2):
-            player.jump_count = 0
             if tile.image == spawn_tile:
                 for i in tiles:
                     if i.image == spawn_tile2:
