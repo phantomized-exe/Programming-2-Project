@@ -468,9 +468,9 @@ def check_tile_collision_x():
     if tile is not None and player.velocity_x == 0 and player2.velocity_x != 0:
         adjust_bg = True
         if right.colliderect(player2):
-            player.x = player2.x-player.width
+            player.x -= 1
         elif left.colliderect(player2):
-            player.x = player2.x+player2.width
+            player.x += 1
     elif tile is not None and player.velocity_x != 0:
         adjust_bg = True
         if player.velocity_x < 0 or player.direction == "left":
