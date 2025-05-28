@@ -465,12 +465,13 @@ def check_tile_collision_x():
     check_lava_collision()
     tile = check_tile_collision()
     adjust_bg = False
-    if (left.colliderect(player2) or right.colliderect(player2)) and player.velocity_x == 0 and player2.velocity_x != 0:
+    if (left.colliderect(player2) or right.colliderect(player2)) and player.velocity_x == 0:# and player2.velocity_x != 0:
         adjust_bg = True
+        check_tile_collision_y()
         if right.colliderect(player2):
-            player.x = player2.x-player.width-2
+            player.x = player2.x-player.width-1
         elif left.colliderect(player2):
-            player.x = player2.x+player2.width+2
+            player.x = player2.x+player2.width+1
     elif tile is not None and player.velocity_x != 0:
         adjust_bg = True
         if player.velocity_x < 0 or player.direction == "left":
