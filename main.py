@@ -101,7 +101,6 @@ floor_tile_imageq = load_image("Test Sprite Tile-lava19.png.png",(TILE_SIZE,TILE
 floor_tile_imager = load_image("Test Sprite Tile-bounce.png.png",(TILE_SIZE,TILE_SIZE))
 
 server_ip = input("Enter server IP: ")
-time.sleep(1)
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
 pygame.display.set_caption("Celeste 2") #title of window
