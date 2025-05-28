@@ -101,6 +101,8 @@ floor_tile_imageq = load_image("Test Sprite Tile-lava19.png.png",(TILE_SIZE,TILE
 floor_tile_imager = load_image("Test Sprite Tile-bounce.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_images = load_image("Test Sprite Tile-lava20.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imaget = load_image("Test Sprite Tile-lava21.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imageu = load_image("Test Sprite Tile-lava22.png.png",(TILE_SIZE,TILE_SIZE))
+floor_tile_imagev = load_image("Test Sprite Tile-lava23.png.png",(TILE_SIZE,TILE_SIZE))
 
 server_ip = input("Enter server IP: ")
 pygame.init() #always needed to initialize pygame
@@ -422,6 +424,16 @@ def create_map():
                 y = i*TILE_SIZE
                 tile = Tile(x,y,floor_tile_imaget)
                 tiles.append(tile)
+            elif row[j] == "u":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imageu)
+                tiles.append(tile)
+            elif row[j] == "v":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,floor_tile_imagev)
+                tiles.append(tile)
 
 def check_tile_collision():
     if player.colliderect(player2):
@@ -435,7 +447,7 @@ def check_lava_collision():
     global joy_restart
     for tile in tiles:
         if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or keys[pygame.K_r] or joy_restart:
-            if keys[pygame.K_r] or joy_restart or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget:
+            if keys[pygame.K_r] or joy_restart or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget or tile.image == floor_tile_imageu or tile.image == floor_tile_imagev:
                 if coyote_lava >= 32 or keys[pygame.K_r] or joy_restart:
                     coyote_lava = 0
                     player.velocity_x = 0
@@ -455,7 +467,7 @@ def check_lava_collision():
                     break
     for tile in tiles:
         if lava_rect.colliderect(tile):
-            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget:
+            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget or tile.image == floor_tile_imageu or tile.image == floor_tile_imagev:
                 touching_tile_x = True
                 break
             else:
@@ -464,7 +476,7 @@ def check_lava_collision():
             touching_tile_x = False
     for tile in tiles:
         if lava_rect2.colliderect(tile):
-            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget:
+            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget or tile.image == floor_tile_imageu or tile.image == floor_tile_imagev:
                 touching_tile_x2 = True
                 break
             else:
@@ -820,23 +832,82 @@ test_map0 = ["00000000000000000000000000000000000000000000000000000000000000001"
             "j00000000000000000000000000000000000000000000000000000000000004",
             "44444444444444444444444444444444444444444444444444444444444444"]
 test_map = [
-    "0000004000000000000000000000000",
-    "0000004000000000000000000000000",
-    "0000004100000000000000000000000",
+    "0000000000000000000000000000000",
+    "!440000000000000000000000000000",
+    "4400000000000000000000000000000",
+    "0400000000000000000000000000000",
+    "0400000000000000000000000000000",
+    "0400000000000000000000000000000",
+    "0414000000000000000000000000000",
+    "0444000000000000000000000000000",
+    "0004000000000000000000000000000",
+    "0004000000000000000000000000000",
+    "0004000000000000000000000000000",
+    "0004140000000000000000000000000",
+    "0004440000000000000000000000000",
+    "0000040000000000000000000000000",
+    "0000040000000000000000000000000",
+    "0000040000000000000000000000000",
+    "0000041400000000000000000000000",
+    "0000044400000000000000000000000",
+    "0000000400000000000000000000000",
+    "0000000400000000000000000000000",
+    "0000000400000000000000000000000",
+    "0000000414000000000000000000000",
+    "0000000444000000000000000000000",
+    "0000000004000000000000000000000",
+    "0000000004000000000000000000000",
+    "0000000004000000000000000000000",
+    "0000000004140000000000000000000",
+    "0000000004440000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000041400000000000000000",
+    "0000000000044400000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000414000000000000000",
+    "0000000000000444000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000004140000000000000",
+    "0000000000000004440000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000041400000000000",
+    "0000000000000000044400000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000000000000000",
+    "0000000000000000000414000000000",
+    "0000000000000000000444000000000",
+    "0000000000000000000000000000000",
     "0000004400000000000000000000000",
-    "0000000400000000000000000000000",
-    "0000000400000000040000000000000",
-    "0000000400000000100000000000000",
-    "0000000000000000000000000000000",
-    "0000000000000000000000000000000",
-    "0000000100000000000000000000000",
-    "0000000400000000000000000000000",
-    "0000000400000000000000000000000",
-    "0000000400000000000000000000000",
-    "0000000400000000000000000000000",
-    "0000000400000000000000000000000",
-    "0001444400004000000004000000000",
-    "0000000000044000000004400000000",
+    "0000004000000000000000000000000",
+    "0000004000000000011#11000000000",
+    "000000410000000000utt1000000000",
+    "0000004t4000000000044t000000000",
+    "0000004000000000000444000000000",
+    "0000004000000000000044000000000",
+    "0000004100000000000044000000000",
+    "0000004t00000000000004000000000",
+    "0000004400000000000004000000000",
+    "0000000000000000040004000000000",
+    "0000000000000000100004000000000",
+    "0000001000000000000004000000000",
+    "000000t000000000000004000000000",
+    "0000004000000000000004000000000",
+    "0000004000000000000004000000000",
+    "0000004000000000000000000000000",
+    "0000004000000000000000000000000",
+    "0!00004000000000000000000000000",
+    "0t00004000004000000004000000000",
+    "0444444400044000000004400000000",
+    "0400000000044000000004400000000",
     "0000000000444400000004440000000",
     "0000000004444440000004444000000",
     "11gq44qh1gq44qh11110044441111!1",
@@ -985,7 +1056,7 @@ test_map = [
     "01!1000000000000000000000000000",
     "0000000000000000000000000000000",
     "0000000000000000000000000000000",
-    "11000000000000000000000000111#1",
+    "11000000000000000000000000111!1",
     "1100000000000000000011000011111",
     "1100001111000111000011000011111",
     "11r44411114441114444114444111114444444444",
