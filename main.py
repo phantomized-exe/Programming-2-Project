@@ -1067,6 +1067,7 @@ while True: #game loop
             break
         else:
             player2.jumping = True
+    #joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
     for event in pygame.event.get():
         if event.type == pygame.QUIT: #user clicks the X button in window
             pygame.quit()
