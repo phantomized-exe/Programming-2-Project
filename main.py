@@ -583,7 +583,7 @@ def check_tile_collision_y():
         crouch_jump2 = False
         for tile in tiles:
             tile.y -= PLAYER_VELOCITY_Y
-        player.velocity_y = PLAYER_VELOCITY_Y*1.2
+        player.velocity_y = PLAYER_VELOCITY_Y
         player.jumping = True
         player.jump_count += 1
     feet_rect.y = player.crouching_y if player.crouching else player.standing_y
