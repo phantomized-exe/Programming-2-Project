@@ -420,10 +420,11 @@ def check_tile_collision():
     return None
 def check_lava_collision():
     global coyote_lava
+    global joy_restart
     for tile in tiles:
-        if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or keys[pygame.K_r]:
-            if keys[pygame.K_r] or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq:
-                if coyote_lava >= 32 or keys[pygame.K_r]:
+        if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or keys[pygame.K_r] or joy_restart:
+            if keys[pygame.K_r] or joy_restart or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq:
+                if coyote_lava >= 32 or keys[pygame.K_r] or joy_restart:
                     coyote_lava = 0
                     player.velocity_x = 0
                     player.velocity_y = 0
@@ -436,6 +437,7 @@ def check_lava_collision():
                                 j.y -= spawn_y
                             break
                     player.jump_count = 0
+                    joy_restart = False
                 else:
                     coyote_lava += 1
                     break
@@ -1033,9 +1035,24 @@ global coyote_lava
 coyote_lava = 0
 global crouch_jump2
 crouch_jump2 = False
+joy_jump = False
+joy_crouch = False
+joy_left = False
+joy_right = False
+global joy_restart
+joy_restart = False
+button_crouch = False
+joysticks = []
 keys = pygame.key.get_pressed()
 check_tile_collision_x()
 while True: #game loop
+    if joysticks == []:
+        pygame.joystick.init()
+        for i in range(pygame.joystick.get_count()):
+            joystick = pygame.joystick.Joystick(i)
+            joystick.init()
+            joysticks.append(joystick)
+            print(f"{joystick.get_name()} detected")
     spawn_x = 0
     spawn_y = 0
     for tile in tiles:
@@ -1072,22 +1089,84 @@ while True: #game loop
         if event.type == pygame.QUIT: #user clicks the X button in window
             pygame.quit()
             exit()
+        if event.type == pygame.JOYDEVICEREMOVED:
+            print(f"{joystick.get_name()} disconnected.")
+            for joy in joysticks:
+                if joy.get_instance_id() == event.instance_id:
+                    joysticks.remove(joy)
+                    #break
+        if event.type == pygame.JOYAXISMOTION:
+            if event.axis < 2:
+                x = joysticks[event.joy].get_axis(0)
+                y = joysticks[event.joy].get_axis(1)
+                joy_left = False
+                joy_right = False
+                if x < -.5 and y < -.5:
+                    joy_left = True
+                elif x > .5 and y < -.5:
+                    joy_right = True
+                elif x < -.5 and y > .5:
+                    joy_left = True
+                    joy_crouch = True
+                elif x > .5 and y > .5:
+                    joy_right = True
+                    joy_crouch = True
+                elif y > .5 and abs(x) < .5:
+                    joy_crouch = True
+                elif x < -.5 and abs(y) < .5:
+                    joy_left = True
+                elif x > .5 and abs(y) < .5:
+                    joy_right = True
+                else:
+                    joy_left = False
+                    joy_right = False
+                    if not button_crouch:
+                        joy_crouch = False
+        if event.type == pygame.JOYBUTTONDOWN:
+            if event.button == 0:
+                joy_jump = True
+            if event.button == 1 or event.button == 2:
+                button_crouch = True
+                joy_crouch = True
+            if event.button == 3:
+                joy_restart = True
+        if event.type == pygame.JOYBUTTONUP:
+            if event.button == 1 or event.button == 2:
+                button_crouch = False
+                joy_crouch = False
         #KEYDOWN - key was pressed, KEYUP - key was pressed/release
-        elif event.type == pygame.KEYDOWN and not player.crouching:
-            if event.key in (pygame.K_UP, pygame.K_w, pygame.K_SPACE):
-                if player.jump_count < player.max_jumps and not player.colliderect(feet_rect2):
-                    for tile in tiles:
-                        tile.y -= PLAYER_VELOCITY_Y
-                    player.velocity_y = PLAYER_VELOCITY_Y
-                    player.jumping = True
-                    player.jump_count += 1
-                elif not player.colliderect(feet_rect2):
-                    for tile in tiles:
-                        if lava_rect.colliderect(tile):
-                            touching_tile_buffer = True
-                            break
-                        else:
-                            touching_tile_buffer = False
+        if event.type == pygame.KEYDOWN and not player.crouching or joy_jump:
+            try:
+                if event.key in (pygame.K_UP, pygame.K_w, pygame.K_SPACE):
+                    if player.jump_count < player.max_jumps and not player.colliderect(feet_rect2) and not player.crouching:
+                        for tile in tiles:
+                            tile.y -= PLAYER_VELOCITY_Y
+                        player.velocity_y = PLAYER_VELOCITY_Y
+                        player.jumping = True
+                        player.jump_count += 1
+                    elif not player.colliderect(feet_rect2):
+                        for tile in tiles:
+                            if lava_rect.colliderect(tile):
+                                touching_tile_buffer = True
+                                break
+                            else:
+                                touching_tile_buffer = False
+            except AttributeError:
+                if joy_jump:
+                    if player.jump_count < player.max_jumps and not player.colliderect(feet_rect2) and not player.crouching:
+                        for tile in tiles:
+                            tile.y -= PLAYER_VELOCITY_Y
+                        player.velocity_y = PLAYER_VELOCITY_Y
+                        player.jumping = True
+                        player.jump_count += 1
+                    elif not player.colliderect(feet_rect2):
+                        for tile in tiles:
+                            if lava_rect.colliderect(tile):
+                                touching_tile_buffer = True
+                                break
+                            else:
+                                touching_tile_buffer = False
+                    joy_jump = False
     keys = pygame.key.get_pressed()
     if touching_tile_buffer and not player.jumping and not player.crouching and not player.colliderect(feet_rect2):
         for tile in tiles:
@@ -1100,7 +1179,7 @@ while True: #game loop
     elif player2.velocity_x < 0:
         player2.direction = "left"
     check_crouch()
-    if (keys[pygame.K_DOWN] or keys[pygame.K_s]) or force_crouch:
+    if (keys[pygame.K_DOWN] or keys[pygame.K_s]) or force_crouch or joy_crouch:
         touching_tile_buffer = False
         if player.jumping:
             CROUCH_FRICTION = 1
@@ -1127,10 +1206,10 @@ while True: #game loop
             player.crouching = False
             if not player.jumping:
                 player.crouch_jump = False
-    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+    if keys[pygame.K_LEFT] or keys[pygame.K_a] or joy_left:
         player.velocity_x = -PLAYER_VELOCITY_X//CROUCH_FRICTION
         player.direction = "left"
-    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+    if keys[pygame.K_RIGHT] or keys[pygame.K_d] or joy_right:
         player.velocity_x = PLAYER_VELOCITY_X//CROUCH_FRICTION
         player.direction = "right"
     move()
