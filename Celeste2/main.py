@@ -39,7 +39,7 @@ CROUCH_FRICTION = 1
 
 # images
 def load_image(image_name,scale=None):
-    image = pygame.image.load(os.path.join("Test Sprites",image_name))
+    image = pygame.image.load(os.path.join("Celeste2/Test Sprites",image_name))
     if scale is not None:
         image = pygame.transform.scale(image,scale)
     return image
@@ -108,7 +108,7 @@ floor_tile_imagev = load_image("Test Sprite Tile-lava23.png.png",(TILE_SIZE,TILE
 while True:
     hosting = input("Host or join game? (host/join) ")
     if hosting == "h" or hosting == "host":
-        server_process = subprocess.Popen(["python", "server.py"])
+        server_process = subprocess.Popen(["python", "Celeste2/server.py"])
         server_ip = "127.0.0.1"
         #print("Server started. You are hosting the game.")
         break
