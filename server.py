@@ -60,10 +60,10 @@ def threaded_client(conn, player):
     connected[player] = False
     print(f"Lost connection with player {player+1}")
 #currentPlayer = 0
+print(f"Clients connect to {get_local_ip()}")
 while True:
     conn, addr = s.accept()
     #print("Connected to:", addr)
-    print(f"Clients connect to {get_local_ip()}")
     #print(f"IP: {addr[0]}\nPort: {addr[1]}")
     #start_new_thread(threaded_client, (conn,currentPlayer))
     #currentPlayer += 1
@@ -77,6 +77,5 @@ while True:
         conn.close()
         continue
     connected[player] = True
-    if player == 1:
-        print("Client connected")
+    print(f"Player {player+1} connected")
     start_new_thread(threaded_client, (conn, player))
