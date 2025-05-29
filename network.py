@@ -1,5 +1,4 @@
 import socket
-global rand_ip
 
 class Network:
     def __init__(self,server_ip):
