@@ -1,8 +1,6 @@
 import socket
 import random
 from _thread import *
-global conn_available
-conn_available = False
 #import sys
 def get_local_ip():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -32,18 +30,13 @@ def make_pos(tup):
     return f"{tup[0]},{tup[1]},{tup[2]},{tup[3]}"
 pos = [(0,0,0,False),(-1000,-1000,0,False)]
 def threaded_client(conn, player):
-    global conn_available
     conn.send(str.encode(make_pos(pos[player])))
     while True:
         try:
             raw = conn.recv(2048).decode()
             if not raw:
                 print("Client disconnected.")
-                conn_available = True
                 break
-            elif raw and conn_available:
-                print("Client connected")
-                conn_available = False
             raw = raw.strip()
             parts = raw.split(",")
             if len(parts) != 4:
@@ -84,4 +77,5 @@ while True:
         conn.close()
         continue
     connected[player] = True
+    print("Client connected")
     start_new_thread(threaded_client, (conn, player))
