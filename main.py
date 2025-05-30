@@ -699,6 +699,8 @@ def move():
         up.y = player.y
         left.y = player.y+2
         right.y = player.y+2
+        head_rect2.y = player2.y-4
+        head_rect2.x = player2.x+2
     else:
         feet_rect.x = player.standing_x+2
         feet_rect.y = player.standing_y
@@ -710,6 +712,8 @@ def move():
         up.y = player.y
         left.y = player.y+2
         right.y = player.y+2
+        head_rect2.y = player2.y-4
+        head_rect2.x = player2.x+2
     player.y = player.crouching_y if player.crouching else player.standing_y
 
 def read_pos(str):
@@ -788,6 +792,7 @@ def draw():
         pygame.draw.rect(window, (255, 0, 0), feet_rect2, 2)
         pygame.draw.rect(window, (0, 255, 0), lava_rect, 2)
         pygame.draw.rect(window, (0, 255, 0), lava_rect2, 2)
+        pygame.draw.rect(window, (0, 0, 0), head_rect2, 2)
     if cheat:
         player.jump_count = 0
 def check_crouch():
@@ -796,7 +801,7 @@ def check_crouch():
     collide_crouch = pygame.Rect(player.x, player.y-(PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT), PLAYER_WIDTH, PLAYER_HEIGHT)
     if player.crouching or feet_rect.colliderect(player2):
         for tile in tiles:#32 crouch 58 tall
-            if collide_crouch.colliderect(tile) or (up.colliderect(player2) and feet_rect2.colliderect(tile)):
+            if collide_crouch.colliderect(tile) or (feet_rect2.colliderect(player) and head_rect2.colliderect(tile)):
                 CROUCH_FRICTION = 2
                 player.width = PLAYER_CROUCH_WIDTH
                 player.height = PLAYER_CROUCH_HEIGHT
@@ -1172,6 +1177,11 @@ right.height = player.height-4
 right.width = 2
 touching_tile_buffer = False
 player2_crouching = False
+head_rect2 = Player()
+head_rect2.x = player2.x+2
+head_rect2.y = player2.y-4
+head_rect2.height = 4
+head_rect2.width = player2.width-4
 global debug
 debug = False
 global cheat
