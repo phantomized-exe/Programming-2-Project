@@ -104,6 +104,7 @@ floor_tile_images = load_image("Test Sprite Tile-lava20.png.png",(TILE_SIZE,TILE
 floor_tile_imaget = load_image("Test Sprite Tile-lava21.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imageu = load_image("Test Sprite Tile-lava22.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imagev = load_image("Test Sprite Tile-lava23.png.png",(TILE_SIZE,TILE_SIZE))
+spawn_tile0 = load_image("Test Sprite Tile-icon0.png.png",(TILE_SIZE,TILE_SIZE))
 
 while True:
     hosting = input("Host or join game? (host/join) ")
@@ -285,7 +286,7 @@ def create_map():
             if row[j] == "#":
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
-                tile = Tile(x,y,spawn_tile2)
+                tile = Tile(x,y,spawn_tile0)
                 tile.width = TILE_SIZE
                 tile.height = TILE_SIZE
                 tiles.append(tile)
@@ -464,12 +465,24 @@ def check_lava_collision():
                     player.velocity_y = 0
                     for i in tiles:
                         if i.image == spawn_tile2:
+                            no_checkpoints = False
                             spawn_x = i.x-(10*32)+16#+random.randint(0,TILE_SIZE)
                             spawn_y = i.y-(10*32)+TILE_SIZE+16+3#-player.height
                             for j in tiles:
                                 j.x -= spawn_x
                                 j.y -= spawn_y
                             break
+                        else:
+                            no_checkpoints = True
+                    if no_checkpoints:
+                        for i in tiles:
+                            if i.image == spawn_tile0:
+                                spawn_x = i.x-(10*32)+16#+random.randint(0,TILE_SIZE)
+                                spawn_y = i.y-(10*32)+TILE_SIZE+16+3#-player.height
+                                for j in tiles:
+                                    j.x -= spawn_x
+                                    j.y -= spawn_y
+                                break
                     player.jump_count = 0
                     joy_restart = False
                 else:
@@ -1181,12 +1194,13 @@ button_crouch = False
 joysticks = []
 keys = pygame.key.get_pressed()
 check_tile_collision_x()
+'''
 if hosting == "j" or hosting == "join":
     if feet_rect.colliderect(player2):
         x = player.x+4
         y = player.y+player.height+player2.height
         delete_tile(x,y)#tile 64, player 56
-        tile = Tile(x,y,spawn_tile2)
+        tile = Tile(x,y,spawn_tile)
         tile.width = TILE_SIZE
         tile.height = TILE_SIZE
         tiles.append(tile)
@@ -1194,17 +1208,11 @@ if hosting == "j" or hosting == "join":
         x = player.x+4
         y = player.y+player.height
         delete_tile(x,y)
-        tile = Tile(x,y,spawn_tile2)
+        tile = Tile(x,y,spawn_tile)
         tile.width = TILE_SIZE
         tile.height = TILE_SIZE
         tiles.append(tile)
-'''if row[j] == "#":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,spawn_tile2)
-                tile.width = TILE_SIZE
-                tile.height = TILE_SIZE
-                tiles.append(tile)'''
+        '''
 while True: #game loop
     if joysticks == []:
         pygame.joystick.init()
