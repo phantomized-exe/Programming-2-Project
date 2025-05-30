@@ -1185,7 +1185,7 @@ joy_crouch = False
 joy_left = False
 joy_right = False
 global joy_restart
-joy_restart = False
+joy_restart = True
 button_crouch = False
 joysticks = []
 keys = pygame.key.get_pressed()
