@@ -27,7 +27,7 @@ def read_pos(s):
     return int(s[0]), int(s[1]), float(s[2]), s[3]=="True"
 def make_pos(tup):
     return f"{tup[0]},{tup[1]},{tup[2]},{tup[3]}"
-pos = [(0,0,0,False),(0,-10000,0,False)]
+pos = [(0,0,0,False),(0,1000,0,False)]
 def threaded_client(conn, player):
     conn.send(str.encode(make_pos(pos[player])))
     while True:
