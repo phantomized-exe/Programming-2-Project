@@ -796,7 +796,7 @@ def check_crouch():
     collide_crouch = pygame.Rect(player.x, player.y-(PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT), PLAYER_WIDTH, PLAYER_HEIGHT)
     if player.crouching or feet_rect.colliderect(player2):
         for tile in tiles:#32 crouch 58 tall
-            if collide_crouch.colliderect(tile):
+            if collide_crouch.colliderect(tile) or (up.colliderect(player2) and feet_rect2.colliderect(tile)):
                 CROUCH_FRICTION = 2
                 player.width = PLAYER_CROUCH_WIDTH
                 player.height = PLAYER_CROUCH_HEIGHT
