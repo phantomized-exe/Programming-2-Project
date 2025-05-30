@@ -104,7 +104,7 @@ floor_tile_images = load_image("Test Sprite Tile-lava20.png.png",(TILE_SIZE,TILE
 floor_tile_imaget = load_image("Test Sprite Tile-lava21.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imageu = load_image("Test Sprite Tile-lava22.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imagev = load_image("Test Sprite Tile-lava23.png.png",(TILE_SIZE,TILE_SIZE))
-spawn_tile0 = load_image("Test Sprite Tile-icon0.png.png",(TILE_SIZE,TILE_SIZE))
+spawn_tile0 = load_image("Test Sprite-icon0.png.png",(TILE_SIZE,TILE_SIZE))
 
 while True:
     hosting = input("Host or join game? (host/join) ")
