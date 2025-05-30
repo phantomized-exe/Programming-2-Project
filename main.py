@@ -792,6 +792,12 @@ def check_crouch():
                 break
             else:
                 force_crouch = False
+def delete_tile(x,y):
+    global tiles
+    for tile in tiles:
+        if tile.x == x and tile.y == y:
+            tiles.remove(tile)
+            break
 #start game
 level_list = []
 rand_int = 0
@@ -1109,6 +1115,8 @@ for tile in tiles:
             i.x -= spawn_x
             i.y -= spawn_y
         break
+read_level = level.read_text()
+load_level = json.loads(read_level)
 background = Background()
 global time_walking
 global force_crouch
@@ -1173,6 +1181,30 @@ button_crouch = False
 joysticks = []
 keys = pygame.key.get_pressed()
 check_tile_collision_x()
+if hosting == "j" or hosting == "join":
+    if feet_rect.colliderect(player2):
+        x = player.x+4
+        y = player.y+player.height+player2.height
+        delete_tile(x,y)#tile 64, player 56
+        tile = Tile(x,y,spawn_tile2)
+        tile.width = TILE_SIZE
+        tile.height = TILE_SIZE
+        tiles.append(tile)
+    else:
+        x = player.x+4
+        y = player.y+player.height
+        delete_tile(x,y)
+        tile = Tile(x,y,spawn_tile2)
+        tile.width = TILE_SIZE
+        tile.height = TILE_SIZE
+        tiles.append(tile)
+'''if row[j] == "#":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                tile = Tile(x,y,spawn_tile2)
+                tile.width = TILE_SIZE
+                tile.height = TILE_SIZE
+                tiles.append(tile)'''
 while True: #game loop
     if joysticks == []:
         pygame.joystick.init()
