@@ -1194,25 +1194,6 @@ keys = pygame.key.get_pressed()
 for tile in tiles:
     if tile.image == spawn_tile2:
         tile.image == spawn_tile
-'''
-if hosting == "j" or hosting == "join":
-    if feet_rect.colliderect(player2):
-        x = player.x+4
-        y = player.y+player.height+player2.height
-        delete_tile(x,y)#tile 64, player 56
-        tile = Tile(x,y,spawn_tile)
-        tile.width = TILE_SIZE
-        tile.height = TILE_SIZE
-        tiles.append(tile)
-    else:
-        x = player.x+4
-        y = player.y+player.height
-        delete_tile(x,y)
-        tile = Tile(x,y,spawn_tile)
-        tile.width = TILE_SIZE
-        tile.height = TILE_SIZE
-        tiles.append(tile)
-        '''
 for tile in tiles:
     if tile.image == spawn_tile2:
         spawn_x = tile.x-(10*32)+16
@@ -1222,15 +1203,6 @@ for tile in tiles:
             i.y -= spawn_y
         break
 while True: #game loop
-    '''
-    for tile in tiles:
-        if feet_rect2.colliderect(tile) and tile.image == spawn_tile0 and player.colliderect(player2):
-            for i in tiles:
-                tile.y += player2.height
-            #player.y = player2.y+player.height
-            #print("test")
-            break
-    '''
     if joysticks == []:
         pygame.joystick.init()
         for i in range(pygame.joystick.get_count()):
