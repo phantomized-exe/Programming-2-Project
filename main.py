@@ -1214,6 +1214,13 @@ if hosting == "j" or hosting == "join":
         tiles.append(tile)
         '''
 while True: #game loop
+    for tile in tiles:
+        if feet_rect2.colliderect(tile) and tile.image == spawn_tile0 and player.colliderect(player2):
+            for i in tiles:
+                tile.y += player2.height
+            #player.y = player2.y+player.height
+            #print("test")
+            break
     if joysticks == []:
         pygame.joystick.init()
         for i in range(pygame.joystick.get_count()):
