@@ -594,8 +594,8 @@ def check_tile_collision_y():
                     PLAYER_VELOCITY_Y = -12.1
             elif tile.image == floor_tile_imager:
                 for tile in tiles:
-                    tile.y -= PLAYER_VELOCITY_Y*1.5
-                player.velocity_y = PLAYER_VELOCITY_Y*1.5
+                    tile.y -= PLAYER_VELOCITY_Y
+                player.velocity_y = PLAYER_VELOCITY_Y
                 player.jumping = True
                 player.jump_count += 1
             touching_tile_feet = True
