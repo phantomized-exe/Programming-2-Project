@@ -35,6 +35,7 @@ def threaded_client(conn, player):
             raw = conn.recv(2048).decode()
             if not raw:
                 print("Client disconnected.")
+                pos[1] = {0,1000,0,False}
                 break
             raw = raw.strip()
             parts = raw.split(",")
