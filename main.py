@@ -1124,14 +1124,6 @@ player2.y = startPos[1]
 player = Player()
 player.width = PLAYER_WIDTH
 player.player = 1
-for tile in tiles:
-    if tile.image == spawn_tile2:
-        spawn_x = tile.x-(10*32)+16
-        spawn_y = tile.y-(10*32)+TILE_SIZE+16+3+PLAYER_HEIGHT
-        for i in tiles:
-            i.x -= spawn_x
-            i.y -= spawn_y
-        break
 read_level = level.read_text()
 load_level = json.loads(read_level)
 background = Background()
@@ -1219,6 +1211,14 @@ if hosting == "j" or hosting == "join":
         tile.height = TILE_SIZE
         tiles.append(tile)
         '''
+for tile in tiles:
+    if tile.image == spawn_tile2:
+        spawn_x = tile.x-(10*32)+16
+        spawn_y = tile.y-(10*32)+TILE_SIZE+16+3+PLAYER_HEIGHT
+        for i in tiles:
+            i.x -= spawn_x
+            i.y -= spawn_y
+        break
 while True: #game loop
     '''
     for tile in tiles:
