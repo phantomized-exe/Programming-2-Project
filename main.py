@@ -1123,7 +1123,7 @@ player.player = 1
 for tile in tiles:
     if tile.image == spawn_tile2:
         spawn_x = tile.x-(10*32)+16
-        spawn_y = tile.y-(10*32)+TILE_SIZE+16+3#-player.height
+        spawn_y = tile.y-(10*32)+TILE_SIZE+16+3+PLAYER_HEIGHT
         for i in tiles:
             i.x -= spawn_x
             i.y -= spawn_y
@@ -1214,6 +1214,7 @@ if hosting == "j" or hosting == "join":
         tiles.append(tile)
         '''
 while True: #game loop
+    '''
     for tile in tiles:
         if feet_rect2.colliderect(tile) and tile.image == spawn_tile0 and player.colliderect(player2):
             for i in tiles:
@@ -1221,6 +1222,7 @@ while True: #game loop
             #player.y = player2.y+player.height
             #print("test")
             break
+    '''
     if joysticks == []:
         pygame.joystick.init()
         for i in range(pygame.joystick.get_count()):
