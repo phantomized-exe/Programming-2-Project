@@ -1090,6 +1090,8 @@ coyote_time = 0
 tiles = []
 create_map()
 n = Network(server_ip)
+if hosting == "j" or hosting == "join":
+    print("Connected to server")
 startPos = read_pos(n.getPos())
 player2 = Player()
 player2.player = 2
