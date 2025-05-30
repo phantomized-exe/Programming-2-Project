@@ -478,7 +478,7 @@ def check_lava_collision():
                         for i in tiles:
                             if i.image == spawn_tile0:
                                 spawn_x = i.x-(10*32)+16#+random.randint(0,TILE_SIZE)
-                                spawn_y = i.y-(10*32)+TILE_SIZE+16+3#-player.height
+                                spawn_y = i.y-(10*32)+TILE_SIZE+16+3+player.height
                                 for j in tiles:
                                     j.x -= spawn_x
                                     j.y -= spawn_y
