@@ -23,11 +23,11 @@ PLAYER_JUMP_HEIGHT = 58
 PLAYER_CROUCH_WIDTH = 28
 PLAYER_CROUCH_HEIGHT = 32
 PLAYER_DISTANCE = 5
-BACKGROUND_X = -206*0
+BACKGROUND_X = 2048
 global BACKGROUND_Y
-BACKGROUND_Y = -206*0
-BACKGROUND_WIDTH = 1024
-BACKGROUND_HEIGHT = 1024
+BACKGROUND_Y = 512
+BACKGROUND_WIDTH = 512*1.5#1024
+BACKGROUND_HEIGHT = 512*1.5#1024
 
 GRAVITY = 1.1
 FRICTION = .8
@@ -43,9 +43,9 @@ def load_image(image_name,scale=None):
     if scale is not None:
         image = pygame.transform.scale(image,scale)
     return image
-background_image0 = load_image("Mountains-front.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
+background_image0 = load_image("Mountains-front.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
 background_image3 = load_image("Test Sprite-back3.png.png",(BACKGROUND_WIDTH/2,BACKGROUND_HEIGHT/2))
-background_image = load_image("Mountains-back.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
+background_image = load_image("Mountains-back.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
 background_image2 = load_image("Test Sprite-back2.png.png",(BACKGROUND_WIDTH/2,BACKGROUND_HEIGHT/2))
 player_image_right = load_image("Test Sprite-right.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
 player_image_right2 = load_image("Test Sprite-right2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT)) #resizes player
@@ -125,12 +125,14 @@ clock = pygame.time.Clock() #used for the framerate
 class Background(pygame.Rect):
     def __init__(self):
         pygame.Rect.__init__(self,PLAYER_X,PLAYER_Y,PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT)
+'''
 class Clouds(pygame.rect):
     def __init__(self,cloud_width,cloud_height,cloud_image):
         cloud_x = 1000
         cloud_y = random.randint(0,512)
         pygame.Rect.__init__(self,cloud_x,cloud_y,cloud_width,cloud_height)
         self.image = cloud_image
+'''
 class Player(pygame.Rect):
     player_animation = 0
     def __init__(self):
@@ -658,8 +660,8 @@ def move():
     player.y += player.velocity_y
     for tile in tiles:
         if tile.image == bg:
-            BACKGROUND_Y = tile.y/25
-            BACKGROUND_X = tile.x/25
+            BACKGROUND_Y = tile.y/25#+1024
+            BACKGROUND_X = tile.x/25+128
     BACKGROUND_Y = round(BACKGROUND_Y,1)
     check_tile_collision_y()
     if not player.crouching:
@@ -757,7 +759,7 @@ def draw():
     background_y = BACKGROUND_Y
     background_y = round(background_y/2,1)-103
     background_x = BACKGROUND_X
-    background_x = round(background_x/2,1)-206
+    background_x = round(background_x/2,1)-128#-412
     round(background_y,1)
     window.blit(background_image, (background_x,background_y))
     background_y = BACKGROUND_Y
