@@ -105,6 +105,12 @@ floor_tile_imaget = load_image("Test Sprite Tile-lava21.png.png",(TILE_SIZE,TILE
 floor_tile_imageu = load_image("Test Sprite Tile-lava22.png.png",(TILE_SIZE,TILE_SIZE))
 floor_tile_imagev = load_image("Test Sprite Tile-lava23.png.png",(TILE_SIZE,TILE_SIZE))
 spawn_tile0 = load_image("Test Sprite-icon0.png.png",(TILE_SIZE,TILE_SIZE))
+clouds1 = load_image("clouds1.png")
+clouds2 = load_image("clouds2.png")
+clouds3 = load_image("clouds3.png")
+clouds4 = load_image("clouds4.png")
+clouds5 = load_image("clouds5.png")
+clouds6 = load_image("clouds6.png")
 
 while True:
     hosting = input("Host or join game? (host/join) ")
@@ -125,14 +131,31 @@ clock = pygame.time.Clock() #used for the framerate
 class Background(pygame.Rect):
     def __init__(self):
         pygame.Rect.__init__(self,PLAYER_X,PLAYER_Y,PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT)
-'''
-class Clouds(pygame.rect):
-    def __init__(self,cloud_width,cloud_height,cloud_image):
-        cloud_x = 1000
-        cloud_y = random.randint(0,512)
-        pygame.Rect.__init__(self,cloud_x,cloud_y,cloud_width,cloud_height)
-        self.image = cloud_image
-'''
+def generate_cloud():
+    cloud_num = random.randint(1,6)
+    if cloud_num == 1:
+        cloud_image = clouds1
+    elif cloud_num == 2:
+        cloud_image = clouds2
+    elif cloud_num == 3:
+        cloud_image = clouds3
+    elif cloud_num == 4:
+        cloud_image = clouds4
+    elif cloud_num == 5:
+        cloud_image = clouds5
+    elif cloud_num == 6:
+        cloud_image = clouds6
+    cloud_width = cloud_image.get_width()
+    cloud_height = cloud_image.get_height()
+    cloud_x = 100
+    cloud_y = random.randint(0,512)
+    cloud_speed = random.randint(1,5)
+    return (cloud_x,cloud_y,cloud_width,cloud_height,cloud_image,cloud_speed)
+class Clouds(pygame.Rect):
+    def __init__(self,cloud=generate_cloud()):
+        pygame.Rect.__init__(self,cloud[0],cloud[1],cloud[2],cloud[3])
+        self.image = cloud[4]
+        self.speed = cloud[5]
 class Player(pygame.Rect):
     player_animation = 0
     def __init__(self):
@@ -1210,6 +1233,10 @@ for tile in tiles:
             i.x -= spawn_x
             i.y -= spawn_y
         break
+clouds = []
+for i in range(100):
+    cloud = Clouds()
+    cloud.append(clouds)
 while True: #game loop
     if joysticks == []:
         pygame.joystick.init()
