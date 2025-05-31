@@ -1239,10 +1239,12 @@ for tile in tiles:
             i.x -= spawn_x
             i.y -= spawn_y
         break
+'''
 clouds = []
 for i in range(100):
     cloud = Clouds()
     clouds.append(cloud)
+'''
 while True: #game loop
     if joysticks == []:
         pygame.joystick.init()
