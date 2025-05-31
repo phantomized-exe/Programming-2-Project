@@ -26,8 +26,8 @@ PLAYER_DISTANCE = 5
 BACKGROUND_X = 2048
 global BACKGROUND_Y
 BACKGROUND_Y = 512
-BACKGROUND_WIDTH = 512*1.5#1024
-BACKGROUND_HEIGHT = 512*1.5#1024
+BACKGROUND_WIDTH = 1024
+BACKGROUND_HEIGHT = 1024
 
 GRAVITY = 1.1
 FRICTION = .8
@@ -44,9 +44,10 @@ def load_image(image_name,scale=None):
         image = pygame.transform.scale(image,scale)
     return image
 background_image0 = load_image("Mountains-front.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
-background_image3 = load_image("Test Sprite-back3.png.png",(BACKGROUND_WIDTH/2,BACKGROUND_HEIGHT/2))
+background_image3 = load_image("Test Sprite-back3.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
 background_image = load_image("Mountains-back.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
-background_image2 = load_image("Test Sprite-back2.png.png",(BACKGROUND_WIDTH/2,BACKGROUND_HEIGHT/2))
+background_image2 = load_image("Test Sprite-back2.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
+background_image4 = load_image("Test Sprite-back4.png.png",(GAME_WIDTH,GAME_HEIGHT))
 player_image_right = load_image("Test Sprite-right.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
 player_image_right2 = load_image("Test Sprite-right2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT)) #resizes player
 player_image_left = load_image("Test Sprite-left.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
@@ -111,6 +112,7 @@ clouds3 = load_image("clouds3.png")
 clouds4 = load_image("clouds4.png")
 clouds5 = load_image("clouds5.png")
 clouds6 = load_image("clouds6.png")
+air = load_image("Mountains-air.png.png",(GAME_WIDTH,GAME_HEIGHT))
 
 while True:
     hosting = input("Host or join game? (host/join) ")
@@ -774,29 +776,33 @@ def draw():
     #window.fill((84,222,158))
     background_y = BACKGROUND_Y
     background_x = BACKGROUND_X
-    window.fill((20,18,167))
-    background_y = round(BACKGROUND_Y/4,1)
+    window.fill((20,18,167))#(4,233,255))#(20,18,167))
+    window.blit(air,(0,0))
+    background_y = round(BACKGROUND_Y/5,1)+7
+    background_x = round(BACKGROUND_X/5,1)-25
+    window.blit(background_image4, (background_x,background_y))
+    background_y = round(BACKGROUND_Y/4,1)-128
     background_x = round(BACKGROUND_X/4,1)
     round(background_y,1)
     window.blit(background_image3, (background_x,background_y))
-    background_y = BACKGROUND_Y
-    background_y = round(background_y/2,1)-103
+    background_y = BACKGROUND_Y-64
+    background_y = round(background_y/2,1)-224
     background_x = BACKGROUND_X
-    background_x = round(background_x/2,1)-128#-412
+    background_x = round(background_x/2,1)-145
     round(background_y,1)
     window.blit(background_image, (background_x,background_y))
     background_y = BACKGROUND_Y
-    background_y = background_y-103
+    background_y = background_y-206
     background_x = BACKGROUND_X
     background_x = background_x-206
     round(background_y,1)
     window.blit(background_image0, (background_x,background_y))
-    background_y = BACKGROUND_Y
+    background_y = BACKGROUND_Y-128
     background_y = background_y*2
-    background_x = BACKGROUND_X
+    background_x = BACKGROUND_X-325
     background_x = background_x*2
     round(background_y,1)
-    window.blit(background_image2, (BACKGROUND_X,background_y))
+    window.blit(background_image2, (background_x,background_y))
     for tile in tiles:
         window.blit(tile.image, tile)
     player2.update_image()
@@ -1236,7 +1242,7 @@ for tile in tiles:
 clouds = []
 for i in range(100):
     cloud = Clouds()
-    cloud.append(clouds)
+    clouds.append(cloud)
 while True: #game loop
     if joysticks == []:
         pygame.joystick.init()
