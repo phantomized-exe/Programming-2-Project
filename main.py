@@ -43,9 +43,9 @@ def load_image(image_name,scale=None):
     if scale is not None:
         image = pygame.transform.scale(image,scale)
     return image
-background_image0 = load_image("Test Sprite-back0.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
+background_image0 = load_image("Mountains-front.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
 background_image3 = load_image("Test Sprite-back3.png.png",(BACKGROUND_WIDTH/2,BACKGROUND_HEIGHT/2))
-background_image = load_image("Test Sprite-back.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
+background_image = load_image("Mountains-back.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
 background_image2 = load_image("Test Sprite-back2.png.png",(BACKGROUND_WIDTH/2,BACKGROUND_HEIGHT/2))
 player_image_right = load_image("Test Sprite-right.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
 player_image_right2 = load_image("Test Sprite-right2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT)) #resizes player
@@ -125,6 +125,12 @@ clock = pygame.time.Clock() #used for the framerate
 class Background(pygame.Rect):
     def __init__(self):
         pygame.Rect.__init__(self,PLAYER_X,PLAYER_Y,PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT)
+class Clouds(pygame.rect):
+    def __init__(self,cloud_width,cloud_height,cloud_image):
+        cloud_x = 1000
+        cloud_y = random.randint(0,512)
+        pygame.Rect.__init__(self,cloud_x,cloud_y,cloud_width,cloud_height)
+        self.image = cloud_image
 class Player(pygame.Rect):
     player_animation = 0
     def __init__(self):
@@ -1058,7 +1064,7 @@ test_map = [
     "000000100001gqh@00000111gqqh111",
     "0000002000022222000002222222222",
     "0r00003000033333000003333333333",
-    "01!0000000033333000003333333333",
+    "01!00000000333330000033333333330001!1",
     "0000000000000000000000000000000",
     "0000001100000000000000000000000",
     "0000000000110011000001110000000",
@@ -1070,8 +1076,8 @@ test_map = [
     "0001000000000000000000000000000",
     "!101000001000000000000000000011",
     "0001000000000000000000000000000",
-    "0001000000000011410000000000000",
-    "0011100000000000000000111000111",
+    "0001000000000014410000000000000",
+    "0011100000000000000000110001100",
     "0000000000000000000000000000000",
     "0000000000000000000000000000000",
     "1100000000000000000000000000000",
