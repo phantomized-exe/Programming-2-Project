@@ -115,6 +115,14 @@ clouds6 = load_image("clouds6.png")
 air = load_image("Mountains-air.png.png",(GAME_WIDTH,GAME_HEIGHT))
 
 while True:
+    lava = input("Enable lava mode? (y/n) ")
+    if lava == "y" or lava == "yes":
+        lava_mode = True
+        break
+    elif lava == "n" or lava == "no":
+        lava_mode = False
+        break
+while True:
     hosting = input("Host or join game? (h/j) ")
     if hosting == "h" or hosting == "host":
         server_process = subprocess.Popen(["python", "server.py"])
@@ -860,14 +868,6 @@ def delete_tile(x,y):
             tiles.remove(tile)
             break
 #start game
-while True:
-    lava = input("Enable lava mode? (y/n) ")
-    if lava == "y" or lava == "yes":
-        lava_mode = True
-        break
-    elif lava == "n" or lava == "no":
-        lava_mode = False
-        break
 level_list = []
 rand_int = 0
 for i in range(48):
