@@ -640,7 +640,7 @@ def check_tile_collision_y():
                 player.velocity_y = PLAYER_VELOCITY_Y*1.5
                 player.jumping = True
                 player.jump_count += 1
-            if lava_mode and tile.image != spawn_tile0:
+            if lava_mode and tile.image != spawn_tile0 and tile.image != floor_tile_imagej:
                 tile.image = floor_tile_image4
             touching_tile_feet = True
             break
