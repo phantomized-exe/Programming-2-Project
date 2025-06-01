@@ -115,7 +115,7 @@ clouds6 = load_image("clouds6.png")
 air = load_image("Mountains-air.png.png",(GAME_WIDTH,GAME_HEIGHT))
 
 while True:
-    hosting = input("Host or join game? (host/join) ")
+    hosting = input("Host or join game? (h/j) ")
     if hosting == "h" or hosting == "host":
         server_process = subprocess.Popen(["python", "server.py"])
         server_ip = "127.0.0.1"
@@ -489,6 +489,7 @@ def check_tile_collision():
 def check_lava_collision():
     global coyote_lava
     global joy_restart
+    global tiles
     for tile in tiles:
         if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or keys[pygame.K_r] or joy_restart:
             if keys[pygame.K_r] or joy_restart or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget or tile.image == floor_tile_imageu or tile.image == floor_tile_imagev:
@@ -496,6 +497,9 @@ def check_lava_collision():
                     coyote_lava = 0
                     player.velocity_x = 0
                     player.velocity_y = 0
+                    if lava_mode:
+                        tiles = []
+                        create_map()
                     for i in tiles:
                         if i.image == spawn_tile2:
                             no_checkpoints = False
@@ -616,11 +620,14 @@ def check_tile_collision_y():
                 player.velocity_y = 0
                 player.y = player2.y+player2.height
         if feet_rect.colliderect(tile) or feet_rect.colliderect(player2):
-            if tile.image == spawn_tile:
+            if tile.image == spawn_tile or tile.image == spawn_tile0:
                 for i in tiles:
                     if i.image == spawn_tile2:
                         i.image = spawn_tile
-                tile.image = spawn_tile2
+                if tile.image == spawn_tile:
+                    tile.image = spawn_tile2
+                else:
+                    tile.image = spawn_tile0
             elif tile.image == floor_tile_imagej:
                 if player.max_jumps != 2 and PLAYER_VELOCITY_Y != -12.1:
                     print()
@@ -633,6 +640,8 @@ def check_tile_collision_y():
                 player.velocity_y = PLAYER_VELOCITY_Y*1.5
                 player.jumping = True
                 player.jump_count += 1
+            if lava_mode and tile.image != spawn_tile0:
+                tile.image = floor_tile_image4
             touching_tile_feet = True
             break
         else:
@@ -851,6 +860,14 @@ def delete_tile(x,y):
             tiles.remove(tile)
             break
 #start game
+while True:
+    lava = input("Enable lava mode? (y/n) ")
+    if lava == "y" or lava == "yes":
+        lava_mode = True
+        break
+    elif lava == "n" or lava == "no":
+        lava_mode = False
+        break
 level_list = []
 rand_int = 0
 for i in range(48):
@@ -1149,6 +1166,7 @@ level_dump = json.dumps(test_map)
 level.write_text(level_dump)
 global  coyote_time
 coyote_time = 0
+global tiles
 tiles = []
 create_map()
 n = Network(server_ip)
