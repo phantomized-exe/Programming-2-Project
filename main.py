@@ -868,6 +868,7 @@ def delete_tile(x,y):
             tiles.remove(tile)
             break
 #start game
+print("\nController Controls:\nLeft Joystick: Move\nA Button: Jump\nB/X Button: Crouch\nY Button: Restart Level\n\nKeyboard Controls:\nA/LEFT ARROW: Left\nD/RIGHT ARROW: Right\nW/UP ARROW/SPACE: Jump\nS/DOWN ARROW: Crouch\nR: Restart Level\n")#\nL: Enable Cheat Mode\nO: Enable Debug Mode\nP: Disable Debug/Cheat Mode")
 level_list = []
 rand_int = 0
 for i in range(48):
