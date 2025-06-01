@@ -40,7 +40,7 @@ def threaded_client(conn, player):
             raw = raw.strip()
             parts = raw.split(",")
             if len(parts) != 4:
-                print(f"Error player {player+1}: {repr(raw)}")
+                print(f"Player {player+1}: {repr(raw)}")
                 continue
             try:
                 x = int(parts[0])
@@ -55,12 +55,13 @@ def threaded_client(conn, player):
             #print(f"Player {player+1}: {pos[player]}; sending back {reply}")
             conn.sendall(str.encode(make_pos(reply)))
         except Exception as e:
-            print(f"Error player {player+1}: {e}")
+            print(f"Player {player+1}: {e}")
             break
     conn.close()
     connected[player] = False
     print(f"Lost connection with player {player+1}")
 #currentPlayer = 0
+print()
 print(f"Clients connect to {get_local_ip()}")
 while True:
     conn, addr = s.accept()
