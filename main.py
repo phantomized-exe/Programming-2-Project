@@ -119,6 +119,7 @@ while True:
     difficulty = int(input("How difficult do you want your game?\n1. Baby\n2. Normal\n3. Hot Lava Mode (aka Hot Feet)\n(1/2/3) "))
     if difficulty == 1 or difficulty == 2 or difficulty == 3:
         break
+global baby_mode
 if difficulty == 1:
     baby_mode = True
     lava_mode = False
@@ -845,6 +846,7 @@ def make_pos(tup):
 
 def draw():
     global BACKGROUND_Y
+    global baby_mode
     global debug
     global cheat
     #window.fill("blue")
@@ -884,6 +886,7 @@ def draw():
             if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget or tile.image == floor_tile_imageu or tile.image == floor_tile_imagev:
                 tile.image = floor_tile_image
                 tile.original_image = floor_tile_image
+        baby_mode = False
     for tile in tiles:
         window.blit(tile.image, tile)
     player2.update_image()
