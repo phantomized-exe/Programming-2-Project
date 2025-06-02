@@ -115,12 +115,21 @@ clouds6 = load_image("clouds6.png")
 air = load_image("Mountains-air.png.png",(GAME_WIDTH,GAME_HEIGHT))
 
 while True:
-    lava = input("Enable hot lava mode? (y/n) ")
+    lava = input("Enable hot lava mode aka hot feet? (y/n) ")
     if lava == "y" or lava == "yes":
         lava_mode = True
+        while True:
+            extra_lava = input("Enable extra spicy hot feet? (y/n) ")
+            if extra_lava == "y" or extra_lava == "yes":
+                extra_lava_mode = True
+                break
+            elif extra_lava == "n" or extra_lava == "no":
+                extra_lava_mode = False
+                break
         break
     elif lava == "n" or lava == "no":
         lava_mode = False
+        extra_lava_mode = False
         break
 while True:
     hosting = input("Host or join game? (h/j) ")
@@ -303,6 +312,9 @@ class Tile(pygame.Rect):
     def __init__(self,x,y,image=None):
         pygame.Rect.__init__(self,x,y,TILE_SIZE,TILE_SIZE)
         self.image = image
+        self.lava_timer = 0
+        self.timer = 0
+        self.original_image = image
 
 def create_map():
     read_level = level.read_text()
@@ -505,9 +517,6 @@ def check_lava_collision():
                     coyote_lava = 0
                     player.velocity_x = 0
                     player.velocity_y = 0
-                    if lava_mode:
-                        tiles = []
-                        create_map()
                     for i in tiles:
                         if i.image == spawn_tile2:
                             no_checkpoints = False
@@ -530,6 +539,13 @@ def check_lava_collision():
                                 break
                     player.jump_count = 0
                     joy_restart = False
+                    if lava_mode:
+                        for tile in tiles:
+                            if tile.image == floor_tile_image4:
+                                tile.image = tile.original_image
+                                tile.lava_timer = 0
+                                tile.timer = 0
+                        lava_tile.clear()
                 else:
                     coyote_lava += 1
                     break
@@ -590,6 +606,7 @@ def check_tile_collision_y():
     global BACKGROUND_Y
     global PLAYER_VELOCITY_Y
     global CROUCH_FRICTION
+    global lava_tile
     global coyote_time
     global crouch_jump2
     check_lava_collision()
@@ -628,6 +645,11 @@ def check_tile_collision_y():
                 player.velocity_y = 0
                 player.y = player2.y+player2.height
         if feet_rect.colliderect(tile) or feet_rect.colliderect(player2):
+            if lava_mode and tile.image != spawn_tile0 and tile.image != floor_tile_imagej and feet_rect.colliderect(tile) and tile.timer == 0:
+                if extra_lava_mode:
+                    lava_tile.append(tile)
+                elif not extra_lava_mode  and tile.image != spawn_tile and tile.image != spawn_tile2:
+                    lava_tile.append(tile)
             if tile.image == spawn_tile or tile.image == spawn_tile0:
                 for i in tiles:
                     if i.image == spawn_tile2:
@@ -648,12 +670,20 @@ def check_tile_collision_y():
                 player.velocity_y = PLAYER_VELOCITY_Y*1.5
                 player.jumping = True
                 player.jump_count += 1
-            if lava_mode and tile.image != spawn_tile0 and tile.image != floor_tile_imagej:
-                tile.image = floor_tile_image4
             touching_tile_feet = True
             break
         else:
             touching_tile_feet = False
+    for tile in lava_tile:
+        tile.timer += 1
+        if tile.timer >= 22 and not extra_lava_mode:
+            tile.image = floor_tile_image4
+            tile.timer = 0
+            lava_tile.remove(tile)
+        elif tile.timer >= 1 and extra_lava_mode:
+            tile.image = floor_tile_image4
+            tile.timer = 0
+            lava_tile.remove(tile)
     tile = check_tile_collision()
     if tile is not None:
         coyote_time = 0
@@ -1245,6 +1275,8 @@ joy_right = False
 global joy_restart
 joy_restart = True
 button_crouch = False
+global lava_tile
+lava_tile = []
 joysticks = []
 keys = pygame.key.get_pressed()
 for tile in tiles:
@@ -1431,6 +1463,15 @@ while True: #game loop
     if keys[pygame.K_RIGHT] or keys[pygame.K_d] or joy_right:
         player.velocity_x = PLAYER_VELOCITY_X//CROUCH_FRICTION
         player.direction = "right"
+    for tile in tiles:
+        if tile.image == floor_tile_image4:
+            tile.lava_timer += 1
+            if tile.lava_timer >= 32 and not extra_lava_mode:
+                tile.image = tile.original_image
+                tile.lava_timer = 0
+            elif tile.lava_timer > 100 and extra_lava_mode:
+                tile.image = tile.original_image
+                tile.lava_timer = 0
     move()
     draw()
     pygame.display.update()
