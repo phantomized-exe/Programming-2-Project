@@ -112,7 +112,14 @@ clouds3 = load_image("clouds3.png")
 clouds4 = load_image("clouds4.png")
 clouds5 = load_image("clouds5.png")
 clouds6 = load_image("clouds6.png")
+win = load_image("win.png.png")
+win_baby = load_image("win-baby.png.png")
+win_hot_lava = load_image("win-hot-lava.png.png")
+win_carolina = load_image("win-carolina.png.png")
 air = load_image("Mountains-air.png.png",(GAME_WIDTH,GAME_HEIGHT))
+crown = load_image("Test Sprite Tile-crown.png.png",(TILE_SIZE,TILE_SIZE))
+crown_baby = load_image("Test Sprite Tile-crown-baby.png.png",(TILE_SIZE,TILE_SIZE))
+crown_hot_lava = load_image("Test Sprite Tile-crown-hot-lava.png.png",(TILE_SIZE,TILE_SIZE))
 
 while True:
     print()
@@ -123,24 +130,24 @@ global baby_mode
 if difficulty == 1:
     baby_mode = True
     lava_mode = False
-elif difficulty != 1:
+elif difficulty == 2:
     baby_mode = False
-    if difficulty == 3:
-        while True:
+    lava_mode = True
+elif difficulty == 3:
+    baby_mode = False
+    while True:
         #lava = input("Enable hot lava mode aka hot feet? (y/n) ")
         #if lava == "y" or lava == "yes":
-            lava_mode = True
-            while True:
-                print()
-                extra_lava = int(input("How spicy do you want your hot feet?\n1. Jalapeño\n2. Habanero\n3. Carolina Reaper (WARNING: Hot feet destroy checkpoints!!!)\n(1/2/3) "))
-                if extra_lava == 1 or extra_lava == 2 or extra_lava == 3:
-                    break
-            break
+        lava_mode = True
+        while True:
+            print()
+            extra_lava = int(input("How spicy do you want your hot feet?\n1. Jalapeño\n2. Habanero\n3. Carolina Reaper (WARNING: Hot feet destroy checkpoints!!!)\n(1/2/3) "))
+            if extra_lava == 1 or extra_lava == 2 or extra_lava == 3:
+                break
+        break
         #elif lava == "n" or lava == "no":
             #lava_mode = False
             #break
-    elif difficulty != 3:
-        lava_mode = False
 while True:
     print()
     hosting = input("Host or join game? (h/j) ")
@@ -353,6 +360,22 @@ def create_map():
                 x = j*TILE_SIZE
                 y = i*TILE_SIZE
                 tile = Tile(x,y,spawn_tile0)
+                tile.width = TILE_SIZE
+                tile.height = TILE_SIZE
+                tiles.append(tile)
+            if row[j] == "$":
+                x = j*TILE_SIZE
+                y = i*TILE_SIZE
+                if difficulty == 1:
+                    win_tile = crown_baby
+                elif difficulty == 2:
+                    win_tile = crown
+                elif difficulty == 3:
+                    win_tile = crown_hot_lava
+                else:
+                    print("Error")
+                    quit()
+                tile = Tile(x,y,win_tile)
                 tile.width = TILE_SIZE
                 tile.height = TILE_SIZE
                 tiles.append(tile)
@@ -599,10 +622,10 @@ def check_tile_collision_x():
         elif left.colliderect(player2):
             player.x = player2.x+player2.width+1
     '''
-    if tile is not None and lava_mode and tile.image != spawn_tile0 and tile.image != floor_tile_imagej and tile.timer_x == 0 and tile.image != floor_tile_imager:
+    if tile is not None and lava_mode and tile.image != spawn_tile0 and tile.image != floor_tile_imagej and tile.timer_x == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
         if extra_lava == 3:
             lava_tile_x.append(tile)
-        elif (extra_lava == 1 or extra_lava == 2) and tile.image != spawn_tile0 and tile.image != spawn_tile and tile.image != spawn_tile2 and tile.image != floor_tile_imagej:
+        elif (extra_lava == 1 or extra_lava == 2) and tile.image != spawn_tile0 and tile.image != spawn_tile and tile.image != spawn_tile2 and tile.image != floor_tile_imagej and tile.timer_x == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
             lava_tile_x.append(tile)
     if tile is not None and player.velocity_x != 0:
         adjust_bg = True
@@ -675,10 +698,10 @@ def check_tile_collision_y():
                 player.velocity_y = 0
                 player.y = player2.y+player2.height
         if feet_rect.colliderect(tile) or feet_rect.colliderect(player2):
-            if lava_mode and tile.image != spawn_tile0 and tile.image != floor_tile_imagej and feet_rect.colliderect(tile) and tile.timer_y == 0 and tile.image != floor_tile_imager:
+            if lava_mode and tile.image != spawn_tile0 and tile.image != floor_tile_imagej and feet_rect.colliderect(tile) and tile.timer_y == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
                 if extra_lava == 3:
                     lava_tile_y.append(tile)
-                elif (extra_lava == 1 or extra_lava == 2) and tile.image != spawn_tile and tile.image != spawn_tile2:
+                elif (extra_lava == 1 or extra_lava == 2) and tile.image != spawn_tile and tile.image != spawn_tile2 and tile.image != spawn_tile0 and tile.image != floor_tile_imagej and feet_rect.colliderect(tile) and tile.timer_y == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
                     lava_tile_y.append(tile)
             if tile.image == spawn_tile or tile.image == spawn_tile0:
                 for i in tiles:
@@ -991,7 +1014,7 @@ test_map = [
     "0000000000000000000000000000000",
     "0000000000000000000000000000000",
     "0000000000000000000000000000000",
-    "4!40000000000000000000000000000",
+    "4$40000000000000000000000000000",
     "4440000000000000000000000000000",
     "0400000000000000000000000000000",
     "0400000000000000000000000000000",
