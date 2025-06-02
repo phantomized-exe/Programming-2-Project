@@ -952,9 +952,12 @@ def draw():
         if difficulty == 1:
             window.blit(win_baby,(0,0))
         elif difficulty == 2:
-            window.blit(win,(0,0))
-        elif difficulty == 3:
             window.blit(win_hot_lava,(0,0))
+        elif difficulty == 3:
+            if extra_lava == 3:
+                window.blit(win,(0,0))
+            else:
+                window.blit(win_carolina,(0,0))
 def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
