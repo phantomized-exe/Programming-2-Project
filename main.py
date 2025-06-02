@@ -115,18 +115,33 @@ clouds6 = load_image("clouds6.png")
 air = load_image("Mountains-air.png.png",(GAME_WIDTH,GAME_HEIGHT))
 
 while True:
-    lava = input("Enable hot lava mode aka hot feet? (y/n) ")
-    if lava == "y" or lava == "yes":
-        lava_mode = True
+    print()
+    difficulty = int(input("How difficult do you want your game?\n1. Baby\n2. Normal\n3. Hot Lava Mode (aka Hot Feet)\n(1/2/3) "))
+    if difficulty == 1 or difficulty == 2 or difficulty == 3:
+        break
+if difficulty == 1:
+    baby_mode = True
+    lava_mode = False
+elif difficulty != 1:
+    baby_mode = False
+    if difficulty == 3:
         while True:
-            extra_lava = int(input("How spicy do you want your hot feet?\n1. Orange Chicken\n2. General Tso's\n3. Buffalo Wings (WARNING: Hot feet destroy checkpoints!!!)\n(1/2/3) "))
-            if extra_lava == 1 or extra_lava == 2 or extra_lava == 3:
-                break
-        break
-    elif lava == "n" or lava == "no":
+        #lava = input("Enable hot lava mode aka hot feet? (y/n) ")
+        #if lava == "y" or lava == "yes":
+            lava_mode = True
+            while True:
+                print()
+                extra_lava = int(input("How spicy do you want your hot feet?\n1. Jalapeño\n2. Habanero\n3. Carolina Reaper (WARNING: Hot feet destroy checkpoints!!!)\n(1/2/3) "))
+                if extra_lava == 1 or extra_lava == 2 or extra_lava == 3:
+                    break
+            break
+        #elif lava == "n" or lava == "no":
+            #lava_mode = False
+            #break
+    elif difficulty != 3:
         lava_mode = False
-        break
 while True:
+    print()
     hosting = input("Host or join game? (h/j) ")
     if hosting == "h" or hosting == "host":
         server_process = subprocess.Popen(["python", "server.py"])
@@ -864,6 +879,11 @@ def draw():
     background_x = background_x*2
     round(background_y,1)
     window.blit(background_image2, (background_x,background_y))
+    if baby_mode:
+        for tile in tiles:
+            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget or tile.image == floor_tile_imageu or tile.image == floor_tile_imagev:
+                tile.image = floor_tile_image
+                tile.original_image = floor_tile_image
     for tile in tiles:
         window.blit(tile.image, tile)
     player2.update_image()
