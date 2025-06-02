@@ -113,9 +113,9 @@ clouds4 = load_image("clouds4.png")
 clouds5 = load_image("clouds5.png")
 clouds6 = load_image("clouds6.png")
 win = load_image("win.png.png")
-win_baby = load_image("win-baby.png.png")
-win_hot_lava = load_image("win-hot-lava.png.png")
-win_carolina = load_image("win-carolina.png.png")
+win_baby = load_image("win-baby.png.png",(GAME_WIDTH,GAME_HEIGHT))
+win_hot_lava = load_image("win-hot-lava.png.png",(GAME_WIDTH,GAME_HEIGHT))
+win_carolina = load_image("win-carolina.png.png",(GAME_WIDTH,GAME_HEIGHT))
 air = load_image("Mountains-air.png.png",(GAME_WIDTH,GAME_HEIGHT))
 crown = load_image("Test Sprite Tile-crown.png.png",(TILE_SIZE,TILE_SIZE))
 crown_baby = load_image("Test Sprite Tile-crown-baby.png.png",(TILE_SIZE,TILE_SIZE))
@@ -130,6 +130,11 @@ global baby_mode
 if difficulty == 1:
     baby_mode = True
     lava_mode = False
+    while True:
+        print()
+        extra_baby = int(input("How spicy do you want your baby?\n1. Normal Baby\n2. Extra Spicy Baby\n(1/2) "))
+        if extra_baby == 1 or extra_baby == 2:
+            break
 elif difficulty == 2:
     baby_mode = False
     lava_mode = True
@@ -662,6 +667,7 @@ def check_tile_collision_y():
     global lava_tile_y
     global coyote_time
     global crouch_jump2
+    global won
     check_lava_collision()
     feet_rect.height = player.height+2
     left.height = player.height-4
@@ -723,6 +729,9 @@ def check_tile_collision_y():
                 player.velocity_y = PLAYER_VELOCITY_Y*1.5
                 player.jumping = True
                 player.jump_count += 1
+            elif tile.image == crown or tile.image == crown_baby or tile.image == crown_hot_lava:# and not won:
+                print("You win idiot")
+                won = True
             touching_tile_feet = True
             break
         else:
@@ -906,6 +915,9 @@ def draw():
     window.blit(background_image2, (background_x,background_y))
     if baby_mode:
         for tile in tiles:
+            if extra_baby:
+                if tile.image == spawn_tile or tile.image == spawn_tile2:
+                    tile.image = floor_tile_image
             if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget or tile.image == floor_tile_imageu or tile.image == floor_tile_imagev:
                 tile.image = floor_tile_image
                 tile.original_image = floor_tile_image
@@ -936,6 +948,13 @@ def draw():
         pygame.draw.rect(window, (0, 255, 0), lava_rect2, 2)
     if cheat:
         player.jump_count = 0
+    if won:
+        if difficulty == 1:
+            window.blit(win_baby,(0,0))
+        elif difficulty == 2:
+            window.blit(win,(0,0))
+        elif difficulty == 3:
+            window.blit(win_hot_lava,(0,0))
 def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
@@ -1339,6 +1358,8 @@ global lava_tile_x
 lava_tile_x = []
 global lava_tile_y
 lava_tile_y = []
+global won
+won = False
 joysticks = []
 keys = pygame.key.get_pressed()
 for tile in tiles:
