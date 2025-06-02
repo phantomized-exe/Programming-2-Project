@@ -119,7 +119,7 @@ while True:
     if lava == "y" or lava == "yes":
         lava_mode = True
         while True:
-            extra_lava = input("Enable extra spicy hot feet? (y/n) ")
+            extra_lava = input("Enable extra spicy hot feet? WARNING: Hot feet destroy checkpoints (y/n) ")
             if extra_lava == "y" or extra_lava == "yes":
                 extra_lava_mode = True
                 break
@@ -680,7 +680,7 @@ def check_tile_collision_y():
             tile.image = floor_tile_image4
             tile.timer = 0
             lava_tile.remove(tile)
-        elif tile.timer >= 1 and extra_lava_mode:
+        elif tile.timer >= 11 and extra_lava_mode:
             tile.image = floor_tile_image4
             tile.timer = 0
             lava_tile.remove(tile)
@@ -1469,7 +1469,7 @@ while True: #game loop
             if tile.lava_timer >= 32 and not extra_lava_mode:
                 tile.image = tile.original_image
                 tile.lava_timer = 0
-            elif tile.lava_timer > 100 and extra_lava_mode:
+            elif tile.lava_timer > 64 and extra_lava_mode:
                 tile.image = tile.original_image
                 tile.lava_timer = 0
     move()

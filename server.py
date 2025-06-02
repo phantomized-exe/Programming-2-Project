@@ -21,7 +21,7 @@ except socket.error as e:
     print(str(e))
 s.listen(2)
 
-print("Waiting for a connection, Server Started")
+#print("Waiting for a connection, Server Started")
 def read_pos(s):
     s = s.split(",")
     return int(s[0]), int(s[1]), float(s[2]), s[3]=="True"
