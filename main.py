@@ -130,6 +130,7 @@ global baby_mode
 if difficulty == 1:
     baby_mode = True
     lava_mode = False
+    extra_lava = 0
     while True:
         print()
         extra_baby = int(input("How spicy do you want your baby?\n1. Normal Baby\n2. Extra Spicy Baby\n(1/2) "))
@@ -138,12 +139,15 @@ if difficulty == 1:
 elif difficulty == 2:
     baby_mode = False
     lava_mode = True
+    extra_lava = 0
+    extra_baby = 0
 elif difficulty == 3:
     baby_mode = False
+    lava_mode = True
+    extra_baby = 0
     while True:
         #lava = input("Enable hot lava mode aka hot feet? (y/n) ")
         #if lava == "y" or lava == "yes":
-        lava_mode = True
         while True:
             print()
             extra_lava = int(input("How spicy do you want your hot feet?\n1. Jalapeño\n2. Habanero\n3. Carolina Reaper (WARNING: Hot feet destroy checkpoints!!!)\n(1/2/3) "))
@@ -730,7 +734,10 @@ def check_tile_collision_y():
                 player.jumping = True
                 player.jump_count += 1
             elif tile.image == crown or tile.image == crown_baby or tile.image == crown_hot_lava:# and not won:
-                print("You win idiot")
+                if extra_lava != 3:
+                    print("You win idiot")
+                else:
+                    print("You win")
                 won = True
             touching_tile_feet = True
             break
@@ -949,15 +956,16 @@ def draw():
     if cheat:
         player.jump_count = 0
     if won:
+        window.fill((0,0,0))
         if difficulty == 1:
-            window.blit(win_baby,(0,0))
+            window.blit(win_baby,(0,-25))
         elif difficulty == 2:
-            window.blit(win_hot_lava,(0,0))
+            window.blit(win_hot_lava,(0,-25))
         elif difficulty == 3:
             if extra_lava == 3:
                 window.blit(win,(0,0))
             else:
-                window.blit(win_carolina,(0,0))
+                window.blit(win_carolina,(0,-25))
 def check_crouch():
     global CROUCH_FRICTION
     global force_crouch
