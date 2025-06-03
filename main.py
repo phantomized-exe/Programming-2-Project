@@ -546,7 +546,7 @@ def create_map():
                 elif difficulty == 3:
                     win_tile = crown_hot_lava
                 else:
-                    print("Error")
+                    print("Error with gamemode selection")
                     quit()
                 tile = Tile(x,y,win_tile)
                 tile.width = TILE_SIZE
