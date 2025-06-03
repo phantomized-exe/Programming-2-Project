@@ -121,17 +121,17 @@ crown = load_image("Test Sprite Tile-crown.png.png",(TILE_SIZE,TILE_SIZE))
 crown_baby = load_image("Test Sprite Tile-crown-baby.png.png",(TILE_SIZE,TILE_SIZE))
 crown_hot_lava = load_image("Test Sprite Tile-crown-hot-lava.png.png",(TILE_SIZE,TILE_SIZE))
 button_list = []
-button = load_image("button.png",(64,32))
-button_list.append(button)
-button_baby = load_image("button-baby.png",(64,32))
+button_baby = load_image("button-baby.png",(128,64))
 button_list.append(button_baby)
-button_baby_spicy = load_image("button-baby-spicy.png",(64,32))
+button_baby_spicy = load_image("button-baby-spicy.png",(128,64))
 button_list.append(button_baby_spicy)
-button_hot_feet = load_image("button-hot-feet.png",(64,32))
-button_list.append(button_hot_feet)
-button_hot_feet_baby = load_image("button-hot-feet-baby.png",(64,32))
+button = load_image("button.png",(128,64))
+button_list.append(button)
+button_hot_feet_baby = load_image("button-hot-feet-baby.png",(128,64))
 button_list.append(button_hot_feet_baby)
-button_hot_feet_spicy = load_image("button-hot-feet-spicy.png",(64,32))
+button_hot_feet = load_image("button-hot-feet.png",(128,64))
+button_list.append(button_hot_feet)
+button_hot_feet_spicy = load_image("button-hot-feet-spicy.png",(128,64))
 button_list.append(button_hot_feet_spicy)
 '''
 while True:
@@ -173,8 +173,13 @@ elif difficulty == 3:
 '''
 class Button(pygame.Rect):
     def __init__(self,x,y,image=None):
-        pygame.Rect.__init__(self,x,y,64,32)
+        pygame.Rect.__init__(self,x,y,128,64)
         self.image = image
+        self.original_image = image
+        self.big_image = pygame.transform.scale(image, (int(128 * 1.2), int(64 * 1.2)))
+        self.hovered = False
+        self.original_pos = (x, y)
+'''
 while True:
     print()
     hosting = input("Host or join game? (h/j) ")
@@ -186,26 +191,84 @@ while True:
     elif hosting == "j" or hosting == "join":
         server_ip = input("Enter server IP: ")
         break
+'''
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
 pygame.display.set_caption("Celeste 2") #title of window
 pygame.display.set_icon(image_icon3)
 clock = pygame.time.Clock() #used for the framerate
-button_coords = [(112, 138), (288, 138), (464, 138), (112, 308), (288, 308), (464, 308)]
+#button_coords = [(112, 138), (288, 138), (464, 138), (112, 308), (288, 308), (464, 308)]
+button_coords = [(128, 72),(384, 72),(128, 208),(384, 208),(128, 344),(384, 344)]
 button_rects = []
 for i in range(6):
     x,y = button_coords[i]
     button_rect = Button(x,y,button_list[i])
     button_rects.append(button_rect)
-while True:
-    mouse = pygame.mouse.get_pos()
-    mouse_buttons = pygame.mouse.get_pressed()
-    left_mouse = mouse_buttons[0]
+#while True:
+    for button in button_rects:
+        mouse = pygame.mouse.get_pos()
+        if button.collidepoint(mouse):
+            if not button.hovered:
+                button.hovered = True
+                button.image = button.big_image
+                button.width,button.height = button.image.get_size()
+                button.x = button.original_pos[0]-(button.width-128)//2
+                button.y = button.original_pos[1]-(button.height-64)//2
+        else:
+            if button.hovered:
+                button.hovered = False
+                button.image = button.original_image
+                button.width,button.height = 128,64
+                button.x, button.y = button.original_pos
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            mouse = pygame.mouse.get_pos()
+            for button in button_rects:
+                if button.collidepoint(mouse):
+                    if button.image == button_baby:
+                        difficulty = 1
+                        baby_mode = True
+                        lava_mode = False
+                        extra_lava = 0
+                        extra_baby = False
+                    elif button.image == button_baby_spicy:
+                        difficulty = 1
+                        baby_mode = True
+                        lava_mode = False
+                        extra_baby = True
+                        extra_lava = 0
+                    elif button.image == button:
+                        difficulty = 2
+                        baby_mode = False
+                        lava_mode = False
+                        extra_baby = False
+                        extra_lava = 0
+                    elif button.image == button_hot_feet_baby:
+                        difficulty = 3
+                        baby_mode = False
+                        lava_mode = True
+                        extra_baby = False
+                        extra_lava = 1
+                    elif button.image == button_hot_feet:
+                        difficulty = 3
+                        baby_mode = False
+                        lava_mode = True
+                        extra_baby = False
+                        extra_lava = 2
+                    elif button.image == button_hot_feet_spicy:
+                        difficulty = 3
+                        baby_mode = False
+                        lava_mode = True
+                        extra_baby = False
+                        extra_lava = 3
     window.fill((0,0,0))
     for button in button_rects:
-        window.blit(button.image,(button.x,button.y))
-        if button.collidepoint(mouse) and left_mouse:
-            break
+        window.blit(button.image, (button.x, button.y))
+    pygame.display.update()
+    clock.tick(60)
 
 
 class Background(pygame.Rect):
