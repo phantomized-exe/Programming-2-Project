@@ -3,6 +3,11 @@ import random
 from _thread import *
 #import sys
 def get_local_ip():
+    """finds the ip clients must connect to
+
+    Returns:
+        str: returns the ip
+    """
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         sock.connect(('8.8.8.8', 80)) 
@@ -23,12 +28,34 @@ s.listen(2)
 
 #print("Waiting for a connection, Server Started")
 def read_pos(s):
+    """reads the values from clients
+
+    Args:
+        s (str): the values
+
+    Returns:
+        int: returns as a list of ints
+    """
     s = s.split(",")
     return int(s[0]), int(s[1]), float(s[2]), s[3]=="True"
 def make_pos(tup):
+    """formats the data to send back to clients
+
+    Args:
+        tup (tup): data
+
+    Returns:
+        str: returns formatted data
+    """
     return f"{tup[0]},{tup[1]},{tup[2]},{tup[3]}"
 pos = [(10000,-10000,0,False),(10000,-10000,0,False)]
 def threaded_client(conn, player):
+    """decodes info
+
+    Args:
+        conn (_type_): _description_
+        player (_type_): _description_
+    """
     conn.send(str.encode(make_pos(pos[player])))
     while True:
         try:

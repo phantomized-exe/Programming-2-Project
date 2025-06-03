@@ -39,6 +39,15 @@ CROUCH_FRICTION = 1
 
 # images
 def load_image(image_name,scale=None):
+    """Loads all the images in the Test Sprite folder
+
+    Args:
+        image_name (str): name of image
+        scale (int, optional): scales the image. Defaults to None.
+
+    Returns:
+        pygame.image: image
+    """
     image = pygame.image.load(os.path.join("Test Sprites",image_name))
     if scale is not None:
         image = pygame.transform.scale(image,scale)
@@ -177,6 +186,11 @@ elif difficulty == 3:
             #break
 '''
 class Button(pygame.Rect):
+    """generates the buttons
+
+    Args:
+        pygame (_type_): _description_
+    """
     def __init__(self,x,y,image=None):
         pygame.Rect.__init__(self,x,y,128,64)
         self.image = image
@@ -339,9 +353,15 @@ while running:
 
 
 class Background(pygame.Rect):
+    """generates the background
+
+    Args:
+        pygame (_type_): _description_
+    """
     def __init__(self):
         pygame.Rect.__init__(self,PLAYER_X,PLAYER_Y,PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT)
-def generate_cloud():
+'''
+def generate_cloud(): #unused idea
     cloud_num = random.randint(1,6)
     if cloud_num == 1:
         cloud_image = clouds1
@@ -366,9 +386,17 @@ class Clouds(pygame.Rect):
         pygame.Rect.__init__(self,cloud[0],cloud[1],cloud[2],cloud[3])
         self.image = cloud[4]
         self.speed = cloud[5]
+'''
 class Player(pygame.Rect):
+    """player 1 and 2
+
+    Args:
+        pygame (_type_): _description_
+    """
     player_animation = 0
     def __init__(self):
+        """initializes player
+        """
         pygame.Rect.__init__(self,PLAYER_X,PLAYER_Y,PLAYER_WIDTH,PLAYER_HEIGHT)
         self.velocity_x = 0
         self.velocity_y = 1
@@ -384,8 +412,12 @@ class Player(pygame.Rect):
         self.jump_count = 0
         self.max_jumps = 1
     def update(self):
+        """updates player's hitbox
+        """
         self.rect = (self.x, self.y, self.width, self.height)
     def update_image(self):
+        """updates player's animations
+        """
         if self.player == 1:
             if self.crouching:
                 if self.direction == "right":
@@ -500,6 +532,11 @@ class Player(pygame.Rect):
                         self.image = player2_image_left
 
 class Tile(pygame.Rect):
+    """creates the tiles
+
+    Args:
+        pygame (_type_): _description_
+    """
     def __init__(self,x,y,image=None):
         pygame.Rect.__init__(self,x,y,TILE_SIZE,TILE_SIZE)
         self.image = image
@@ -510,6 +547,8 @@ class Tile(pygame.Rect):
         self.original_image = image
 
 def create_map():
+    """creates the map
+    """
     read_level = level.read_text()
     load_level = json.loads(read_level)
     for i in range(len(load_level)):
@@ -709,6 +748,11 @@ def create_map():
                 tiles.append(tile)
 
 def check_tile_collision():
+    """detects player collision with tile
+
+    Returns:
+        either object or None: if th eplayer collides, it returns the player, otherwise it returns None
+    """
     if player.colliderect(player2):
         return player2
     for tile in tiles:
@@ -716,6 +760,8 @@ def check_tile_collision():
             return tile
     return None
 def check_lava_collision():
+    """detects lava collisions
+    """
     global coyote_lava
     global joy_restart
     global tiles
@@ -782,6 +828,8 @@ def check_lava_collision():
             coyote_lava -= 1
 
 def check_tile_collision_x():
+    """detects collisions on the x-axis
+    """
     global lava_tile_x
     check_lava_collision()
     tile = check_tile_collision()
@@ -829,6 +877,8 @@ def check_tile_collision_x():
 
     #player.x = player.crouching_x if player.crouching else player.standing_x
 def check_tile_collision_y():
+    """detects collisions on the y-axis
+    """
     global BACKGROUND_Y
     global PLAYER_VELOCITY_Y
     global CROUCH_FRICTION
@@ -952,6 +1002,8 @@ def check_tile_collision_y():
     feet_rect.y = player.crouching_y if player.crouching else player.standing_y
 
 def move():
+    """moves the player according to their inputs
+    """
     global BACKGROUND_Y
     global BACKGROUND_X
     #y movement
@@ -1028,12 +1080,20 @@ def move():
     player.y = player.crouching_y if player.crouching else player.standing_y
 
 def read_pos(str):
+    """gets the player's position for player 2
+
+    Args:
+        str (str): n.getPos()
+
+    Returns:
+        None or x,y,v,crouch: Returns the player's x, y, their x velocity, and iof they are crouching
+    """
     s = str.strip()
     parts = s.split(",")
     if len(parts) != 4:
         print(f"error: {repr(s)}")
         return None
-    x_str, y_str, v_str, crouch_str = parts
+    x_str,y_str,v_str,crouch_str=parts
     try:
         x = int(x_str)
         y = int(y_str)
@@ -1045,9 +1105,19 @@ def read_pos(str):
     return x, y, v, crouch
 
 def make_pos(tup):
+    """formats the player's position
+
+    Args:
+        tup (tup): player values
+
+    Returns:
+        str: returns neatly formatted str with all player values
+    """
     return f"{tup[0]},{tup[1]},{tup[2]},{tup[3]}"
 
 def draw():
+    """makes everything show up on screen
+    """
     global BACKGROUND_Y
     global baby_mode
     global debug
@@ -1131,6 +1201,8 @@ def draw():
             else:
                 window.blit(win_carolina,(0,-25))
 def check_crouch():
+    """checks if the player is crouching
+    """
     global CROUCH_FRICTION
     global force_crouch
     collide_crouch = pygame.Rect(player.x, player.y-(PLAYER_HEIGHT-PLAYER_CROUCH_HEIGHT), PLAYER_WIDTH, PLAYER_HEIGHT)
@@ -1146,6 +1218,12 @@ def check_crouch():
             else:
                 force_crouch = False
 def delete_tile(x,y):
+    """deletes tiles
+
+    Args:
+        x (int): x value of deleted tile
+        y (int): y value of deleted tile
+    """
     global tiles
     for tile in tiles:
         if tile.x == x and tile.y == y:
