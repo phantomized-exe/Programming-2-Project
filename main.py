@@ -120,7 +120,20 @@ air = load_image("Mountains-air.png.png",(GAME_WIDTH,GAME_HEIGHT))
 crown = load_image("Test Sprite Tile-crown.png.png",(TILE_SIZE,TILE_SIZE))
 crown_baby = load_image("Test Sprite Tile-crown-baby.png.png",(TILE_SIZE,TILE_SIZE))
 crown_hot_lava = load_image("Test Sprite Tile-crown-hot-lava.png.png",(TILE_SIZE,TILE_SIZE))
-
+button_list = []
+button = load_image("button.png",(64,32))
+button_list.append(button)
+button_baby = load_image("button-baby.png",(64,32))
+button_list.append(button_baby)
+button_baby_spicy = load_image("button-baby-spicy.png",(64,32))
+button_list.append(button_baby_spicy)
+button_hot_feet = load_image("button-hot-feet.png",(64,32))
+button_list.append(button_hot_feet)
+button_hot_feet_baby = load_image("button-hot-feet-baby.png",(64,32))
+button_list.append(button_hot_feet_baby)
+button_hot_feet_spicy = load_image("button-hot-feet-spicy.png",(64,32))
+button_list.append(button_hot_feet_spicy)
+'''
 while True:
     print()
     difficulty = int(input("How difficult do you want your game?\n1. Baby\n2. Normal\n3. Hot Lava Mode (aka Hot Feet)\n(1/2/3) "))
@@ -157,6 +170,11 @@ elif difficulty == 3:
         #elif lava == "n" or lava == "no":
             #lava_mode = False
             #break
+'''
+class Button(pygame.Rect):
+    def __init__(self,x,y,image=None):
+        pygame.Rect.__init__(self,x,y,64,32)
+        self.image = image
 while True:
     print()
     hosting = input("Host or join game? (h/j) ")
@@ -173,6 +191,22 @@ window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
 pygame.display.set_caption("Celeste 2") #title of window
 pygame.display.set_icon(image_icon3)
 clock = pygame.time.Clock() #used for the framerate
+button_coords = [(112, 138), (288, 138), (464, 138), (112, 308), (288, 308), (464, 308)]
+button_rects = []
+for i in range(6):
+    x,y = button_coords[i]
+    button_rect = Button(x,y,button_list[i])
+    button_rects.append(button_rect)
+while True:
+    mouse = pygame.mouse.get_pos()
+    mouse_buttons = pygame.mouse.get_pressed()
+    left_mouse = mouse_buttons[0]
+    window.fill((0,0,0))
+    for button in button_rects:
+        window.blit(button.image,(button.x,button.y))
+        if button.collidepoint(mouse) and left_mouse:
+            break
+
 
 class Background(pygame.Rect):
     def __init__(self):
