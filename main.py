@@ -125,14 +125,19 @@ button_baby = load_image("button-baby.png",(128,64))
 button_list.append(button_baby)
 button_baby_spicy = load_image("button-baby-spicy.png",(128,64))
 button_list.append(button_baby_spicy)
-button = load_image("button.png",(128,64))
-button_list.append(button)
+button_normal = load_image("button.png",(128,64))
+button_list.append(button_normal)
 button_hot_feet_baby = load_image("button-hot-feet-baby.png",(128,64))
 button_list.append(button_hot_feet_baby)
 button_hot_feet = load_image("button-hot-feet.png",(128,64))
 button_list.append(button_hot_feet)
 button_hot_feet_spicy = load_image("button-hot-feet-spicy.png",(128,64))
 button_list.append(button_hot_feet_spicy)
+hj_list = []
+host = load_image("host.png",(128,64))
+hj_list.append(host)
+join = load_image("join.png",(128,64))
+hj_list.append(join)
 '''
 while True:
     print()
@@ -198,13 +203,63 @@ pygame.display.set_caption("Celeste 2") #title of window
 pygame.display.set_icon(image_icon3)
 clock = pygame.time.Clock() #used for the framerate
 #button_coords = [(112, 138), (288, 138), (464, 138), (112, 308), (288, 308), (464, 308)]
+hj_coords = [(128, 208),(384, 208)]
+hj_rects = []
+for i in range(2):
+    x,y = hj_coords[i]
+    hj_rect = Button(x,y,hj_list[i])
+    hj_rects.append(hj_rect)
+running = True
+while running:
+    for button in hj_rects:
+        mouse = pygame.mouse.get_pos()
+        if button.collidepoint(mouse):
+            if not button.hovered:
+                button.hovered = True
+                button.image = button.big_image
+                button.width,button.height = button.image.get_size()
+                button.x = button.original_pos[0]-(button.width-128)//2
+                button.y = button.original_pos[1]-(button.height-64)//2
+        else:
+            if button.hovered:
+                button.hovered = False
+                button.image = button.original_image
+                button.width,button.height = 128,64
+                button.x, button.y = button.original_pos
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            mouse = pygame.mouse.get_pos()
+            for button in hj_rects:
+                if button.collidepoint(mouse):
+                    if button.original_image == host:
+                        hosting = "h"
+                        server_process = subprocess.Popen(["python", "server.py"])
+                        server_ip = "127.0.0.1"
+                        #print("Server started. You are hosting the game.")
+                        running = False
+                        break
+                    elif button.original_image == join:
+                        hosting = "j"
+                        server_ip = input("Enter server IP: ")
+                        running = False
+                        break
+    window.fill((0,0,0))
+    for button in hj_rects:
+        window.blit(button.image, (button.x, button.y))
+    pygame.display.update()
+    clock.tick(60)
+
 button_coords = [(128, 72),(384, 72),(128, 208),(384, 208),(128, 344),(384, 344)]
 button_rects = []
 for i in range(6):
     x,y = button_coords[i]
     button_rect = Button(x,y,button_list[i])
     button_rects.append(button_rect)
-#while True:
+running = True
+while running:
     for button in button_rects:
         mouse = pygame.mouse.get_pos()
         if button.collidepoint(mouse):
@@ -228,42 +283,54 @@ for i in range(6):
             mouse = pygame.mouse.get_pos()
             for button in button_rects:
                 if button.collidepoint(mouse):
-                    if button.image == button_baby:
-                        difficulty = 1
-                        baby_mode = True
-                        lava_mode = False
-                        extra_lava = 0
-                        extra_baby = False
-                    elif button.image == button_baby_spicy:
-                        difficulty = 1
-                        baby_mode = True
-                        lava_mode = False
-                        extra_baby = True
-                        extra_lava = 0
-                    elif button.image == button:
+                    if button.original_image == button_normal:
                         difficulty = 2
                         baby_mode = False
                         lava_mode = False
                         extra_baby = False
                         extra_lava = 0
-                    elif button.image == button_hot_feet_baby:
+                        running = False
+                        break
+                    elif button.original_image == button_baby:
+                        difficulty = 1
+                        baby_mode = True
+                        lava_mode = False
+                        extra_lava = 0
+                        extra_baby = False
+                        running = False
+                        break
+                    elif button.original_image == button_baby_spicy:
+                        difficulty = 1
+                        baby_mode = True
+                        lava_mode = False
+                        extra_baby = True
+                        extra_lava = 0
+                        running = False
+                        break
+                    elif button.original_image == button_hot_feet_baby:
                         difficulty = 3
                         baby_mode = False
                         lava_mode = True
                         extra_baby = False
                         extra_lava = 1
-                    elif button.image == button_hot_feet:
+                        running = False
+                        break
+                    elif button.original_image == button_hot_feet:
                         difficulty = 3
                         baby_mode = False
                         lava_mode = True
                         extra_baby = False
                         extra_lava = 2
-                    elif button.image == button_hot_feet_spicy:
+                        running = False
+                        break
+                    elif button.original_image == button_hot_feet_spicy:
                         difficulty = 3
                         baby_mode = False
                         lava_mode = True
                         extra_baby = False
                         extra_lava = 3
+                        running = False
+                        break
     window.fill((0,0,0))
     for button in button_rects:
         window.blit(button.image, (button.x, button.y))
