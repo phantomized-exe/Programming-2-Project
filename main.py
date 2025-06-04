@@ -153,6 +153,7 @@ load = load_image("load.png",(128,64))
 ln_list.append(load)
 new = load_image("new.png",(128,64))
 ln_list.append(new)
+load_dead = load_image("load-dead.png",(128,64))
 global difficulty
 global baby_mode
 global lava_mode
@@ -270,6 +271,9 @@ if load_save is not None:
         ln_rect = Button(x,y,ln_list[i])
         ln_rects.append(ln_rect)
 else:
+    x,y = ln_coords[0]
+    ln_rect = Button(x,y,load_dead)
+    ln_rects.append(ln_rect)
     x,y = ln_coords[1]
     ln_rect = Button(x,y,ln_list[1])
     ln_rects.append(ln_rect)
@@ -277,7 +281,7 @@ running = True
 while running:
     for button in ln_rects:
         mouse = pygame.mouse.get_pos()
-        if button.collidepoint(mouse):
+        if button.collidepoint(mouse) and button.image != load_dead:
             if not button.hovered:
                 button.hovered = True
                 button.image = button.big_image
