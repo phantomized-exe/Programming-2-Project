@@ -148,12 +148,16 @@ host = load_image("host.png",(128,64))
 hj_list.append(host)
 join = load_image("join.png",(128,64))
 hj_list.append(join)
+ln_list = []
+load = load_image("load.png",(128,64))
+ln_list.append(load)
+new = load_image("new.png",(128,64))
+ln_list.append(new)
 difficulty = 2
 baby_mode = False
 lava_mode = False
 extra_baby = False
 extra_lava = 0
-running = False
 '''
 while True:
     print()
@@ -217,7 +221,6 @@ while True:
     elif hosting == "j" or hosting == "join":
         server_ip = input("Enter server IP: ")
         break
-'''
 read_save = save.read_text()
 load_save = json.loads(read_save)
 if load_save is not None:
@@ -232,12 +235,66 @@ if load_save is not None:
             break
         elif start_save == "n" or start_save == "no":
             break
-
+'''
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
 pygame.display.set_caption("Celeste 2") #title of window
 pygame.display.set_icon(image_icon3)
 clock = pygame.time.Clock() #used for the framerate
+
+read_save = save.read_text()
+load_save = json.loads(read_save)
+if load_save is not None:
+    ln_coords = [(128, 208),(384, 208)]
+    ln_rects = []
+    for i in range(2):
+        x,y = ln_coords[i]
+        ln_rect = Button(x,y,ln_list[i])
+        ln_rects.append(ln_rect)
+    running = True
+    while running:
+        for button in ln_rects:
+            mouse = pygame.mouse.get_pos()
+            if button.collidepoint(mouse):
+                if not button.hovered:
+                    button.hovered = True
+                    button.image = button.big_image
+                    button.width,button.height = button.image.get_size()
+                    button.x = button.original_pos[0]-(button.width-128)//2
+                    button.y = button.original_pos[1]-(button.height-64)//2
+            else:
+                if button.hovered:
+                    button.hovered = False
+                    button.image = button.original_image
+                    button.width,button.height = 128,64
+                    button.x, button.y = button.original_pos
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse = pygame.mouse.get_pos()
+                for button in ln_rects:
+                    if button.collidepoint(mouse):
+                        if button.original_image == load:
+                            start_save = "y"
+                            difficulty = load_save[1]
+                            baby_mode = load_save[2]
+                            lava_mode = load_save[3]
+                            extra_baby = load_save[4]
+                            extra_lava = load_save[5]
+                            running = False
+                            break
+                        elif button.original_image == new:
+                            start_save = "n"
+                            running = False
+                            break
+            window.fill((0,0,0))
+            for button in ln_rects:
+                window.blit(button.image, (button.x, button.y))
+            pygame.display.update()
+            clock.tick(60)
+
 #button_coords = [(112, 138), (288, 138), (464, 138), (112, 308), (288, 308), (464, 308)]
 hj_coords = [(128, 208),(384, 208)]
 hj_rects = []
