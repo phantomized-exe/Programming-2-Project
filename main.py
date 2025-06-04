@@ -153,11 +153,18 @@ load = load_image("load.png",(128,64))
 ln_list.append(load)
 new = load_image("new.png",(128,64))
 ln_list.append(new)
+global difficulty
+global baby_mode
+global lava_mode
+global extra_baby
+global extra_lava
 difficulty = 2
 baby_mode = False
 lava_mode = False
 extra_baby = False
 extra_lava = 0
+global baby_tiles
+baby_tiles = False
 '''
 while True:
     print()
@@ -430,7 +437,6 @@ if load_save is not None:
                 window.blit(button.image, (button.x, button.y))
             pygame.display.update()
             clock.tick(60)
-
 
 class Background(pygame.Rect):
     """generates the background
@@ -956,7 +962,7 @@ def check_tile_collision_x():
             lava_tile_x.remove(tile)
 
     #player.x = player.crouching_x if player.crouching else player.standing_x
-def check_tile_collision_y():
+def check_tile_collision_y():#difficulty,baby_mode,lava_mode,extra_baby,extra_lava
     """detects collisions on the y-axis
     """
     global BACKGROUND_Y
@@ -966,6 +972,11 @@ def check_tile_collision_y():
     global coyote_time
     global crouch_jump2
     global won
+    global difficulty
+    global baby_mode
+    global lava_mode
+    global extra_baby
+    global extra_lava
     check_lava_collision()
     feet_rect.height = player.height+2
     left.height = player.height-4
@@ -1032,9 +1043,10 @@ def check_tile_collision_y():
                     if i.image == spawn_tile0:
                         spawn_x = i.x-(10*32)+16
                         spawn_y = i.y-(10*32)+TILE_SIZE+16+3
-                save_list = [(spawn_x,spawn_y),difficulty,baby_mode,lava_mode,extra_baby,extra_lava,player.max_jumps]
-                save_dump = json.dumps(save_list)
-                save.write_text(save_dump)
+                if extra_lava != 3:
+                    save_list = [(spawn_x,spawn_y),difficulty,baby_mode,lava_mode,extra_baby,extra_lava,player.max_jumps]
+                    save_dump = json.dumps(save_list)
+                    save.write_text(save_dump)
             elif tile.image == floor_tile_imagej:
                 if player.max_jumps != 2 and PLAYER_VELOCITY_Y != -12.1:
                     print()
@@ -1222,6 +1234,7 @@ def draw():
     global baby_mode
     global debug
     global cheat
+    global baby_tiles
     #window.fill("blue")
     #window.fill("#54de9e")
     #window.fill((84,222,158))
@@ -1254,7 +1267,7 @@ def draw():
     background_x = background_x*2
     round(background_y,1)
     window.blit(background_image2, (background_x,background_y))
-    if baby_mode:
+    if baby_mode and not baby_tiles:
         for tile in tiles:
             if extra_baby:
                 if tile.image == spawn_tile or tile.image == spawn_tile2:
@@ -1262,7 +1275,7 @@ def draw():
             if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget or tile.image == floor_tile_imageu or tile.image == floor_tile_imagev:
                 tile.image = floor_tile_image
                 tile.original_image = floor_tile_image
-        baby_mode = False
+        baby_tiles = True
     for tile in tiles:
         window.blit(tile.image, tile)
     player2.update_image()
@@ -1576,7 +1589,7 @@ test_map = [
     "0000002000022222000002222222222",
     "0r000030000333330000033333333330001",
     "01!00000000333330000033333333330001!1",
-    "0000000000000000000000000000000",
+    "0000000000000000000000000000000000222",
     "0000001100000000000000000000000",
     "0000000000110011000001110000000",
     "00000000000000000000000000001!1",
