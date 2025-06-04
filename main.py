@@ -147,6 +147,11 @@ host = load_image("host.png",(128,64))
 hj_list.append(host)
 join = load_image("join.png",(128,64))
 hj_list.append(join)
+ln_list = []
+load = load_image("load.png",(128,64))
+ln_list.append(load)
+new = load_image("new.png",(128,64))
+ln_list.append(new)
 '''
 while True:
     print()
