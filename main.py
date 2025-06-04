@@ -8,6 +8,7 @@ from network import Network
 import time
 import subprocess
 level = Path("level_code.json")
+save = Path("save.json")
 
 # game variables
 TILE_SIZE = 32
@@ -147,11 +148,12 @@ host = load_image("host.png",(128,64))
 hj_list.append(host)
 join = load_image("join.png",(128,64))
 hj_list.append(join)
-ln_list = []
-load = load_image("load.png",(128,64))
-ln_list.append(load)
-new = load_image("new.png",(128,64))
-ln_list.append(new)
+difficulty = 2
+baby_mode = False
+lava_mode = False
+extra_baby = False
+extra_lava = 0
+running = False
 '''
 while True:
     print()
@@ -216,6 +218,21 @@ while True:
         server_ip = input("Enter server IP: ")
         break
 '''
+read_save = save.read_text()
+load_save = json.loads(read_save)
+if load_save is not None:
+    while True:
+        start_save = input("Start from last save? (y/n) ")
+        if start_save == "y" or start_save == "yes":#difficulty,baby_mode,lava_mode,extra_baby,extra_lava,running
+            difficulty = load_save[1]
+            baby_mode = load_save[2]
+            lava_mode = load_save[3]
+            extra_baby = load_save[4]
+            extra_lava = load_save[5]
+            break
+        elif start_save == "n" or start_save == "no":
+            break
+
 pygame.init() #always needed to initialize pygame
 window = pygame.display.set_mode((GAME_WIDTH,GAME_HEIGHT))
 pygame.display.set_caption("Celeste 2") #title of window
@@ -265,96 +282,97 @@ while running:
                         server_ip = input("Enter server IP: ")
                         running = False
                         break
-    window.fill((0,0,0))
-    for button in hj_rects:
-        window.blit(button.image, (button.x, button.y))
-    pygame.display.update()
-    clock.tick(60)
-
-button_coords = [(128, 72),(384, 72),(128, 208),(384, 208),(128, 344),(384, 344)]
-button_rects = []
-for i in range(6):
-    x,y = button_coords[i]
-    button_rect = Button(x,y,button_list[i])
-    button_rects.append(button_rect)
-running = True
-while running:
-    for button in button_rects:
-        mouse = pygame.mouse.get_pos()
-        if button.collidepoint(mouse):
-            if not button.hovered:
-                button.hovered = True
-                button.image = button.big_image
-                button.width,button.height = button.image.get_size()
-                button.x = button.original_pos[0]-(button.width-128)//2
-                button.y = button.original_pos[1]-(button.height-64)//2
-        else:
-            if button.hovered:
-                button.hovered = False
-                button.image = button.original_image
-                button.width,button.height = 128,64
-                button.x, button.y = button.original_pos
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            mouse = pygame.mouse.get_pos()
+        window.fill((0,0,0))
+        for button in hj_rects:
+            window.blit(button.image, (button.x, button.y))
+        pygame.display.update()
+        clock.tick(60)
+if load_save is not None:
+    if start_save == "n" or start_save == "no":
+        button_coords = [(128, 72),(384, 72),(128, 208),(384, 208),(128, 344),(384, 344)]
+        button_rects = []
+        for i in range(6):
+            x,y = button_coords[i]
+            button_rect = Button(x,y,button_list[i])
+            button_rects.append(button_rect)
+        running = True
+        while running:
             for button in button_rects:
+                mouse = pygame.mouse.get_pos()
                 if button.collidepoint(mouse):
-                    if button.original_image == button_normal:
-                        difficulty = 2
-                        baby_mode = False
-                        lava_mode = False
-                        extra_baby = False
-                        extra_lava = 0
-                        running = False
-                        break
-                    elif button.original_image == button_baby:
-                        difficulty = 1
-                        baby_mode = True
-                        lava_mode = False
-                        extra_lava = 0
-                        extra_baby = False
-                        running = False
-                        break
-                    elif button.original_image == button_baby_spicy:
-                        difficulty = 1
-                        baby_mode = True
-                        lava_mode = False
-                        extra_baby = True
-                        extra_lava = 0
-                        running = False
-                        break
-                    elif button.original_image == button_hot_feet_baby:
-                        difficulty = 3
-                        baby_mode = False
-                        lava_mode = True
-                        extra_baby = False
-                        extra_lava = 1
-                        running = False
-                        break
-                    elif button.original_image == button_hot_feet:
-                        difficulty = 3
-                        baby_mode = False
-                        lava_mode = True
-                        extra_baby = False
-                        extra_lava = 2
-                        running = False
-                        break
-                    elif button.original_image == button_hot_feet_spicy:
-                        difficulty = 3
-                        baby_mode = False
-                        lava_mode = True
-                        extra_baby = False
-                        extra_lava = 3
-                        running = False
-                        break
-    window.fill((0,0,0))
-    for button in button_rects:
-        window.blit(button.image, (button.x, button.y))
-    pygame.display.update()
-    clock.tick(60)
+                    if not button.hovered:
+                        button.hovered = True
+                        button.image = button.big_image
+                        button.width,button.height = button.image.get_size()
+                        button.x = button.original_pos[0]-(button.width-128)//2
+                        button.y = button.original_pos[1]-(button.height-64)//2
+                else:
+                    if button.hovered:
+                        button.hovered = False
+                        button.image = button.original_image
+                        button.width,button.height = 128,64
+                        button.x, button.y = button.original_pos
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    mouse = pygame.mouse.get_pos()
+                    for button in button_rects:
+                        if button.collidepoint(mouse):
+                            if button.original_image == button_normal:
+                                difficulty = 2
+                                baby_mode = False
+                                lava_mode = False
+                                extra_baby = False
+                                extra_lava = 0
+                                running = False
+                                break
+                            elif button.original_image == button_baby:
+                                difficulty = 1
+                                baby_mode = True
+                                lava_mode = False
+                                extra_lava = 0
+                                extra_baby = False
+                                running = False
+                                break
+                            elif button.original_image == button_baby_spicy:
+                                difficulty = 1
+                                baby_mode = True
+                                lava_mode = False
+                                extra_baby = True
+                                extra_lava = 0
+                                running = False
+                                break
+                            elif button.original_image == button_hot_feet_baby:
+                                difficulty = 3
+                                baby_mode = False
+                                lava_mode = True
+                                extra_baby = False
+                                extra_lava = 1
+                                running = False
+                                break
+                            elif button.original_image == button_hot_feet:
+                                difficulty = 3
+                                baby_mode = False
+                                lava_mode = True
+                                extra_baby = False
+                                extra_lava = 2
+                                running = False
+                                break
+                            elif button.original_image == button_hot_feet_spicy:
+                                difficulty = 3
+                                baby_mode = False
+                                lava_mode = True
+                                extra_baby = False
+                                extra_lava = 3
+                                running = False
+                                break
+            window.fill((0,0,0))
+            for button in button_rects:
+                window.blit(button.image, (button.x, button.y))
+            pygame.display.update()
+            clock.tick(60)
 
 
 class Background(pygame.Rect):
@@ -940,6 +958,26 @@ def check_tile_collision_y():
                     tile.image = spawn_tile2
                 else:
                     tile.image = spawn_tile0
+                '''
+                for i in tiles:
+                        if i.image == spawn_tile2:
+                            no_checkpoints = False
+                            spawn_x = i.x-(10*32)+16#+random.randint(0,TILE_SIZE)
+                            spawn_y = i.y-(10*32)+TILE_SIZE+16+3#-player.height
+                            for j in tiles:
+                                j.x -= spawn_x
+                                j.y -= spawn_y
+                            break
+                        else:
+                            no_checkpoints = True
+                '''
+                for i in tiles:
+                    if i.image == spawn_tile0:
+                        spawn_x = i.x-(10*32)+16
+                        spawn_y = i.y-(10*32)+TILE_SIZE+16+3
+                save_list = [(spawn_x,spawn_y),difficulty,baby_mode,lava_mode,extra_baby,extra_lava,player.max_jumps]
+                save_dump = json.dumps(save_list)
+                save.write_text(save_dump)
             elif tile.image == floor_tile_imagej:
                 if player.max_jumps != 2 and PLAYER_VELOCITY_Y != -12.1:
                     print()
@@ -1623,14 +1661,33 @@ keys = pygame.key.get_pressed()
 for tile in tiles:
     if tile.image == spawn_tile2:
         tile.image == spawn_tile
-for tile in tiles:
-    if tile.image == spawn_tile2:
-        spawn_x = tile.x-(10*32)+16
-        spawn_y = tile.y-(10*32)+TILE_SIZE+16+3+PLAYER_HEIGHT
-        for i in tiles:
-            i.x -= spawn_x
-            i.y -= spawn_y
-        break
+if load_save is not None:
+    if start_save == "n" or start_save == "no":
+        joy_restart = True
+        for tile in tiles:
+            if tile.image == spawn_tile0:
+                spawn_x = tile.x-(10*32)+16
+                spawn_y = tile.y-(10*32)+TILE_SIZE+16+3+PLAYER_HEIGHT
+                for i in tiles:
+                    i.x -= spawn_x
+                    i.y -= spawn_y
+                break
+    elif start_save == "y" or start_save == "yes":
+        player.max_jumps = load_save[6]
+        check_lava_collision()
+        for tile in tiles:
+            tile.x += load_save[0][0]
+            tile.y += load_save[0][1]-PLAYER_HEIGHT-3
+else:
+    joy_restart = True
+    for tile in tiles:
+        if tile.image == spawn_tile0:
+            spawn_x = tile.x-(10*32)+16
+            spawn_y = tile.y-(10*32)+TILE_SIZE+16+3+PLAYER_HEIGHT
+            for i in tiles:
+                i.x -= spawn_x
+                i.y -= spawn_y
+            break
 '''
 clouds = []
 for i in range(100):
