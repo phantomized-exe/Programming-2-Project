@@ -1069,7 +1069,7 @@ def check_tile_collision_y():#difficulty,baby_mode,lava_mode,extra_baby,extra_la
                     print()
                     print("Double jump unlocked!")
                     player.max_jumps = 2
-                    PLAYER_VELOCITY_Y = -19
+                    PLAYER_VELOCITY_Y = -14
             elif tile.image == floor_tile_imager:
                 for tile in tiles:
                     tile.y -= PLAYER_VELOCITY_Y*1.5
