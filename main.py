@@ -5,7 +5,6 @@ from pathlib import Path
 import json
 import random
 from network import Network
-import time
 import subprocess
 level = Path("level_code.json")
 save = Path("save.json")
