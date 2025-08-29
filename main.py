@@ -37,122 +37,122 @@ PLAYER_VELOCITY_Y = -14
 global CROUCH_FRICTION
 CROUCH_FRICTION = 1
 
-# images
-def load_image(image_name,scale=None):
-    """Loads all the images in the Test Sprite folder
-
-    Args:
-        image_name (str): name of image
-        scale (int, optional): scales the image. Defaults to None.
-
-    Returns:
-        pygame.image: image
-    """
-    image = pygame.image.load(os.path.join("Test Sprites",image_name))
+def load_image(image_name, scale=None):
+    """Loads an image from the Test Sprites folder, optionally scaling it."""
+    image = pygame.image.load(os.path.join("Test Sprites", image_name))
     if scale is not None:
-        image = pygame.transform.scale(image,scale)
+        image = pygame.transform.scale(image, scale)
     return image
-background_image0 = load_image("Mountains-front.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
-background_image3 = load_image("Test Sprite-back3.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
-background_image = load_image("Mountains-back.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
-background_image2 = load_image("Test Sprite-back2.png.png",(BACKGROUND_WIDTH,BACKGROUND_HEIGHT))
-background_image4 = load_image("Test Sprite-back4.png.png",(GAME_WIDTH,GAME_HEIGHT))
-player_image_right = load_image("Test Sprite-right.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
-player_image_right2 = load_image("Test Sprite-right2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT)) #resizes player
-player_image_left = load_image("Test Sprite-left.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
-player_image_left2 = load_image("Test Sprite-left2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
-player2_image_right = load_image("Test Sprite2-right.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
-player2_image_right2 = load_image("Test Sprite2-right2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT)) #resizes player
-player2_image_left = load_image("Test Sprite2-left.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
-player2_image_left2 = load_image("Test Sprite2-left2.png.png",(PLAYER_WIDTH,PLAYER_HEIGHT))
+
+# Backgrounds and UI
+background_images = {
+    "front": load_image("Mountains-front.png.png", (BACKGROUND_WIDTH, BACKGROUND_HEIGHT)),
+    "back3": load_image("Test Sprite-back3.png.png", (BACKGROUND_WIDTH, BACKGROUND_HEIGHT)),
+    "back": load_image("Mountains-back.png.png", (BACKGROUND_WIDTH, BACKGROUND_HEIGHT)),
+    "back2": load_image("Test Sprite-back2.png.png", (BACKGROUND_WIDTH, BACKGROUND_HEIGHT)),
+    "back4": load_image("Test Sprite-back4.png.png", (GAME_WIDTH, GAME_HEIGHT)),
+}
+player_images = {
+    "right": load_image("Test Sprite-right.png.png", (PLAYER_WIDTH, PLAYER_HEIGHT)),
+    "right2": load_image("Test Sprite-right2.png.png", (PLAYER_WIDTH, PLAYER_HEIGHT)),
+    "left": load_image("Test Sprite-left.png.png", (PLAYER_WIDTH, PLAYER_HEIGHT)),
+    "left2": load_image("Test Sprite-left2.png.png", (PLAYER_WIDTH, PLAYER_HEIGHT)),
+    "jump_right": load_image("Test Sprite-jump-right.png.png", (PLAYER_JUMP_WIDTH, PLAYER_JUMP_HEIGHT)),
+    "jump_left": load_image("Test Sprite-jump-left.png.png", (PLAYER_JUMP_WIDTH, PLAYER_JUMP_HEIGHT)),
+    "crouch_right": load_image("Test Sprite-crouch-right.png.png", (PLAYER_CROUCH_WIDTH, PLAYER_CROUCH_HEIGHT)),
+    "crouch_left": load_image("Test Sprite-crouch-left.png.png", (PLAYER_CROUCH_WIDTH, PLAYER_CROUCH_HEIGHT)),
+    "crouch_right2": load_image("Test Sprite-crouch-right2.png.png", (PLAYER_CROUCH_WIDTH, PLAYER_CROUCH_HEIGHT)),
+    "crouch_left2": load_image("Test Sprite-crouch-left2.png.png", (PLAYER_CROUCH_WIDTH, PLAYER_CROUCH_HEIGHT)),
+}
+player2_images = {
+    "right": load_image("Test Sprite2-right.png.png", (PLAYER_WIDTH, PLAYER_HEIGHT)),
+    "right2": load_image("Test Sprite2-right2.png.png", (PLAYER_WIDTH, PLAYER_HEIGHT)),
+    "left": load_image("Test Sprite2-left.png.png", (PLAYER_WIDTH, PLAYER_HEIGHT)),
+    "left2": load_image("Test Sprite2-left2.png.png", (PLAYER_WIDTH, PLAYER_HEIGHT)),
+    "jump_right": load_image("Test Sprite2-jump-right.png.png", (PLAYER_JUMP_WIDTH, PLAYER_JUMP_HEIGHT)),
+    "jump_left": load_image("Test Sprite2-jump-left.png.png", (PLAYER_JUMP_WIDTH, PLAYER_JUMP_HEIGHT)),
+    "crouch_right": load_image("Test Sprite2-crouch-right.png.png", (PLAYER_CROUCH_WIDTH, PLAYER_CROUCH_HEIGHT)),
+    "crouch_left": load_image("Test Sprite2-crouch-left.png.png", (PLAYER_CROUCH_WIDTH, PLAYER_CROUCH_HEIGHT)),
+    "crouch_right2": load_image("Test Sprite2-crouch-right2.png.png", (PLAYER_CROUCH_WIDTH, PLAYER_CROUCH_HEIGHT)),
+    "crouch_left2": load_image("Test Sprite2-crouch-left2.png.png", (PLAYER_CROUCH_WIDTH, PLAYER_CROUCH_HEIGHT)),
+}
 image_icon = load_image("Test Sprite-icon.png.png")
 image_icon2 = load_image("Test Sprite-icon2.png.png")
 image_icon3 = load_image("Test Sprite-icon3.png.png")
-spawn_tile = load_image("Test Sprite-icon.png.png",(TILE_SIZE,TILE_SIZE))
-spawn_tile2 = load_image("Test Sprite-icon2.png.png",(TILE_SIZE,TILE_SIZE))
-bg = load_image("Test Sprite-bg.png.png",(TILE_SIZE,TILE_SIZE))
-player_image_jump_right = load_image("Test Sprite-jump-right.png.png",(PLAYER_JUMP_WIDTH,PLAYER_JUMP_HEIGHT))
-player_image_jump_left = load_image("Test Sprite-jump-left.png.png",(PLAYER_JUMP_WIDTH,PLAYER_JUMP_HEIGHT))
-player_image_crouch_right = load_image("Test Sprite-crouch-right.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
-player_image_crouch_left = load_image("Test Sprite-crouch-left.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
-player_image_crouch_right2 = load_image("Test Sprite-crouch-right2.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
-player_image_crouch_left2 = load_image("Test Sprite-crouch-left2.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
-player2_image_jump_right = load_image("Test Sprite2-jump-right.png.png",(PLAYER_JUMP_WIDTH,PLAYER_JUMP_HEIGHT))
-player2_image_jump_left = load_image("Test Sprite2-jump-left.png.png",(PLAYER_JUMP_WIDTH,PLAYER_JUMP_HEIGHT))
-player2_image_crouch_right = load_image("Test Sprite2-crouch-right.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
-player2_image_crouch_left = load_image("Test Sprite2-crouch-left.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
-player2_image_crouch_right2 = load_image("Test Sprite2-crouch-right2.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
-player2_image_crouch_left2 = load_image("Test Sprite2-crouch-left2.png.png",(PLAYER_CROUCH_WIDTH,PLAYER_CROUCH_HEIGHT))
-floor_tile_image = load_image("Test Sprite Tile-legacy.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_image2 = load_image("Test Sprite Tile-legacy2.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_image3 = load_image("Test Sprite Tile-legacy3.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_image4 = load_image("Test Sprite Tile-lava.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_image5 = load_image("Test Sprite Tile-lava2.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_image6 = load_image("Test Sprite Tile-lava3.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_image7 = load_image("Test Sprite Tile-lava4.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_image8 = load_image("Test Sprite Tile-side.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_image9 = load_image("Test Sprite Tile-side2.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imagea = load_image("Test Sprite Tile-lava5.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imageb = load_image("Test Sprite Tile-lava6.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imagec = load_image("Test Sprite Tile-lava7.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imaged = load_image("Test Sprite Tile-lava8.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imagee = load_image("Test Sprite Tile-lava9.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imagef = load_image("Test Sprite Tile-lava10.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imageg = load_image("Test Sprite Tile-lava11.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imageh = load_image("Test Sprite Tile-lava12.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imagei = load_image("Test Sprite Tile-legacy4.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imagej = load_image("Test Sprite-star.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imagek = load_image("Test Sprite Tile-lava13.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imagel = load_image("Test Sprite Tile-lava14.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imagem = load_image("Test Sprite Tile-lava15.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imagen = load_image("Test Sprite Tile-lava16.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imageo = load_image("Test Sprite Tile-lava17.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imagep = load_image("Test Sprite Tile-lava18.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imageq = load_image("Test Sprite Tile-lava19.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imager = load_image("Test Sprite Tile-bounce.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_images = load_image("Test Sprite Tile-lava20.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imaget = load_image("Test Sprite Tile-lava21.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imageu = load_image("Test Sprite Tile-lava22.png.png",(TILE_SIZE,TILE_SIZE))
-floor_tile_imagev = load_image("Test Sprite Tile-lava23.png.png",(TILE_SIZE,TILE_SIZE))
-spawn_tile0 = load_image("Test Sprite-icon0.png.png",(TILE_SIZE,TILE_SIZE))
-clouds1 = load_image("clouds1.png")
-clouds2 = load_image("clouds2.png")
-clouds3 = load_image("clouds3.png")
-clouds4 = load_image("clouds4.png")
-clouds5 = load_image("clouds5.png")
-clouds6 = load_image("clouds6.png")
-win = load_image("win.png.png",(GAME_WIDTH,GAME_HEIGHT))
-win_baby = load_image("win-baby.png.png",(GAME_WIDTH,GAME_HEIGHT))
-win_hot_lava = load_image("win-hot-lava.png.png",(GAME_WIDTH,GAME_HEIGHT))
-win_carolina = load_image("win-carolina.png.png",(GAME_WIDTH,GAME_HEIGHT))
-air = load_image("Mountains-air.png.png",(GAME_WIDTH,GAME_HEIGHT))
-crown = load_image("Test Sprite Tile-crown.png.png",(TILE_SIZE,TILE_SIZE))
-crown_baby = load_image("Test Sprite Tile-crown-baby.png.png",(TILE_SIZE,TILE_SIZE))
-crown_hot_lava = load_image("Test Sprite Tile-crown-hot-lava.png.png",(TILE_SIZE,TILE_SIZE))
-button_list = []
-button_baby = load_image("button-baby.png.png",(128,64))
-button_list.append(button_baby)
-button_baby_spicy = load_image("button-baby-spicy.png.png",(128,64))
-button_list.append(button_baby_spicy)
-button_normal = load_image("button.png.png",(128,64))
-button_list.append(button_normal)
-button_hot_feet_baby = load_image("button-hot-feet-baby.png.png",(128,64))
-button_list.append(button_hot_feet_baby)
-button_hot_feet = load_image("button-hot-feet.png.png",(128,64))
-button_list.append(button_hot_feet)
-button_hot_feet_spicy = load_image("button-hot-feet-spicy.png.png",(128,64))
-button_list.append(button_hot_feet_spicy)
-hj_list = []
-host = load_image("host.png",(128,64))
-hj_list.append(host)
-join = load_image("join.png",(128,64))
-hj_list.append(join)
-ln_list = []
-load = load_image("load.png",(128,64))
-ln_list.append(load)
-new = load_image("new.png",(128,64))
-ln_list.append(new)
-load_dead = load_image("load-dead.png",(128,64))
+spawn_tile = load_image("Test Sprite-icon.png.png", (TILE_SIZE, TILE_SIZE))
+spawn_tile2 = load_image("Test Sprite-icon2.png.png", (TILE_SIZE, TILE_SIZE))
+bg = load_image("Test Sprite-bg.png.png", (TILE_SIZE, TILE_SIZE))
+spawn_tile0 = load_image("Test Sprite-icon0.png.png", (TILE_SIZE, TILE_SIZE))
+
+# Tile images dictionary for easier access
+tile_images = {
+    "1": load_image("Test Sprite Tile-legacy.png.png", (TILE_SIZE, TILE_SIZE)),
+    "2": load_image("Test Sprite Tile-legacy2.png.png", (TILE_SIZE, TILE_SIZE)),
+    "3": load_image("Test Sprite Tile-legacy3.png.png", (TILE_SIZE, TILE_SIZE)),
+    "4": load_image("Test Sprite Tile-lava.png.png", (TILE_SIZE, TILE_SIZE)),
+    "5": load_image("Test Sprite Tile-lava2.png.png", (TILE_SIZE, TILE_SIZE)),
+    "6": load_image("Test Sprite Tile-lava3.png.png", (TILE_SIZE, TILE_SIZE)),
+    "7": load_image("Test Sprite Tile-lava4.png.png", (TILE_SIZE, TILE_SIZE)),
+    "8": load_image("Test Sprite Tile-side.png.png", (TILE_SIZE, TILE_SIZE)),
+    "9": load_image("Test Sprite Tile-side2.png.png", (TILE_SIZE, TILE_SIZE)),
+    "a": load_image("Test Sprite Tile-lava5.png.png", (TILE_SIZE, TILE_SIZE)),
+    "b": load_image("Test Sprite Tile-lava6.png.png", (TILE_SIZE, TILE_SIZE)),
+    "c": load_image("Test Sprite Tile-lava7.png.png", (TILE_SIZE, TILE_SIZE)),
+    "d": load_image("Test Sprite Tile-lava8.png.png", (TILE_SIZE, TILE_SIZE)),
+    "e": load_image("Test Sprite Tile-lava9.png.png", (TILE_SIZE, TILE_SIZE)),
+    "f": load_image("Test Sprite Tile-lava10.png.png", (TILE_SIZE, TILE_SIZE)),
+    "g": load_image("Test Sprite Tile-lava11.png.png", (TILE_SIZE, TILE_SIZE)),
+    "h": load_image("Test Sprite Tile-lava12.png.png", (TILE_SIZE, TILE_SIZE)),
+    "i": load_image("Test Sprite Tile-legacy4.png.png", (TILE_SIZE, TILE_SIZE)),
+    "j": load_image("Test Sprite-star.png.png", (TILE_SIZE, TILE_SIZE)),
+    "k": load_image("Test Sprite Tile-lava13.png.png", (TILE_SIZE, TILE_SIZE)),
+    "l": load_image("Test Sprite Tile-lava14.png.png", (TILE_SIZE, TILE_SIZE)),
+    "m": load_image("Test Sprite Tile-lava15.png.png", (TILE_SIZE, TILE_SIZE)),
+    "n": load_image("Test Sprite Tile-lava16.png.png", (TILE_SIZE, TILE_SIZE)),
+    "o": load_image("Test Sprite Tile-lava17.png.png", (TILE_SIZE, TILE_SIZE)),
+    "p": load_image("Test Sprite Tile-lava18.png.png", (TILE_SIZE, TILE_SIZE)),
+    "q": load_image("Test Sprite Tile-lava19.png.png", (TILE_SIZE, TILE_SIZE)),
+    "r": load_image("Test Sprite Tile-bounce.png.png", (TILE_SIZE, TILE_SIZE)),
+    "s": load_image("Test Sprite Tile-lava20.png.png", (TILE_SIZE, TILE_SIZE)),
+    "t": load_image("Test Sprite Tile-lava21.png.png", (TILE_SIZE, TILE_SIZE)),
+    "u": load_image("Test Sprite Tile-lava22.png.png", (TILE_SIZE, TILE_SIZE)),
+    "v": load_image("Test Sprite Tile-lava23.png.png", (TILE_SIZE, TILE_SIZE)),
+}
+
+# Lava tile images set for fast collision checks
+lava_tile_images = set(
+    tile_images[c] for c in ["4","5","6","7","a","b","c","d","e","f","g","h","k","l","m","n","o","p","q","s","t","u","v"]
+)
+
+# Clouds and win screens
+clouds = [load_image(f"clouds{i}.png") for i in range(1,7)]
+win = load_image("win.png.png", (GAME_WIDTH, GAME_HEIGHT))
+win_baby = load_image("win-baby.png.png", (GAME_WIDTH, GAME_HEIGHT))
+win_hot_lava = load_image("win-hot-lava.png.png", (GAME_WIDTH, GAME_HEIGHT))
+win_carolina = load_image("win-carolina.png.png", (GAME_WIDTH, GAME_HEIGHT))
+air = load_image("Mountains-air.png.png", (GAME_WIDTH, GAME_HEIGHT))
+crown = load_image("Test Sprite Tile-crown.png.png", (TILE_SIZE, TILE_SIZE))
+crown_baby = load_image("Test Sprite Tile-crown-baby.png.png", (TILE_SIZE, TILE_SIZE))
+crown_hot_lava = load_image("Test Sprite Tile-crown-hot-lava.png.png", (TILE_SIZE, TILE_SIZE))
+
+# Button and menu images
+button_list = [
+    load_image("button-baby.png.png", (128,64)),
+    load_image("button-baby-spicy.png.png", (128,64)),
+    load_image("button.png.png", (128,64)),
+    load_image("button-hot-feet-baby.png.png", (128,64)),
+    load_image("button-hot-feet.png.png", (128,64)),
+    load_image("button-hot-feet-spicy.png.png", (128,64)),
+]
+hj_list = [
+    load_image("host.png", (128,64)),
+    load_image("join.png", (128,64)),
+]
+ln_list = [
+    load_image("load.png", (128,64)),
+    load_image("new.png", (128,64)),
+]
+load_dead = load_image("load-dead.png", (128,64))
 global difficulty
 global baby_mode
 global lava_mode
@@ -301,7 +301,7 @@ while running:
             mouse = pygame.mouse.get_pos()
             for button in ln_rects:
                 if button.collidepoint(mouse):
-                    if button.original_image == load:
+                    if button.original_image == ln_list[0]:
                         start_save = "y"
                         difficulty = load_save[1]
                         baby_mode = load_save[2]
@@ -310,7 +310,7 @@ while running:
                         extra_lava = load_save[5]
                         running = False
                         break
-                    elif button.original_image == new:
+                    elif button.original_image == ln_list[1]:
                         start_save = "n"
                         running = False
                         break
@@ -352,14 +352,14 @@ while running:
             mouse = pygame.mouse.get_pos()
             for button in hj_rects:
                 if button.collidepoint(mouse):
-                    if button.original_image == host:
+                    if button.original_image == hj_list[0]:
                         hosting = "h"
                         server_process = subprocess.Popen(["python", "server.py"])
                         server_ip = "127.0.0.1"
                         #print("Server started. You are hosting the game.")
                         running = False
                         break
-                    elif button.original_image == join:
+                    elif button.original_image == hj_list[1]:
                         hosting = "j"
                         server_ip = input("Enter server IP: ")
                         running = False
@@ -401,7 +401,7 @@ if start_save == "n" or start_save == "no" or load_save is None:
                     mouse = pygame.mouse.get_pos()
                     for button in button_rects:
                         if button.collidepoint(mouse):
-                            if button.original_image == button_normal:
+                            if button.original_image == button_list[2]:
                                 difficulty = 2
                                 baby_mode = False
                                 lava_mode = False
@@ -409,7 +409,7 @@ if start_save == "n" or start_save == "no" or load_save is None:
                                 extra_lava = 0
                                 running = False
                                 break
-                            elif button.original_image == button_baby:
+                            elif button.original_image == button_list[0]:
                                 difficulty = 1
                                 baby_mode = True
                                 lava_mode = False
@@ -417,7 +417,7 @@ if start_save == "n" or start_save == "no" or load_save is None:
                                 extra_baby = False
                                 running = False
                                 break
-                            elif button.original_image == button_baby_spicy:
+                            elif button.original_image == button_list[1]:
                                 difficulty = 1
                                 baby_mode = True
                                 lava_mode = False
@@ -425,7 +425,7 @@ if start_save == "n" or start_save == "no" or load_save is None:
                                 extra_lava = 0
                                 running = False
                                 break
-                            elif button.original_image == button_hot_feet_baby:
+                            elif button.original_image == button_list[3]:
                                 difficulty = 3
                                 baby_mode = False
                                 lava_mode = True
@@ -433,7 +433,7 @@ if start_save == "n" or start_save == "no" or load_save is None:
                                 extra_lava = 1
                                 running = False
                                 break
-                            elif button.original_image == button_hot_feet:
+                            elif button.original_image == button_list[4]:
                                 difficulty = 3
                                 baby_mode = False
                                 lava_mode = True
@@ -441,7 +441,7 @@ if start_save == "n" or start_save == "no" or load_save is None:
                                 extra_lava = 2
                                 running = False
                                 break
-                            elif button.original_image == button_hot_feet_spicy:
+                            elif button.original_image == button_list[5]:
                                 difficulty = 3
                                 baby_mode = False
                                 lava_mode = True
@@ -526,113 +526,113 @@ class Player(pygame.Rect):
                 if self.direction == "right":
                     if self.velocity_x > 0:
                         if self.player_animation >= 40//PLAYER_VELOCITY_X:
-                            self.image = player_image_crouch_right2
+                            self.image = player_images["crouch_right2"]
                             self.player_animation += 1
                             if self.player_animation >= 80//PLAYER_VELOCITY_X:
                                 self.player_animation = 0
                         else:
-                            self.image = player_image_crouch_right
+                            self.image = player_images["crouch_right"]
                             self.player_animation += 1
                     else:
-                        self.image = player_image_crouch_right
+                        self.image = player_images["crouch_right"]
                 elif self.direction == "left":
                     if self.velocity_x < 0:
                         if self.player_animation >= 40//PLAYER_VELOCITY_X:
-                            self.image = player_image_crouch_left2
+                            self.image = player_images["crouch_left2"]
                             self.player_animation += 1
                             if self.player_animation >= 80//PLAYER_VELOCITY_X:
                                 self.player_animation = 0
                         else:
-                            self.image = player_image_crouch_left
+                            self.image = player_images["crouch_left"]
                             self.player_animation += 1
                     else:
-                        self.image = player_image_crouch_left
+                        self.image = player_images["crouch_left"]
             elif self.jumping:
                 if self.direction == "right":
-                    self.image = player_image_jump_right
+                    self.image = player_images["jump_right"]
                 elif self.direction == "left":
-                    self.image = player_image_jump_left
+                    self.image = player_images["jump_left"]
             else:
                 if self.direction == "right":
                     if self.velocity_x > 0:
                         if self.player_animation >= 20//PLAYER_VELOCITY_X:
-                            self.image = player_image_right2
+                            self.image = player_images["right2"]
                             self.player_animation += 1
                             if self.player_animation >= 40//PLAYER_VELOCITY_X:
                                 self.player_animation = 0
                         else:
-                            self.image = player_image_right
+                            self.image = player_images["right"]
                             self.player_animation += 1
                     else:
-                        self.image = player_image_right
+                        self.image = player_images["right"]
                 elif self.direction == "left":
                     if self.velocity_x < 0:
                         if self.player_animation >= 20//PLAYER_VELOCITY_X:
-                            self.image = player_image_left2
+                            self.image = player_images["left2"]
                             self.player_animation += 1
                             if self.player_animation >= 40//PLAYER_VELOCITY_X:
                                 self.player_animation = 0
                         else:
-                            self.image = player_image_left
+                            self.image = player_images["left"]
                             self.player_animation += 1
                     else:
-                        self.image = player_image_left
+                        self.image = player_images["left"]
         elif self.player == 2:
             if self.crouching:
                 if self.direction == "right":
                     if self.velocity_x > 0:
                         if self.player_animation >= 40//PLAYER_VELOCITY_X:
-                            self.image = player2_image_crouch_right2
+                            self.image = player2_images["crouch_right2"]
                             self.player_animation += 1
                             if self.player_animation >= 80//PLAYER_VELOCITY_X:
                                 self.player_animation = 0
                         else:
-                            self.image = player2_image_crouch_right
+                            self.image = player2_images["crouch_right"]
                             self.player_animation += 1
                     else:
-                        self.image = player2_image_crouch_right
+                        self.image = player2_images["crouch_right"]
                 elif self.direction == "left":
                     if self.velocity_x < 0:
                         if self.player_animation >= 40//PLAYER_VELOCITY_X:
-                            self.image = player2_image_crouch_left2
+                            self.image = player2_images["crouch_left2"]
                             self.player_animation += 1
                             if self.player_animation >= 80//PLAYER_VELOCITY_X:
                                 self.player_animation = 0
                         else:
-                            self.image = player2_image_crouch_left
+                            self.image = player2_images["crouch_left"]
                             self.player_animation += 1
                     else:
-                        self.image = player2_image_crouch_left
+                        self.image = player2_images["crouch_left"]
             elif self.jumping:
                 if self.direction == "right":
-                    self.image = player2_image_jump_right
+                    self.image = player2_images["jump_right"]
                 elif self.direction == "left":
-                    self.image = player2_image_jump_left
+                    self.image = player2_images["jump_left"]
             else:
                 if self.direction == "right":
                     if self.velocity_x > 0:
                         if self.player_animation >= 20//PLAYER_VELOCITY_X:
-                            self.image = player2_image_right2
+                            self.image = player2_images["right2"]
                             self.player_animation += 1
                             if self.player_animation >= 40//PLAYER_VELOCITY_X:
                                 self.player_animation = 0
                         else:
-                            self.image = player2_image_right
+                            self.image = player2_images["right"]
                             self.player_animation += 1
                     else:
-                        self.image = player2_image_right
+                        self.image = player2_images["right"]
                 elif self.direction == "left":
                     if self.velocity_x < 0:
                         if self.player_animation >= 20//PLAYER_VELOCITY_X:
-                            self.image = player2_image_left2
+                            self.image = player2_images["left2"]
                             self.player_animation += 1
                             if self.player_animation >= 40//PLAYER_VELOCITY_X:
                                 self.player_animation = 0
                         else:
-                            self.image = player2_image_left
+                            self.image = player2_images["left"]
                             self.player_animation += 1
                     else:
-                        self.image = player2_image_left
+                        self.image = player2_images["left"]
 
 class Tile(pygame.Rect):
     """creates the tiles
@@ -694,160 +694,10 @@ def create_map():
                 tile.width = TILE_SIZE
                 tile.height = TILE_SIZE
                 tiles.append(tile)
-            if row[j] == "1":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image)
-                tiles.append(tile)
-            elif row[j] == "2":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image2)
-                tiles.append(tile)
-            elif row[j] == "3":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image3)
-                tiles.append(tile)
-            elif row[j] == "4":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image4)
-                tiles.append(tile)
-            elif row[j] == "5":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image5)
-                tiles.append(tile)
-            elif row[j] == "6":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image6)
-                tiles.append(tile)
-            elif row[j] == "7":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image7)
-                tiles.append(tile)
-            elif row[j] == "8":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image8)
-                tiles.append(tile)
-            elif row[j] == "9":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_image9)
-                tiles.append(tile)
-            elif row[j] == "a":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imagea)
-                tiles.append(tile)
-            elif row[j] == "b":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imageb)
-                tiles.append(tile)
-            elif row[j] == "c":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imagec)
-                tiles.append(tile)
-            elif row[j] == "d":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imaged)
-                tiles.append(tile)
-            elif row[j] == "e":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imagee)
-                tiles.append(tile)
-            elif row[j] == "f":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imagef)
-                tiles.append(tile)
-            elif row[j] == "g":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imageg)
-                tiles.append(tile)
-            elif row[j] == "h":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imageh)
-                tiles.append(tile)
-            elif row[j] == "i":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imagei)
-                tiles.append(tile)
-            elif row[j] == "j":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imagej)
-                tiles.append(tile)
-            elif row[j] == "k":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imagek)
-                tiles.append(tile)
-            elif row[j] == "l":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imagel)
-                tiles.append(tile)
-            elif row[j] == "m":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imagem)
-                tiles.append(tile)
-            elif row[j] == "n":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imagen)
-                tiles.append(tile)
-            elif row[j] == "o":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imageo)
-                tiles.append(tile)
-            elif row[j] == "p":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imagep)
-                tiles.append(tile)
-            elif row[j] == "q":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imageq)
-                tiles.append(tile)
-            elif row[j] == "r":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imager)
-                tiles.append(tile)
-            elif row[j] == "s":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_images)
-                tiles.append(tile)
-            elif row[j] == "t":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imaget)
-                tiles.append(tile)
-            elif row[j] == "u":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imageu)
-                tiles.append(tile)
-            elif row[j] == "v":
-                x = j*TILE_SIZE
-                y = i*TILE_SIZE
-                tile = Tile(x,y,floor_tile_imagev)
+            if row[j] in tile_images:
+                x = j * TILE_SIZE
+                y = i * TILE_SIZE
+                tile = Tile(x, y, tile_images[row[j]])
                 tiles.append(tile)
 
 def check_tile_collision():
@@ -870,7 +720,7 @@ def check_lava_collision():
     global tiles
     for tile in tiles:
         if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or keys[pygame.K_r] or joy_restart:
-            if keys[pygame.K_r] or joy_restart or tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget or tile.image == floor_tile_imageu or tile.image == floor_tile_imagev:
+            if keys[pygame.K_r] or joy_restart or tile.image in lava_tile_images:
                 if coyote_lava >= 32 or keys[pygame.K_r] or joy_restart:
                     coyote_lava = 0
                     player.velocity_x = 0
@@ -899,7 +749,7 @@ def check_lava_collision():
                     joy_restart = False
                     if lava_mode:
                         for tile in tiles:
-                            if tile.image == floor_tile_image4:
+                            if tile.image in lava_tile_images:
                                 tile.image = tile.original_image
                                 tile.lava_timer_x = 0
                                 tile.lava_timer_y = 0
@@ -908,18 +758,20 @@ def check_lava_collision():
                 else:
                     coyote_lava += 1
                     break
+    touching_tile_x = False
     for tile in tiles:
         if lava_rect.colliderect(tile):
-            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget or tile.image == floor_tile_imageu or tile.image == floor_tile_imagev:
+            if tile.image in lava_tile_images:
                 touching_tile_x = True
                 break
             else:
                 touching_tile_x = False
         else:
             touching_tile_x = False
+    touching_tile_x2 = False
     for tile in tiles:
         if lava_rect2.colliderect(tile):
-            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget or tile.image == floor_tile_imageu or tile.image == floor_tile_imagev:
+            if tile.image in lava_tile_images:
                 touching_tile_x2 = True
                 break
             else:
@@ -946,10 +798,10 @@ def check_tile_collision_x():
         elif left.colliderect(player2):
             player.x = player2.x+player2.width+1
     '''
-    if tile is not None and lava_mode and tile.image != spawn_tile0 and tile.image != floor_tile_imagej and tile.timer_x == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
+    if tile is not None and lava_mode and tile.image != spawn_tile0 and tile.image != tile_images["j"] and tile.timer_x == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
         if extra_lava == 3:
             lava_tile_x.append(tile)
-        elif (extra_lava == 1 or extra_lava == 2) and tile.image != spawn_tile0 and tile.image != spawn_tile and tile.image != spawn_tile2 and tile.image != floor_tile_imagej and tile.timer_x == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
+    elif (extra_lava == 1 or extra_lava == 2) and tile.image != spawn_tile0 and tile.image != spawn_tile and tile.image != spawn_tile2 and tile.image != tile_images["j"] and tile.timer_x == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
             lava_tile_x.append(tile)
     if tile is not None and player.velocity_x != 0:
         adjust_bg = True
@@ -970,11 +822,11 @@ def check_tile_collision_x():
     for tile in lava_tile_x:
         tile.timer_x += 1
         if tile.timer_x >= 22 and extra_lava == 1:
-            tile.image = floor_tile_image4
+            tile.image = tile_images["4"]
             tile.timer_x = 0
             lava_tile_x.remove(tile)
         elif tile.timer_x >= 11 and (extra_lava == 2 or extra_lava == 3):
-            tile.image = floor_tile_image4
+            tile.image = tile_images["4"]
             tile.timer_x = 0
             lava_tile_x.remove(tile)
 
@@ -1030,10 +882,10 @@ def check_tile_collision_y():#difficulty,baby_mode,lava_mode,extra_baby,extra_la
                 player.velocity_y = 0
                 player.y = player2.y+player2.height
         if feet_rect.colliderect(tile) or feet_rect.colliderect(player2):
-            if lava_mode and tile.image != spawn_tile0 and tile.image != floor_tile_imagej and feet_rect.colliderect(tile) and tile.timer_y == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
+            if lava_mode and tile.image != spawn_tile0 and tile.image != tile_images["j"] and feet_rect.colliderect(tile) and tile.timer_y == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
                 if extra_lava == 3:
                     lava_tile_y.append(tile)
-                elif (extra_lava == 1 or extra_lava == 2) and tile.image != spawn_tile and tile.image != spawn_tile2 and tile.image != spawn_tile0 and tile.image != floor_tile_imagej and feet_rect.colliderect(tile) and tile.timer_y == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
+                elif (extra_lava == 1 or extra_lava == 2) and tile.image != spawn_tile and tile.image != spawn_tile2 and tile.image != spawn_tile0 and tile.image != tile_images["j"] and feet_rect.colliderect(tile) and tile.timer_y == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
                     lava_tile_y.append(tile)
             if tile.image == spawn_tile or tile.image == spawn_tile0:
                 for i in tiles:
@@ -1064,13 +916,13 @@ def check_tile_collision_y():#difficulty,baby_mode,lava_mode,extra_baby,extra_la
                     save_list = [(spawn_x,spawn_y),difficulty,baby_mode,lava_mode,extra_baby,extra_lava,player.max_jumps]
                     save_dump = json.dumps(save_list)
                     save.write_text(save_dump)
-            elif tile.image == floor_tile_imagej:
+            elif tile.image == tile_images["j"]:
                 if player.max_jumps != 2 and PLAYER_VELOCITY_Y != -12.1:
                     print()
                     print("Double jump unlocked!")
                     player.max_jumps = 2
                     PLAYER_VELOCITY_Y = -14
-            elif tile.image == floor_tile_imager:
+            elif tile.image == tile_images["r"]:
                 for tile in tiles:
                     tile.y -= PLAYER_VELOCITY_Y*1.5
                 player.velocity_y = PLAYER_VELOCITY_Y*1.5
@@ -1089,11 +941,11 @@ def check_tile_collision_y():#difficulty,baby_mode,lava_mode,extra_baby,extra_la
     for tile in lava_tile_y:
         tile.timer_y += 1
         if tile.timer_y >= 22 and extra_lava == 1:
-            tile.image = floor_tile_image4
+            tile.image = tile_images["4"]
             tile.timer_y = 0
             lava_tile_y.remove(tile)
         elif tile.timer_y >= 11 and (extra_lava == 2 or extra_lava == 3):
-            tile.image = floor_tile_image4
+            tile.image = tile_images["4"]
             tile.timer_y = 0
             lava_tile_y.remove(tile)
     tile = check_tile_collision()
@@ -1261,37 +1113,37 @@ def draw():
     window.blit(air,(0,0))
     background_y = round(BACKGROUND_Y/5,1)+7
     background_x = round(BACKGROUND_X/5,1)-25
-    window.blit(background_image4, (background_x,background_y))
+    window.blit(background_images["back4"], (background_x,background_y))
     background_y = round(BACKGROUND_Y/4,1)-128
     background_x = round(BACKGROUND_X/4,1)
     round(background_y,1)
-    window.blit(background_image3, (background_x,background_y))
+    window.blit(background_images["back3"], (background_x,background_y))
     background_y = BACKGROUND_Y-64
     background_y = round(background_y/2,1)-224
     background_x = BACKGROUND_X
     background_x = round(background_x/2,1)-145
     round(background_y,1)
-    window.blit(background_image, (background_x,background_y))
+    window.blit(background_images["back"], (background_x,background_y))
     background_y = BACKGROUND_Y
     background_y = background_y-206
     background_x = BACKGROUND_X
     background_x = background_x-206
     round(background_y,1)
-    window.blit(background_image0, (background_x,background_y))
+    window.blit(background_images["front"], (background_x,background_y))
     background_y = BACKGROUND_Y-128
     background_y = background_y*2
     background_x = BACKGROUND_X-325
     background_x = background_x*2
     round(background_y,1)
-    window.blit(background_image2, (background_x,background_y))
+    window.blit(background_images["back2"], (background_x,background_y))
     if baby_mode and not baby_tiles:
         for tile in tiles:
             if extra_baby:
                 if tile.image == spawn_tile or tile.image == spawn_tile2:
-                    tile.image = floor_tile_image
-            if tile.image == floor_tile_image4 or tile.image == floor_tile_image5 or tile.image == floor_tile_image6 or tile.image == floor_tile_image7 or tile.image == floor_tile_imagea or tile.image == floor_tile_imageb or tile.image == floor_tile_imagec or tile.image == floor_tile_imaged or tile.image == floor_tile_imagee or tile.image == floor_tile_imagef or tile.image == floor_tile_imageg or tile.image == floor_tile_imageh or tile.image == floor_tile_imagek or tile.image == floor_tile_imagel or tile.image == floor_tile_imagem or tile.image == floor_tile_imagen or tile.image == floor_tile_imageo or tile.image == floor_tile_imagep or tile.image == floor_tile_imageq or tile.image == floor_tile_images or tile.image == floor_tile_imaget or tile.image == floor_tile_imageu or tile.image == floor_tile_imagev:
-                tile.image = floor_tile_image
-                tile.original_image = floor_tile_image
+                    tile.image = tile_images["1"]
+            if tile.image in lava_tile_images:
+                tile.image = tile_images["1"]
+                tile.original_image = tile_images["1"]
         baby_tiles = True
     for tile in tiles:
         window.blit(tile.image, tile)
@@ -1494,17 +1346,17 @@ test_map = [
     "0000000000444400000004440000000",
     "0000000004444440000004444000000",
     "11gq44qh1gq44qh11110044441111!1",
-    "222244222224422222t004444222222",
-    "3333443333344333334004444333333",
-    "0003443000344300000000444300000",
-    "0000440000044000000000044000000",
-    "0000440000044000000400044000000",
-    "0000440000044000000000044000000",
-    "0000440000044000000000044000000",
-    "00004400000440000000000440000000000000000000",
-    "000044000004400000010004400000000000000000000",
+    "222244222224422222t0044442222220000000004100000000",
+    "33334433333443333340044443333330000000000000000000",
+    "00034430003443000000004443000000000000000000000000",
+    "00004400000440000000000440000000000000000000000000",
+    "00004400000440000004000440000000000000000000000001",
+    "00004400000440000000000440000000000000000000000000",
+    "00004400000440000000000440000000000000000000000000",
+    "00004400000440000000000440000000000000000000000000",
+    "00004400000440000001000440000000000000000000000000",
     "00004000000440000000000000000000000000000000000004",
-    "000000000004400000000000000000000000000000000004!4",
+    "00000000000440000000000000000000000000000000000414",
     "00000000000040000000000001000000000000000400000444",
     "000000000000000000000000000000000004",
     "0000040000000000000000000000000",
@@ -1512,7 +1364,7 @@ test_map = [
     "000044000004400000000000000000000000000000000004",
     "000044000004400000000000000000000000000000000004",
     "000044000004400000000000000000000000000000000004",
-    "011144!1gqqqqqqqqqqqqqqqqqq44qqqqqqq4444qqqqqq444",
+    "011144!1gqqqqqqqqqqqqqqqqqq44qqqqqqq4444qqqqqq44!",
     "00114411111111111111111111144111111140001111114",
     "000244200022220002222000022400000222400002222",
     "000004000003300000330000003a0000003300300033",
@@ -1949,7 +1801,21 @@ while True: #game loop
         player.velocity_x = PLAYER_VELOCITY_X//CROUCH_FRICTION
         player.direction = "right"
     for tile in tiles:
-        if tile.image == floor_tile_image4:
+        if tile.image in lava_tile_images:
+            tile.lava_timer_x += 1
+            if tile.lava_timer_x >= 32 and extra_lava == 1:
+                tile.image = tile.original_image
+                tile.lava_timer_x = 0
+            elif tile.lava_timer_x >= 64 and (extra_lava == 2 or extra_lava == 3):
+                tile.image = tile.original_image
+                tile.lava_timer_x = 0
+            tile.lava_timer_y += 1
+            if tile.lava_timer_y >= 32 and extra_lava == 1:
+                tile.image = tile.original_image
+                tile.lava_timer_y = 0
+            elif tile.lava_timer_y >= 64 and (extra_lava == 2 or extra_lava == 3):
+                tile.image = tile.original_image
+                tile.lava_timer_y = 0
             tile.lava_timer_x += 1
             if tile.lava_timer_x >= 32 and extra_lava == 1:
                 tile.image = tile.original_image
@@ -1968,3 +1834,5 @@ while True: #game loop
     draw()
     pygame.display.update()
     clock.tick(60) #frames per second (fps)
+
+
