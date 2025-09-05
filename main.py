@@ -29,11 +29,11 @@ BACKGROUND_Y = 512
 BACKGROUND_WIDTH = 1024
 BACKGROUND_HEIGHT = 1024
 
-GRAVITY = 1.4
+GRAVITY = .4
 FRICTION = .8
-PLAYER_VELOCITY_X = 7
+PLAYER_VELOCITY_X = 5
 global PLAYER_VELOCITY_Y
-PLAYER_VELOCITY_Y = -14
+PLAYER_VELOCITY_Y = -8
 global CROUCH_FRICTION
 CROUCH_FRICTION = 1
 
@@ -721,7 +721,7 @@ def check_lava_collision():
     for tile in tiles:
         if lava_rect.colliderect(tile) or lava_rect2.colliderect(tile) or keys[pygame.K_r] or joy_restart:
             if keys[pygame.K_r] or joy_restart or tile.image in lava_tile_images:
-                if coyote_lava >= 32 or keys[pygame.K_r] or joy_restart:
+                if coyote_lava >= 64 or keys[pygame.K_r] or joy_restart:
                     coyote_lava = 0
                     player.velocity_x = 0
                     player.velocity_y = 0
@@ -921,7 +921,7 @@ def check_tile_collision_y():#difficulty,baby_mode,lava_mode,extra_baby,extra_la
                     print()
                     print("Double jump unlocked!")
                     player.max_jumps = 2
-                    PLAYER_VELOCITY_Y = -14
+                    PLAYER_VELOCITY_Y = -7.5
             elif tile.image == tile_images["r"]:
                 for tile in tiles:
                     tile.y -= PLAYER_VELOCITY_Y*1.5
@@ -1104,9 +1104,12 @@ def draw():
     global debug
     global cheat
     global baby_tiles
-    #window.fill("blue")
+    global show_blue_bg
+    if show_blue_bg:
+        window.fill("blue")
     #window.fill("#54de9e")
     #window.fill((84,222,158))
+    '''
     background_y = BACKGROUND_Y
     background_x = BACKGROUND_X
     window.fill((20,18,167))#(4,233,255))#(20,18,167))
@@ -1136,6 +1139,7 @@ def draw():
     background_x = background_x*2
     round(background_y,1)
     window.blit(background_images["back2"], (background_x,background_y))
+    '''
     if baby_mode and not baby_tiles:
         for tile in tiles:
             if extra_baby:
@@ -1212,7 +1216,7 @@ def delete_tile(x,y):
             tiles.remove(tile)
             break
 #start game
-print("\nController Controls:\nLeft Joystick: Move\nA Button: Jump\nB/X Button: Crouch\nY Button: Restart Level\n\nKeyboard Controls:\nA/LEFT ARROW: Left\nD/RIGHT ARROW: Right\nW/UP ARROW/SPACE: Jump\nS/DOWN ARROW: Crouch\nR: Restart Level\n")#\nL: Enable Cheat Mode\nO: Enable Debug Mode\nP: Disable Debug/Cheat Mode")
+print("\nController Controls:\nLeft Joystick: Move\nA Button: Jump\nB/X Button: Crouch\nY Button: Restart Level\n\nKeyboard Controls:\nA/LEFT ARROW: Left\nD/RIGHT ARROW: Right\nW/UP ARROW/SPACE: Jump\nS/DOWN ARROW: Crouch\nR: Restart Level\nI: Enable funny mode\nO: Show hitboxes\nP: Hide hitboxes and funny mode\n")#\nL: Enable Cheat Mode\nO: Enable Debug Mode\nP: Disable Debug/Cheat Mode")
 level_list = []
 rand_int = 0
 for i in range(48):
@@ -1598,6 +1602,8 @@ for i in range(100):
     cloud = Clouds()
     clouds.append(cloud)
 '''
+show_blue_bg = True  # Controls whether blue background is shown
+
 while True: #game loop
     if joysticks == []:
         pygame.joystick.init()
@@ -1642,6 +1648,11 @@ while True: #game loop
         if event.type == pygame.QUIT: #user clicks the X button in window
             pygame.quit()
             exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_i:
+                show_blue_bg = False
+            if event.key == pygame.K_p:
+                show_blue_bg = True
         if event.type == pygame.JOYDEVICEREMOVED:
             print(f"{joystick.get_name()} disconnected")
             for joy in joysticks:
