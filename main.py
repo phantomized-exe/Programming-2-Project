@@ -28,6 +28,9 @@ global BACKGROUND_Y
 BACKGROUND_Y = 512
 BACKGROUND_WIDTH = 1024
 BACKGROUND_HEIGHT = 1024
+LIGHT_BLUE = (173, 216, 230)
+LIGHT_GREY = (211, 211, 211)
+ORANGE_RED = (255, 69, 0)
 
 GRAVITY = .4
 FRICTION = .8
@@ -801,7 +804,7 @@ def check_tile_collision_x():
     if tile is not None and lava_mode and tile.image != spawn_tile0 and tile.image != tile_images["j"] and tile.timer_x == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
         if extra_lava == 3:
             lava_tile_x.append(tile)
-    elif (extra_lava == 1 or extra_lava == 2) and tile.image != spawn_tile0 and tile.image != spawn_tile and tile.image != spawn_tile2 and tile.image != tile_images["j"] and tile.timer_x == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
+        elif tile is not None and (extra_lava == 1 or extra_lava == 2) and tile.image != spawn_tile0 and tile.image != spawn_tile and tile.image != spawn_tile2 and tile.image != tile_images["j"] and tile.timer_x == 0 and tile.image != crown and tile.image != crown_baby and tile.image != crown_hot_lava:
             lava_tile_x.append(tile)
     if tile is not None and player.velocity_x != 0:
         adjust_bg = True
@@ -1105,14 +1108,22 @@ def draw():
     global cheat
     global baby_tiles
     global show_blue_bg
+    if ('baby_mode' in globals() and 'lava_mode' in globals() and baby_mode and lava_mode) or (('difficulty' in globals()) and difficulty == 13):
+        bg_color = ORANGE_RED
+    elif ('baby_mode' in globals() and baby_mode) or (('difficulty' in globals()) and difficulty == 1):
+        bg_color = LIGHT_BLUE
+    elif ('lava_mode' in globals() and lava_mode) or (('difficulty' in globals()) and difficulty == 3):
+        bg_color = ORANGE_RED
+    else:
+        bg_color = LIGHT_GREY
     if show_blue_bg:
-        window.fill("blue")
+        window.fill(bg_color)
     #window.fill("#54de9e")
     #window.fill((84,222,158))
     '''
     background_y = BACKGROUND_Y
     background_x = BACKGROUND_X
-    window.fill((20,18,167))#(4,233,255))#(20,18,167))
+    window.fill(bg_color)#(4,233,255))#(20,18,167))
     window.blit(air,(0,0))
     background_y = round(BACKGROUND_Y/5,1)+7
     background_x = round(BACKGROUND_X/5,1)-25
@@ -1176,7 +1187,7 @@ def draw():
     if cheat:
         player.jump_count = 0
     if won:
-        window.fill((0,0,0))
+        window.fill(bg_color)
         if difficulty == 1:
             window.blit(win_baby,(0,-25))
         elif difficulty == 2:
