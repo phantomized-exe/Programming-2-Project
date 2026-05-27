@@ -31,6 +31,7 @@ BACKGROUND_HEIGHT = 1024
 LIGHT_BLUE = (173, 216, 230)
 LIGHT_GREY = (211, 211, 211)
 ORANGE_RED = (255, 69, 0)
+LIGHT_NORMAL = (200,214,224)
 
 GRAVITY = .4
 FRICTION = .8
@@ -1115,7 +1116,7 @@ def draw():
     elif ('lava_mode' in globals() and lava_mode) or (('difficulty' in globals()) and difficulty == 3):
         bg_color = ORANGE_RED
     else:
-        bg_color = LIGHT_GREY
+        bg_color = LIGHT_NORMAL
     if show_blue_bg:
         window.fill(bg_color)
     #window.fill("#54de9e")
